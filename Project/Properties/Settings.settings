@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="project.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="project_U8EAISrv_EAISrv" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://120.76.154.6:8085/EAISrv.asmx</Value>
+    </Setting>
+    <Setting Name="project_ButlerSrv_AppService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://wx.dorlly.com/api/AppService.asmx</Value>
+    </Setting>
+    <Setting Name="project_WOService_WebService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost/WOWeb/api/WebService.asmx</Value>
+    </Setting>
+    <Setting Name="project_ResourceService_ResourceService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://zy.dorlly.com/webapi/resourceservice.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

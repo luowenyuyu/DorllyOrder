@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="GenOrderFormButler">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="serviceNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="srvName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="linkMan" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="linkTel" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="addr" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="needTime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="custNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="KEY" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GenOrderFormButlerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GenOrderFormButlerResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetCustomer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustShortName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Representative" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="BusinessScope" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustLicenseNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RepIDCard" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustContact" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustTel" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustContactMobile" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustBankTitle" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustBankAccount" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustBank" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IsExternal" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetCustomerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SetCustomerResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GenOrderFormButlerSoapIn">
+    <wsdl:part name="parameters" element="tns:GenOrderFormButler" />
+  </wsdl:message>
+  <wsdl:message name="GenOrderFormButlerSoapOut">
+    <wsdl:part name="parameters" element="tns:GenOrderFormButlerResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetCustomerSoapIn">
+    <wsdl:part name="parameters" element="tns:SetCustomer" />
+  </wsdl:message>
+  <wsdl:message name="SetCustomerSoapOut">
+    <wsdl:part name="parameters" element="tns:SetCustomerResponse" />
+  </wsdl:message>
+  <wsdl:portType name="WebServiceSoap">
+    <wsdl:operation name="GenOrderFormButler">
+      <wsdl:input message="tns:GenOrderFormButlerSoapIn" />
+      <wsdl:output message="tns:GenOrderFormButlerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetCustomer">
+      <wsdl:input message="tns:SetCustomerSoapIn" />
+      <wsdl:output message="tns:SetCustomerSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServiceSoap" type="tns:WebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GenOrderFormButler">
+      <soap:operation soapAction="http://tempuri.org/GenOrderFormButler" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetCustomer">
+      <soap:operation soapAction="http://tempuri.org/SetCustomer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceSoap12" type="tns:WebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GenOrderFormButler">
+      <soap12:operation soapAction="http://tempuri.org/GenOrderFormButler" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetCustomer">
+      <soap12:operation soapAction="http://tempuri.org/SetCustomer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebService">
+    <wsdl:port name="WebServiceSoap" binding="tns:WebServiceSoap">
+      <soap:address location="http://localhost/WOWeb/api/WebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WebServiceSoap12" binding="tns:WebServiceSoap12">
+      <soap12:address location="http://localhost/WOWeb/api/WebService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

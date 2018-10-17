@@ -1,0 +1,45 @@
+﻿
+.paginat {padding:0px; margin-top:3px; clear:both; height:32px; clear:both;}
+.paginat ul{margin:0; padding:0; text-align:left; font-size:9pt; font-family:Microsoft Yahei;}
+.paginat li{float:left; list-style:none; margin:5px 2px 5px 2px;}
+.paginat li i{color:#666; display:block; padding:4px 5px 2px 5px; text-decoration:none;}
+.paginat li a{color:#666; display:block; border:1px solid #CCC; padding:2px 5px 2px 5px; text-decoration:none;}
+.paginat li a:hover, .pagination a:active{border:1px solid #CCC; color:#666; background-color:#ADDDF3; cursor:pointer;}
+.paginat li.currentpage,.pagination li.disablepage {padding:2px 5px 2px 5px;}
+.paginat li.currentpage{border:1px solid #CCC; background-color:#F1F1F1; color:#666;}
+.paginat li.disablepage{border:1px solid #CCC; color:#666;}
+.paginat li.nextpage{}
+.paginat li.morelist {font-size:9pt;}
+.jumpbtn {height: 25px; width: 40px; line-height: 25px; padding: 1px 1px;}
+
+.tdl {text-align:center;background-color:#D8E2EC;width:190px;}
+.tdr {text-align:left;width:130px;}
+.tdr input{width:130px; margin:0px;}
+.tdr select{width:130px; margin:0px;}
+
+.tdl1 {text-align:center;background-color:#D8E2EC;width:100px;}
+.tdr1 {text-align:left;width:218px;}
+.tdr1 input{width:90%; margin:0px;}
+.tdr1 select{width:100%; margin:0px;}
+
+.tdl2 {text-align:center;background-color:#D8E2EC;width:120px;}
+.tdr2 {text-align:left;width:308px;}
+.tdr2 input{width:270px; margin:0px;}
+.tdr2 select{width:270px; margin:0px;}
+
+.editdiv {margin-left:20px; margin-top:10px;}
+.tabedit {font-size:10px; width:1040px; }
+.tabedit tr > td {padding: 2px; border:1px solid #a9c6c9;}
+.view_detail{cursor:pointer;vertical-align:middle;}
+
+.itab{height:30px; border-bottom:solid 1px #d0dee5; border-left:solid 1px #d3dbde;}
+.itab ul li{float:left;height:30px; line-height:30px; background:url(../images/itabbg.png) repeat-x; border-right:solid 1px #d3dbde;}
+.itab ul li a{font-size:12px; color:#000; padding-left:20px; padding-right:20px;}
+.itab ul li a.selected{ height:30px; display:block; background:url(../images/itabbg1.png) repeat-x; font-weight:bold;}
+
+.sotable {table-layout:fixed;} 
+.sotable td {white-space:nowrap;overflow:hidden;word-break:keep-all;text-overflow:ellipsis} 
+
+.table_ch th,.table_ch td{padding:2px;line-height:20px}
+
+

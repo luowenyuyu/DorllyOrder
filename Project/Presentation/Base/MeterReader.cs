@@ -1,0 +1,268 @@
+﻿using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Data.SqlClient;
+using System.Net.Json;
+
+namespace project.Presentation.Base
+{
+    public partial class MeterReader : AbstractPmPage, System.Web.UI.ICallbackEventHandler
+    {
+        protected string userid = "";
+        Business.Sys.BusinessUserInfo user = new project.Business.Sys.BusinessUserInfo();
+        protected override void Page_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                HttpCookie hc = getCookie("1");
+                if (hc != null)
+                {
+                    string str = hc.Value.Replace("%3D", "=");
+                    userid = Encrypt.DecryptDES(str, "1");
+                    user.load(userid);
+                    CheckRight(user.Entity, "pm/Base/MeterReader.aspx");
+
+                    if (!Page.IsCallback)
+                    {
+                        if (user.Entity.UserType.ToUpper() != "ADMIN")
+                        {
+                            string sqlstr = "select a.RightCode from Sys_UserRight a left join sys_menu b on a.MenuId=b.MenuID " +
+                                "where a.UserType='" + user.Entity.UserType + "' and menupath='pm/Base/MeterReader.aspx'";
+                            DataTable dt = obj.PopulateDataSet(sqlstr).Tables[0];
+                            if (dt.Rows.Count > 0)
+                            {
+                                string rightCode = dt.Rows[0]["RightCode"].ToString();
+                                if (rightCode.IndexOf("insert") >= 0)
+                                    Buttons += "<a href=\"javascript:;\" onclick=\"insert()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe600;</i> 添加</a>&nbsp;&nbsp;";
+                                if (rightCode.IndexOf("update") >= 0)
+                                    Buttons += "<a href=\"javascript:;\" onclick=\"update()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe60c;</i> 修改</a>&nbsp;&nbsp;";
+                                if (rightCode.IndexOf("delete") >= 0)
+                                    Buttons += "<a href=\"javascript:;\" onclick=\"del()\" class=\"btn btn-danger radius\"><i class=\"Hui-iconfont\">&#xe6e2;</i> 删除</a>&nbsp;&nbsp;";
+                                if (rightCode.IndexOf("vilad") >= 0)
+                                    Buttons += "<a href=\"javascript:;\" onclick=\"valid()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 启用/停用</a>&nbsp;&nbsp;";
+                            }
+                        }
+                        else
+                        {
+                            Buttons += "<a href=\"javascript:;\" onclick=\"insert()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe600;</i> 添加</a>&nbsp;&nbsp;";
+                            Buttons += "<a href=\"javascript:;\" onclick=\"update()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe60c;</i> 修改</a>&nbsp;&nbsp;";
+                            Buttons += "<a href=\"javascript:;\" onclick=\"del()\" class=\"btn btn-danger radius\"><i class=\"Hui-iconfont\">&#xe6e2;</i> 删除</a>&nbsp;&nbsp;";
+                            Buttons += "<a href=\"javascript:;\" onclick=\"valid()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 启用/停用</a>&nbsp;&nbsp;";
+                        }
+
+                        list = createList(string.Empty, string.Empty, string.Empty, 1);
+                    }
+                }
+                else
+                {
+                    Response.Write(errorpage);
+                    return;
+                }
+            }
+            catch
+            {
+                Response.Write(errorpage);
+                return;
+            }
+        }
+
+        Data obj = new Data();
+        protected string list = "";
+        protected string Buttons = "";
+        private string createList(string ReaderNo, string ReaderName, string Status, int page)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder("");
+
+            sb.Append("<table class=\"table table-border table-bordered table-hover table-bg table-sort\" id=\"tablelist\">");
+            sb.Append("<thead>");
+            sb.Append("<tr class=\"text-c\">");
+            sb.Append("<th width=\"5%\">序号</th>");
+            sb.Append("<th width='20%'>抄表人编号</th>");
+            sb.Append("<th width='40%'>抄表人姓名</th>");
+            sb.Append("<th width='15%'>状态</th>");
+            sb.Append("<th width='20%'>创建日期</th>");
+            sb.Append("</tr>");
+            sb.Append("</thead>");
+
+            int r = 1;
+            sb.Append("<tbody>");
+            Business.Base.BusinessMeterReader bc = new project.Business.Base.BusinessMeterReader();
+            foreach (Entity.Base.EntityMeterReader it in bc.GetListQuery(ReaderNo, ReaderName, Status, page, pageSize))
+            {
+                sb.Append("<tr class=\"text-c\" id=\"" + it.ReaderNo + "\">");
+                sb.Append("<td>" + r.ToString() + "</td>");
+                sb.Append("<td>" + it.ReaderNo + "</td>");
+                sb.Append("<td>" + it.ReaderName + "</td>");
+                sb.Append("<td class=\"td-status\"><span class=\"label " + (it.Status == "open" ? "label-success" : "") + " radius\">" + it.StatusName + "</span></td>");
+                sb.Append("<td>" + ParseStringForDate(it.CreateDate) + "</td>");
+                sb.Append("</tr>");
+                r++;
+            }
+            sb.Append("</tbody>");
+            sb.Append("</table>");
+
+            sb.Append(Paginat(bc.GetListCount(ReaderNo, ReaderName, Status), pageSize, page, 7));
+
+            return sb.ToString();
+        }
+        /// <summary>
+        /// 服务器端ajax调用响应请求方法
+        /// </summary>
+        /// <param name="eventArgument">客户端回调参数</param>
+        void System.Web.UI.ICallbackEventHandler.RaiseCallbackEvent(string eventArgument)
+        {
+            this._clientArgument = eventArgument;
+        }
+        private string _clientArgument = "";
+
+        string System.Web.UI.ICallbackEventHandler.GetCallbackResult()
+        {
+            string result = "";
+            JsonArrayParse jp = new JsonArrayParse(this._clientArgument);
+            if (jp.getValue("Type") == "delete")
+                result = deleteaction(jp);
+            else if (jp.getValue("Type") == "update")
+                result = updateaction(jp);
+            else if (jp.getValue("Type") == "submit")
+                result = submitaction(jp);
+            else if (jp.getValue("Type") == "select")
+                result = selectaction(jp);
+            else if (jp.getValue("Type") == "jump")
+                result = jumpaction(jp);
+            else if (jp.getValue("Type") == "valid")
+                result = validaction(jp);
+            return result;
+        }
+        private string updateaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+            try
+            {
+                Business.Base.BusinessMeterReader bc = new project.Business.Base.BusinessMeterReader();
+                bc.load(jp.getValue("id"));
+
+                collection.Add(new JsonStringValue("ReaderNo", bc.Entity.ReaderNo));
+                collection.Add(new JsonStringValue("ReaderName", bc.Entity.ReaderName));
+            }
+            catch
+            { flag = "2"; }
+
+            collection.Add(new JsonStringValue("type", "update"));
+            collection.Add(new JsonStringValue("flag", flag));
+
+            return collection.ToString();
+        }
+        private string deleteaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+            try
+            {
+                Business.Base.BusinessMeterReader bc = new project.Business.Base.BusinessMeterReader();
+                bc.load(jp.getValue("id"));
+                int r = bc.delete();
+                if (r <= 0)
+                    flag = "2";
+            }
+            catch { flag = "2"; }
+
+            collection.Add(new JsonStringValue("type", "delete"));
+            collection.Add(new JsonStringValue("flag", flag));
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ReaderNoS"), jp.getValue("ReaderNameS"), jp.getValue("StatusS"), ParseIntForString(jp.getValue("page")))));
+            return collection.ToString();
+        }
+        private string submitaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+            try
+            {
+                Business.Base.BusinessMeterReader bc = new project.Business.Base.BusinessMeterReader();
+                if (jp.getValue("tp") == "update")
+                {
+                    bc.load(jp.getValue("id"));
+                    bc.Entity.ReaderName = jp.getValue("ReaderName");
+                    int r = bc.Save("update");
+                    if (r <= 0)
+                        flag = "2";
+                }
+                else
+                {
+                    bc.Entity.ReaderNo = jp.getValue("ReaderNo");
+                    bc.Entity.ReaderName = jp.getValue("ReaderName");
+                    bc.Entity.Status = "open";
+                    bc.Entity.CreateUser = user.Entity.UserName;
+                    bc.Entity.CreateDate = GetDate();
+                    int r = bc.Save("insert");
+                    if (r <= 0)
+                        flag = "2";
+                }
+            }
+            catch { flag = "2"; }
+
+
+            collection.Add(new JsonStringValue("type", "submit"));
+            collection.Add(new JsonStringValue("flag", flag));
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ReaderNoS"), jp.getValue("ReaderNameS"), jp.getValue("StatusS"), ParseIntForString(jp.getValue("page")))));
+            return collection.ToString();
+        }
+        private string selectaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+
+            collection.Add(new JsonStringValue("type", "select"));
+            collection.Add(new JsonStringValue("flag", flag));
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ReaderNoS"), jp.getValue("ReaderNameS"), jp.getValue("StatusS"), ParseIntForString(jp.getValue("page")))));
+            return collection.ToString();
+        }
+        private string jumpaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+
+            collection.Add(new JsonStringValue("type", "jump"));
+            collection.Add(new JsonStringValue("flag", flag));
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ReaderNoS"), jp.getValue("ReaderNameS"), jp.getValue("StatusS"), ParseIntForString(jp.getValue("page")))));
+            return collection.ToString();
+        }
+        private string validaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+            try
+            {
+                Business.Base.BusinessMeterReader bc = new project.Business.Base.BusinessMeterReader();
+                bc.load(jp.getValue("id"));
+                if (bc.Entity.Status == "open")
+                    bc.Entity.Status = "close";
+                else
+                    bc.Entity.Status = "open";
+
+                int r = bc.Save("update");
+                if (r <= 0) flag = "2";
+
+                if (bc.Entity.Status == "close")
+                    collection.Add(new JsonStringValue("stat", "<span class=\"label radius\">停用</span>"));
+                else
+                    collection.Add(new JsonStringValue("stat", "<span class=\"label label-success radius\">启用</span>"));
+
+                collection.Add(new JsonStringValue("id", jp.getValue("id")));
+            }
+            catch { flag = "2"; }
+
+            collection.Add(new JsonStringValue("type", "valid"));
+            collection.Add(new JsonStringValue("flag", flag));
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ReaderNoS"), jp.getValue("ReaderNameS"), jp.getValue("StatusS"), ParseIntForString(jp.getValue("page")))));
+            return collection.ToString();
+        }
+    }
+}
