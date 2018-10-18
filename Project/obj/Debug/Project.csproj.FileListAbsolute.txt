@@ -73,3 +73,11 @@ E:\Project\DorllyOrder\Project\obj\Debug\Project.csproj.GenerateResource.Cache
 E:\Project\DorllyOrder\Project\obj\Debug\project.dll
 E:\Project\DorllyOrder\Project\obj\Debug\project.pdb
 E:\Project\DorllyOrder\Project\obj\Debug\Project.csprojResolveAssemblyReference.cache
+E:\MineDev\Projects\DorllyOrder\Project\bin\Debug\project.dll.config
+E:\MineDev\Projects\DorllyOrder\Project\bin\Debug\project.dll
+E:\MineDev\Projects\DorllyOrder\Project\bin\Debug\project.pdb
+E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\Service.resources
+E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.GenerateResource.Cache
+E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\project.dll
+E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\project.pdb
+E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\Project.csprojResolveAssemblyReference.cache

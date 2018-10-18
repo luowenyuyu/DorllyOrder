@@ -15,6 +15,7 @@ namespace project.Presentation.Op
         //public static string Path = "E:\\Project\\DorllyOrder\\DOWeb\\pdf\\缴费通知单";
         //public static string Path = "D:\\GitHub\\DorllyAsp2\\DorllyOrder\\DOWeb\\pdf\\缴费通知单";
         public static string Path = HttpRuntime.AppDomainAppPath + "pdf\\缴费通知单";
+        public static string UnpayPath = HttpRuntime.AppDomainAppPath + "pdf\\未缴费通知单";
         static BaseFont bf = BaseFont.CreateFont(@"c:\Windows\fonts\SURSONG.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
         static Font font16 = new Font(bf, 16, Font.NORMAL);
@@ -22,7 +23,7 @@ namespace project.Presentation.Op
         static Font font9 = new Font(bf, 9, Font.NORMAL);
         static Font font9_Bold = new Font(bf, 9, Font.BOLD);
         static Font font8 = new Font(bf, 8, Font.NORMAL);
-  
+
         public static void Print(Document doc, string OrderRP)
         {
             try
@@ -39,22 +40,22 @@ namespace project.Presentation.Op
 
                 for (int i = 1; i <= page; i++)
                 {
-                    DataTable dt = obj.ExecSelect("Op_OrderDetail a "+
-                        "left join Mstr_Service b on a.ODSRVNo=b.SRVNo "+
+                    DataTable dt = obj.ExecSelect("Op_OrderDetail a " +
+                        "left join Mstr_Service b on a.ODSRVNo=b.SRVNo " +
                         "left join Mstr_ServiceProvider c on c.SPNo=a.ODContractSPNo " +
                         "left join Op_OrderHeader d on d.RowPointer=a.RefRP " +
                         "left join Mstr_Customer e on e.CustNo=d.CustNo " +
-                        
-                        
+
+
                         "left join Op_ContractRMRentList f on a.RefNo=f.RowPointer " +
                         "left join Op_ContractRMRentList_Readout g on g.RefRentRP=f.RowPointer " +
                         "left join Op_Readout h on h.RowPointer=g.RefReadoutRP "
                         ,
 
-                        "a.*,b.SRVName,c.SPName,c.SPBank,c.SPBankAccount,c.SPBankTitle,d.OrderTime,e.CustName,d.OrderType,"+
+                        "a.*,b.SRVName,c.SPName,c.SPBank,c.SPBankAccount,c.SPBankTitle,d.OrderTime,e.CustName,d.OrderType," +
 
-                        "h.LastReadout as RLastReadout,h.Readout as RReadout,isnull(h.Readings,0)*isnull(h.MeteRate,0) as RODQTY,"+
-                        "isnull(h.Readings,0)*isnull(h.MeteRate,0)*a.ODUnitPrice as RODARAmount,h.MeteRate as RMeteRate", 
+                        "h.LastReadout as RLastReadout,h.Readout as RReadout,isnull(h.Readings,0)*isnull(h.MeteRate,0) as RODQTY," +
+                        "isnull(h.Readings,0)*isnull(h.MeteRate,0)*a.ODUnitPrice as RODARAmount,h.MeteRate as RMeteRate",
 
                         " and a.RefRP=" + "'" + OrderRP + "'", i, 8, "a.ResourceNo,a.ODCreateDate");
 
@@ -78,7 +79,7 @@ namespace project.Presentation.Op
         }
 
 
-        #region 
+        #region
         private static void PrintHeader(Document doc, DataRow dr)
         {
             PdfPTable Tit = new PdfPTable(1);
@@ -108,7 +109,7 @@ namespace project.Presentation.Op
             PT1.AddCell(cell11);
             doc.Add(PT1);
         }
-        private static void PrintBody(Document doc, DataTable dt, int page,int pages)
+        private static void PrintBody(Document doc, DataTable dt, int page, int pages)
         {
             PdfPTable PT1 = new PdfPTable(4);
             PT1.DefaultCell.Padding = 3;
@@ -286,7 +287,7 @@ namespace project.Presentation.Op
             float[] hw4 = { 3, 20 };
             PT4.SetWidths(hw4);
             PT4.WidthPercentage = 100;
-            PdfPCell cell41 = new PdfPCell(new Paragraph("账户：" , font9));
+            PdfPCell cell41 = new PdfPCell(new Paragraph("账户：", font9));
             cell41.Border = Rectangle.NO_BORDER;
             cell41.HorizontalAlignment = Element.ALIGN_RIGHT;
             cell41.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -304,7 +305,7 @@ namespace project.Presentation.Op
             float[] hw5 = { 3, 20 };
             PT5.SetWidths(hw5);
             PT5.WidthPercentage = 100;
-            PdfPCell cell51 = new PdfPCell(new Paragraph("收款人：" , font9));
+            PdfPCell cell51 = new PdfPCell(new Paragraph("收款人：", font9));
             cell51.Border = Rectangle.NO_BORDER;
             cell51.HorizontalAlignment = Element.ALIGN_RIGHT;
             cell51.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -322,7 +323,7 @@ namespace project.Presentation.Op
             float[] hw6 = { 3, 20 };
             PT6.SetWidths(hw6);
             PT6.WidthPercentage = 100;
-            PdfPCell cell61 = new PdfPCell(new Paragraph("备注：" , font9));
+            PdfPCell cell61 = new PdfPCell(new Paragraph("备注：", font9));
             cell61.Border = Rectangle.NO_BORDER;
             cell61.HorizontalAlignment = Element.ALIGN_RIGHT;
             cell61.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -340,7 +341,7 @@ namespace project.Presentation.Op
             float[] hw7 = { 3, 20 };
             PT7.SetWidths(hw7);
             PT7.WidthPercentage = 100;
-            PdfPCell cell71 = new PdfPCell(new Paragraph("联系电话：" , font9));
+            PdfPCell cell71 = new PdfPCell(new Paragraph("联系电话：", font9));
             cell71.Border = Rectangle.NO_BORDER;
             cell71.HorizontalAlignment = Element.ALIGN_RIGHT;
             cell71.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -406,7 +407,7 @@ namespace project.Presentation.Op
             PT1.AddCell(cell11);
             doc.Add(PT1);
         }
-        private static void PrintBody_PT(Document doc, DataTable dt, int page,int pages)
+        private static void PrintBody_PT(Document doc, DataTable dt, int page, int pages)
         {
             PdfPTable PT1 = new PdfPTable(9);
             PT1.DefaultCell.Padding = 3;
@@ -482,10 +483,10 @@ namespace project.Presentation.Op
                 string Readout = "";
                 string MeteRate = "";
 
-                string ODQTY=decimal.Parse(dr["ODQTY"].ToString()).ToString("0.##");
-                string ODARAmount=decimal.Parse(dr["ODARAmount"].ToString()).ToString("0.##");
+                string ODQTY = decimal.Parse(dr["ODQTY"].ToString()).ToString("0.##");
+                string ODARAmount = decimal.Parse(dr["ODARAmount"].ToString()).ToString("0.##");
                 //水费、电费、公摊电费、超额电费 dr["ODSRVNo"].ToString() == "GDDF-56" ||
-                if (dr["ODSRVNo"].ToString() == "DF-56" || dr["ODSRVNo"].ToString() == "SF-55" ||  dr["ODSRVNo"].ToString() == "CEDF-62")
+                if (dr["ODSRVNo"].ToString() == "DF-56" || dr["ODSRVNo"].ToString() == "SF-55" || dr["ODSRVNo"].ToString() == "CEDF-62")
                 {
                     if (dr["RLastReadout"].ToString() != "")
                         LastReadout = decimal.Parse(dr["RLastReadout"].ToString()).ToString("0.##");
@@ -741,6 +742,391 @@ namespace project.Presentation.Op
         }
         #endregion
 
+        #region 未缴费通知单打印
+
+        public static void UnpayPrint(Document doc, string OrderRP)
+        {
+            try
+            {
+                Data obj = new Data();
+                //int count = int.Parse(obj.PopulateDataSet("select count(1) as Cnt from Op_OrderDetail where RefRP='" + OrderRP + "'").Tables[0].Rows[0]["Cnt"].ToString());
+                int count = int.Parse(obj.PopulateDataSet("select count(1) as Cnt from Op_OrderDetail a " +
+                "left join Op_ContractRMRentList b on a.RefNo=b.RowPointer " +
+                "left join Op_ContractRMRentList_Readout c on c.RefRentRP=b.RowPointer " +
+                "left join Op_Readout d on d.RowPointer=c.RefReadoutRP " +
+                "where a.RefRP='" + OrderRP + "' and ISNULL(a.ODARAmount,0)!=ISNULL(a.ODPaidAmount,0)").Tables[0].Rows[0]["Cnt"].ToString());
+
+                int page = int.Parse(System.Math.Ceiling(count / 8.0).ToString());
+
+                for (int i = 1; i <= page; i++)
+                {
+                    DataTable dt = obj.ExecSelect("Op_OrderDetail a " +
+                        "left join Mstr_Service b on a.ODSRVNo=b.SRVNo " +
+                        "left join Mstr_ServiceProvider c on c.SPNo=a.ODContractSPNo " +
+                        "left join Op_OrderHeader d on d.RowPointer=a.RefRP " +
+                        "left join Mstr_Customer e on e.CustNo=d.CustNo " +
+
+
+                        "left join Op_ContractRMRentList f on a.RefNo=f.RowPointer " +
+                        "left join Op_ContractRMRentList_Readout g on g.RefRentRP=f.RowPointer " +
+                        "left join Op_Readout h on h.RowPointer=g.RefReadoutRP "
+                        ,
+
+                        "a.*,b.SRVName,c.SPName,c.SPBank,c.SPBankAccount,c.SPBankTitle,d.OrderTime,e.CustName,d.OrderType," +
+
+                        "h.LastReadout as RLastReadout,h.Readout as RReadout,isnull(h.Readings,0)*isnull(h.MeteRate,0) as RODQTY," +
+                        "isnull(h.Readings,0)*isnull(h.MeteRate,0)*a.ODUnitPrice as RODARAmount,h.MeteRate as RMeteRate",
+
+                        " and a.RefRP=" + "'" + OrderRP + "' and ISNULL(a.ODARAmount,0)!=ISNULL(a.ODPaidAmount,0)", i, 8, "a.ResourceNo,a.ODCreateDate");
+
+                    if (i > 1) doc.NewPage();
+
+                    if (dt.Rows[0]["OrderType"].ToString() == "04" || dt.Rows[0]["OrderType"].ToString() == "09")
+                    {
+                        UnpayPrintHeader_PT(doc, dt.Rows[0]);
+                        UnpayPrintBody_PT(doc, dt, i, page);
+                        PrintFooter_PT(doc, OrderRP, dt.Rows[0], i, page);
+                    }
+                    else
+                    {
+                        UnpayPrintHeader(doc, dt.Rows[0]);
+                        UnpayPrintBody(doc, dt, i, page);
+                        PrintFooter(doc, OrderRP, dt.Rows[0], i, page);
+                    }
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+        }
+
+        #region 头部打印
+
+        private static void UnpayPrintHeader(Document doc, DataRow dr)
+        {
+            PdfPTable Tit = new PdfPTable(1);
+            Tit.DefaultCell.Padding = 3;
+            float[] wid = { 1 };
+            Tit.SetWidths(wid);
+            Tit.WidthPercentage = 100;
+            PdfPCell cell1 = new PdfPCell(new Paragraph(DateTime.Parse(dr["OrderTime"].ToString()).ToString("yyyy年MM月 ") + "未缴费通知单", font16));
+            cell1.HorizontalAlignment = Element.ALIGN_CENTER;
+            cell1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            cell1.Border = Rectangle.NO_BORDER;
+            cell1.FixedHeight = 60;
+            Tit.AddCell(cell1);
+            doc.Add(Tit);
+
+            PdfPTable PT1 = new PdfPTable(1);
+            PT1.DefaultCell.Padding = 0;
+            float[] hw8 = { 1 };
+            PT1.SetWidths(hw8);
+            PT1.WidthPercentage = 100;
+            PT1.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
+            PdfPCell cell11 = new PdfPCell(new Paragraph("客户：" + dr["CustName"].ToString(), font9_Bold));
+            cell11.HorizontalAlignment = Element.ALIGN_LEFT;
+            cell11.VerticalAlignment = Element.ALIGN_MIDDLE;
+            cell11.Border = Rectangle.NO_BORDER;
+            cell11.FixedHeight = 20;
+            PT1.AddCell(cell11);
+            doc.Add(PT1);
+        }
+
+        private static void UnpayPrintHeader_PT(Document doc, DataRow dr)
+        {
+            PdfPTable Tit = new PdfPTable(1);
+            Tit.DefaultCell.Padding = 3;
+            float[] wid = { 1 };
+            Tit.SetWidths(wid);
+            Tit.WidthPercentage = 100;
+            PdfPCell cell1 = new PdfPCell(new Paragraph(DateTime.Parse(dr["OrderTime"].ToString()).ToString("yyyy年MM月 ") + "未缴费通知单", font16));
+            cell1.HorizontalAlignment = Element.ALIGN_CENTER;
+            cell1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            cell1.Border = Rectangle.NO_BORDER;
+            cell1.FixedHeight = 60;
+            Tit.AddCell(cell1);
+            doc.Add(Tit);
+
+            PdfPTable PT1 = new PdfPTable(1);
+            PT1.DefaultCell.Padding = 0;
+            float[] hw8 = { 1 };
+            PT1.SetWidths(hw8);
+            PT1.WidthPercentage = 100;
+            PT1.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
+            PdfPCell cell11 = new PdfPCell(new Paragraph("客户：" + dr["CustName"].ToString(), font9_Bold));
+            cell11.HorizontalAlignment = Element.ALIGN_LEFT;
+            cell11.VerticalAlignment = Element.ALIGN_MIDDLE;
+            cell11.Border = Rectangle.NO_BORDER;
+            cell11.FixedHeight = 20;
+            PT1.AddCell(cell11);
+            doc.Add(PT1);
+        }
+
+        #endregion
+
+        #region 数据表格打印
+
+        private static void UnpayPrintBody(Document doc, DataTable dt, int page, int pages)
+        {
+            PdfPTable PT1 = new PdfPTable(5);
+            PT1.DefaultCell.Padding = 3;
+            float[] hw1 = { 2, 14, 10, 10,10 };
+            PT1.SetWidths(hw1);
+            PT1.WidthPercentage = 100;
+            PT1.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            PdfPCell cell1 = new PdfPCell(new Paragraph("序号", font9_Bold));
+            cell1.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER;
+            cell1.HorizontalAlignment = Element.ALIGN_CENTER;
+            cell1.FixedHeight = 18;
+            PdfPCell cell2 = new PdfPCell(new Paragraph("资源编号", font9_Bold));
+            cell2.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+            cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+            PdfPCell cell3 = new PdfPCell(new Paragraph("费用项", font9_Bold));
+            cell3.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+            cell3.HorizontalAlignment = Element.ALIGN_CENTER;
+            PdfPCell cell4 = new PdfPCell(new Paragraph("应收金额", font9_Bold));
+            cell4.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+            cell4.HorizontalAlignment = Element.ALIGN_CENTER;
+            PdfPCell cell5 = new PdfPCell(new Paragraph("未缴金额", font9_Bold));
+            cell5.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+            cell5.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            PT1.AddCell(cell1);
+            PT1.AddCell(cell2);
+            PT1.AddCell(cell3);
+            PT1.AddCell(cell4);
+            PT1.AddCell(cell5);
+
+            doc.Add(PT1);
+            int cnt = 0;
+            int row = (page - 1) * 10;
+            foreach (DataRow dr in dt.Rows)
+            {
+                PdfPTable PT2 = new PdfPTable(5);
+                PT2.DefaultCell.Padding = 3;
+                float[] hw2 = { 2, 14, 10, 10, 10 };
+                PT2.SetWidths(hw2);
+                PT2.WidthPercentage = 100;
+
+                PdfPCell cell21 = new PdfPCell(new Paragraph((row + 1).ToString(), font9));
+                cell21.Border = Rectangle.BOTTOM_BORDER | Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER;
+                cell21.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell21.FixedHeight = 18;
+
+                PdfPCell cell22 = new PdfPCell(new Paragraph(dr["ResourceNo"].ToString(), font9));
+                cell22.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell22.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PdfPCell cell23 = new PdfPCell(new Paragraph(dr["SRVName"].ToString(), font9));
+                cell23.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell23.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PdfPCell cell24 = new PdfPCell(new Paragraph(decimal.Parse(dr["ODARAmount"].ToString()).ToString("0.##"), font9));
+                cell24.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell24.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PdfPCell cell25 = new PdfPCell(new Paragraph((decimal.Parse(dr["ODARAmount"].ToString()) - decimal.Parse(dr["ODPaidAmount"].ToString())).ToString("0.##"), font9));
+                cell25.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell25.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PT2.AddCell(cell21);
+                PT2.AddCell(cell22);
+                PT2.AddCell(cell23);
+                PT2.AddCell(cell24);
+                PT2.AddCell(cell25);
+                doc.Add(PT2);
+                row++;
+                cnt++;
+            }
+            int maxcnt = 7;
+            if (dt.Rows.Count > 0 && pages == page)
+            {
+                Data obj = new Data();
+                DataTable dt1 = obj.PopulateDataSet("select SUM(ISNULL(ODARAmount,0)-ISNULL(ODPaidAmount,0)) as ODARAmount from Op_OrderDetail where RefRP='" + dt.Rows[0]["RefRP"].ToString()
+                    + "' and ISNULL(ODARAmount,0)!=ISNULL(ODPaidAmount,0)").Tables[0];
+                decimal ODARAmount = decimal.Parse(dt1.Rows[0]["ODARAmount"].ToString());
+
+                PdfPTable PT3 = new PdfPTable(5);
+                PT3.DefaultCell.Padding = 3;
+                float[] hw3 = { 2, 14, 10, 10, 10 };
+                PT3.SetWidths(hw3);
+                PT3.WidthPercentage = 100;
+
+                PdfPCell cell31 = new PdfPCell(new Paragraph("合计：  ", font9));
+                cell31.Border = Rectangle.BOTTOM_BORDER | Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER;
+                cell31.HorizontalAlignment = Element.ALIGN_RIGHT;
+                cell31.FixedHeight = 18;
+                cell31.Colspan = 4;
+
+                PdfPCell cell34 = new PdfPCell(new Paragraph(ODARAmount.ToString("0.##"), font9));
+                cell34.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell34.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PT3.AddCell(cell31);
+                PT3.AddCell(cell34);
+                doc.Add(PT3);
+
+                maxcnt++;
+            }
+
+            while (cnt < maxcnt)
+            {
+                PdfPTable PT2 = new PdfPTable(1);
+                PT2.DefaultCell.Padding = 3;
+                float[] hw2 = { 1 };
+                PT2.SetWidths(hw2);
+                PT2.WidthPercentage = 100;
+
+                PdfPCell cel = new PdfPCell(new Paragraph());
+                cel.FixedHeight = 18;
+                cel.Border = Rectangle.NO_BORDER;
+
+                PT2.AddCell(cel);
+                doc.Add(PT2);
+
+                cnt++;
+            }
+        }
+
+        private static void UnpayPrintBody_PT(Document doc, DataTable dt, int page, int pages)
+        {
+            PdfPTable PT1 = new PdfPTable(5);
+            PT1.DefaultCell.Padding = 3;
+            float[] hw1 = { 2, 14, 10, 10,10 };
+            PT1.SetWidths(hw1);
+            PT1.WidthPercentage = 100;
+            PT1.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            PdfPCell cell1 = new PdfPCell(new Paragraph("序号", font9_Bold));
+            cell1.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER;
+            cell1.HorizontalAlignment = Element.ALIGN_CENTER;
+            cell1.FixedHeight = 18;
+            PdfPCell cell2 = new PdfPCell(new Paragraph("资源编号", font9_Bold));
+            cell2.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+            cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+            PdfPCell cell3 = new PdfPCell(new Paragraph("费用项", font9_Bold));
+            cell3.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+            cell3.HorizontalAlignment = Element.ALIGN_CENTER;
+            PdfPCell cell4 = new PdfPCell(new Paragraph("应收金额", font9_Bold));
+            cell4.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+            cell4.HorizontalAlignment = Element.ALIGN_CENTER;
+            PdfPCell cell5 = new PdfPCell(new Paragraph("未缴金额", font9_Bold));
+            cell5.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+            cell5.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            PT1.AddCell(cell1);
+            PT1.AddCell(cell2);
+            PT1.AddCell(cell3);
+            PT1.AddCell(cell4);
+            PT1.AddCell(cell5);
+
+            doc.Add(PT1);
+            int cnt = 0;
+            int row = (page - 1) * 10;
+            foreach (DataRow dr in dt.Rows)
+            {
+                PdfPTable PT2 = new PdfPTable(5);
+                PT2.DefaultCell.Padding = 3;
+                float[] hw2 = { 2, 14, 10, 10, 10 };
+                PT2.SetWidths(hw2);
+                PT2.WidthPercentage = 100;
+
+                PdfPCell cell21 = new PdfPCell(new Paragraph((row + 1).ToString(), font9));
+                cell21.Border = Rectangle.BOTTOM_BORDER | Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER;
+                cell21.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell21.FixedHeight = 18;
+
+                PdfPCell cell22 = new PdfPCell(new Paragraph(dr["ResourceNo"].ToString(), font9));
+                cell22.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell22.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PdfPCell cell23 = new PdfPCell(new Paragraph(dr["SRVName"].ToString(), font9));
+                cell23.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell23.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                string ODARAmount = decimal.Parse(dr["ODARAmount"].ToString()).ToString("0.##");
+                string UnpayAmount = (decimal.Parse(dr["ODARAmount"].ToString()) - decimal.Parse(string.IsNullOrEmpty(dr["ODPaidAmount"].ToString()) ? "0" : dr["ODPaidAmount"].ToString())).ToString("0.##");
+                //水费、电费、公摊电费、超额电费 dr["ODSRVNo"].ToString() == "GDDF-56" ||
+                if (dr["ODSRVNo"].ToString() == "DF-56" || dr["ODSRVNo"].ToString() == "SF-55" || dr["ODSRVNo"].ToString() == "CEDF-62")
+                {
+                    if (dr["RODARAmount"].ToString() != "")
+                    {
+                        ODARAmount = decimal.Parse(dr["RODARAmount"].ToString()).ToString("0.##");
+                        UnpayAmount = (decimal.Parse(dr["RODARAmount"].ToString()) - decimal.Parse(dr["ODPaidAmount"].ToString())).ToString("0.##");
+                    }
+                        
+                }
+
+                PdfPCell cell24 = new PdfPCell(new Paragraph(ODARAmount, font9));
+                cell24.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell24.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PdfPCell cell25 = new PdfPCell(new Paragraph(UnpayAmount, font9));
+                cell25.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell25.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PT2.AddCell(cell21);
+                PT2.AddCell(cell22);
+                PT2.AddCell(cell23);
+                PT2.AddCell(cell24);
+                PT2.AddCell(cell25);
+
+                doc.Add(PT2);
+                row++;
+                cnt++;
+            }
+            int maxcnt = 7;
+            if (dt.Rows.Count > 0 && pages == page)
+            {
+                Data obj = new Data();
+                DataTable dt1 = obj.PopulateDataSet("select SUM(ISNULL(ODARAmount,0)-ISNULL(ODPaidAmount,0)) as ODARAmount from Op_OrderDetail where RefRP='"
+                    + dt.Rows[0]["RefRP"].ToString() + "' and ISNULL(ODARAmount,0)!=ISNULL(ODPaidAmount,0)").Tables[0];
+                decimal ODARAmount = decimal.Parse(dt1.Rows[0]["ODARAmount"].ToString());
+
+                PdfPTable PT3 = new PdfPTable(5);
+                PT3.DefaultCell.Padding = 3;
+                float[] hw3 = { 2, 14, 10, 10, 10 };
+                PT3.SetWidths(hw3);
+                PT3.WidthPercentage = 100;
+
+                PdfPCell cell31 = new PdfPCell(new Paragraph("合计：  ", font9));
+                cell31.Border = Rectangle.BOTTOM_BORDER | Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER;
+                cell31.HorizontalAlignment = Element.ALIGN_RIGHT;
+                cell31.FixedHeight = 18;
+                cell31.Colspan = 4;
+
+                PdfPCell cell34 = new PdfPCell(new Paragraph(ODARAmount.ToString("0.##"), font9));
+                cell34.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
+                cell34.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                PT3.AddCell(cell31);
+                PT3.AddCell(cell34);
+                doc.Add(PT3);
+
+                maxcnt++;
+            }
+
+            while (cnt < maxcnt)
+            {
+                PdfPTable PT2 = new PdfPTable(1);
+                PT2.DefaultCell.Padding = 3;
+                float[] hw2 = { 1 };
+                PT2.SetWidths(hw2);
+                PT2.WidthPercentage = 100;
+
+                PdfPCell cel = new PdfPCell(new Paragraph());
+                cel.FixedHeight = 18;
+                cel.Border = Rectangle.NO_BORDER;
+
+                PT2.AddCell(cel);
+                doc.Add(PT2);
+
+                cnt++;
+            }
+        }
+
+        #endregion
+
+        #endregion
         public static bool PDFWatermark(string inputfilepath, string outputfilepath, string ModelPicName, float top, float left)
         {
             PdfReader pdfReader = null;

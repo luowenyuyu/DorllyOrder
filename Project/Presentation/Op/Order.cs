@@ -14,7 +14,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
 using NPOI.HSSF.UserModel;
-
+using System.Linq;
 namespace project.Presentation.Op
 {
     public partial class Order : AbstractPmPage, System.Web.UI.ICallbackEventHandler
@@ -58,6 +58,8 @@ namespace project.Presentation.Op
                                     Buttons += "<a href=\"javascript:;\" onclick=\"raudit()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 反审核</a>&nbsp;&nbsp;";
                                 if (rightCode.IndexOf("print") >= 0)
                                     Buttons += "<a href=\"javascript:;\" onclick=\"print()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 打印缴费通知单</a>&nbsp;&nbsp;";
+                                if (rightCode.IndexOf("unpayprint") >= 0)
+                                    Buttons += "<a href=\"javascript:;\" onclick=\"unpayprint()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 打未印缴费通知单</a>&nbsp;&nbsp;";
                                 if (rightCode.IndexOf("excelrentorder") >= 0)
                                     Buttons += "<a href=\"javascript:;\" onclick=\"excelrentorder()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 导出租赁订单</a>&nbsp;&nbsp;";
                                 if (rightCode.IndexOf("excelproporder") >= 0)
@@ -75,6 +77,7 @@ namespace project.Presentation.Op
                             Buttons += "<a href=\"javascript:;\" onclick=\"auditpass()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 审核通过</a>&nbsp;&nbsp;";
                             Buttons += "<a href=\"javascript:;\" onclick=\"raudit()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 反审核</a>&nbsp;&nbsp;";
                             Buttons += "<a href=\"javascript:;\" onclick=\"print()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 打印缴费通知单</a>&nbsp;&nbsp;";
+                            Buttons += "<a href=\"javascript:;\" onclick=\"unpayprint()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 打印未缴费通知单</a>&nbsp;&nbsp;";
                             Buttons += "<a href=\"javascript:;\" onclick=\"excelrentorder()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 导出租赁订单</a>&nbsp;&nbsp;";
                             Buttons += "<a href=\"javascript:;\" onclick=\"excelproporder()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 导出物业订单</a>&nbsp;&nbsp;";
                             Buttons += "&nbsp;&nbsp;<a href=\"javascript:;\" onclick=\"getfee()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe6ba;</i> 减免</a>&nbsp;&nbsp;";
@@ -374,6 +377,8 @@ namespace project.Presentation.Op
                 result = jumpaction(jp);
             else if (jp.getValue("Type") == "print")
                 result = printaction(jp);
+            else if (jp.getValue("Type") == "unpayprint")
+                result = unpayprintaction(jp);
             else if (jp.getValue("Type") == "excelrentorder")
                 result = excelrentorderaction(jp);
             else if (jp.getValue("Type") == "excelproporder")
@@ -751,7 +756,7 @@ namespace project.Presentation.Op
                                     }
                                     cnt++;
                                 }
-                                
+
                             }
                             //if (FID.Length > 1) FID = FID.Substring(0, FID.Length - 1);
                             //if (SRVName.Length > 1) SRVName = SRVName.Substring(0, SRVName.Length - 1);
@@ -1023,6 +1028,93 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("path", pathName));
             return collection.ToString();
         }
+        private string unpayprintaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+            string pathName = "";
+            string newName = "";
+            try
+            {
+                string contractList = string.Join("','", jp.getValue("ids").Split(';'));
+                contractList = "'" + contractList.Substring(0, contractList.Length - 2);
+                DataTable dt = obj.PopulateDataSet("select count(1) as Cnt from Op_OrderDetail where RefRP in(" + contractList
+                    + ") and ISNULL(ODARAmount,0)!=ISNULL(ODPaidAmount,0)").Tables[0];
+                if (int.Parse(dt.Rows[0]["Cnt"].ToString()) == 0)
+                {
+                    flag = "4";
+                }
+                //foreach (string id in jp.getValue("ids").Split(';'))
+                //{
+                //    if (id == "") continue;
+                //    DataTable dt = obj.PopulateDataSet("select count(1) as Cnt from Op_OrderDetail where RefRP='" + id + "'").Tables[0];
+                //    if (int.Parse(dt.Rows[0]["Cnt"].ToString()) == 0)
+                //    {
+                //        flag = "4";
+                //        break;
+                //    }
+                //}
+                if (flag != "4")
+                {
+                    Business.Op.BusinessOrderHeader bc = new Business.Op.BusinessOrderHeader();
+                    bc.load(jp.getValue("ids").Split(';')[0]);
+                    pathName = bc.Entity.OrderNo + ".pdf";
+
+                    //A4纸张竖向
+                    Document doc = new Document(PageSize.A5.Rotate(), 20, 20, 20, 10);
+                    newName = creatFileName("pdf");
+                    PdfWriter.GetInstance(doc, new FileStream(OrderPrint.UnpayPath + newName, FileMode.Create));
+                    doc.Open();
+
+                    int row = 0;
+                    foreach (string id in jp.getValue("ids").Split(';'))
+                    {
+                        if (id == "") continue;
+                        dt = obj.PopulateDataSet("select count(1) as Cnt from Op_OrderDetail where RefRP='" + id
+                            + "' and ISNULL(ODARAmount,0)!=ISNULL(ODPaidAmount,0)").Tables[0];
+                        if (int.Parse(dt.Rows[0]["Cnt"].ToString()) > 0)
+                        {
+                            if (row > 0) doc.NewPage();
+                            OrderPrint.UnpayPrint(doc, id);
+                            row++;
+                        }
+                    }
+
+                    try
+                    {
+                        doc.Close();
+                    }
+                    catch { }
+
+                    //加水印
+                    string picName = "a.png";
+                    dt = obj.PopulateDataSet("select * from Op_OrderDetail where RefRP='" + bc.Entity.RowPointer + "'").Tables[0];
+                    if (dt.Rows.Count > 0)
+                    {
+                        //FWC-001
+                        if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-001")
+                            picName = "dl.png";
+                        else if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-002")
+                            picName = "mh.png";
+                        else if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-003")
+                            picName = "fzd.png";
+                    }
+                    OrderPrint.PDFWatermark(OrderPrint.UnpayPath + newName,
+                        OrderPrint.UnpayPath + pathName,
+                        OrderPrint.UnpayPath.Replace("未缴费通知单", "") + picName, 369, 111);
+                }
+            }
+            catch (Exception ex)
+            {
+                flag = "2";
+                collection.Add(new JsonStringValue("ex", ex.ToString()));
+            }
+
+            collection.Add(new JsonStringValue("type", "unpayprint"));
+            collection.Add(new JsonStringValue("flag", flag));
+            collection.Add(new JsonStringValue("path", pathName));
+            return collection.ToString();
+        }
         private string excelrentorderaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
@@ -1287,7 +1379,7 @@ namespace project.Presentation.Op
                             sb.Append("<tr class=\"text-c\">");
                             sb.Append("<td>" + it.ODSRVName + "<input type=\"checkbox\" class=\"input-text size-MINI\" value=\"" + it.RowPointer + "\" name=\"chk\" style=\"display:none;\" /></td>");
                             sb.Append("<td><label id=\"aramt" + it.RowPointer + "\">" + it.ODARAmount.ToString("0.##") + "</label></td>");
-                            sb.Append("<td><input class=\"input-text size-MINI\" id=\"amt" + it.RowPointer + "\" value=\"" + it.ReduceAmount.ToString("0.##") + "\" onblur=\"validDecimal2(this.id);\" onchange=\"CaluReduceAmt('" +  it.RowPointer + "');\" style=\"text-align:center;\" /></td>");
+                            sb.Append("<td><input class=\"input-text size-MINI\" id=\"amt" + it.RowPointer + "\" value=\"" + it.ReduceAmount.ToString("0.##") + "\" onblur=\"validDecimal2(this.id);\" onchange=\"CaluReduceAmt('" + it.RowPointer + "');\" style=\"text-align:center;\" /></td>");
                             sb.Append("<td><label id=\"unamt" + it.RowPointer + "\">" + PayAmt.ToString("0.##") + "</label></td>");
                             sb.Append("</tr>");
 
@@ -1333,7 +1425,7 @@ namespace project.Presentation.Op
                 foreach (string it in jp.getValue("ids").Split(';'))
                 {
                     if (it == "") continue;
-                    obj.ExecuteNonQuery("UPDATE Op_OrderDetail SET ReduceAmount = " + it.Split(':')[1] + ","+
+                    obj.ExecuteNonQuery("UPDATE Op_OrderDetail SET ReduceAmount = " + it.Split(':')[1] + "," +
                         "ODTaxAmount=(ODARAmount-" + it.Split(':')[1] + ") - ROUND(((ODARAmount-" + it.Split(':')[1] + ") / (1+ODTaxRate)),2)" +
                         "WHERE RowPointer = '" + it.Split(':')[0] + "'");
                 }

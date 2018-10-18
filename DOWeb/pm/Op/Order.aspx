@@ -618,6 +618,19 @@
                 stat = 0;
                 return;
             }
+            if (vjson.type == "unpayprint") {
+                if (vjson.flag == "1") {
+                    document.getElementById("openfile").src = "../../pdf/未缴费通知单" + vjson.path;
+                }
+                else if (vjson.flag == "4") {
+                    layer.alert("勾选订单有明细记录为空，不能打印！");
+                }
+                else {
+                    layer.alert(vjson.ex);
+                }
+                stat = 0;
+                return;
+            }
             if (vjson.type == "excelrentorder") {
                 if (vjson.flag == "1") {
                     document.getElementById("openfile").src = "../../downfile/" + vjson.path;
@@ -1199,7 +1212,31 @@
             stat = 1;
             return;
         }
+        function unpayprint() {
+            if (ordertype == "") {
+                layer.msg("请先按照订单类型查询！", { icon: 7, time: 1500 });
+                return;
+            }
+            var contractID = "";
+            var checklist = jQuery("#tbody input:checkbox:checked");
+            if (checklist.length < 1) {
+                layer.alert("请选择一条数据！");
+                return;
+            }
+            var custno = "";
+            for (var i = 0; i < checklist.length; i++) {
+                contractID += checklist[i].value + ";";
+            }
 
+            if (stat == 1) return;
+
+            var submitData = new Object();
+            submitData.Type = "unpayprint";
+            submitData.ids = contractID;
+            transmitData(datatostr(submitData));
+            stat = 1;
+            return;
+        }
         function excelrentorder() {
             var submitData = new Object();
             submitData.Type = "excelrentorder";
