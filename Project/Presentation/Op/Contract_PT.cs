@@ -962,14 +962,14 @@ namespace project.Presentation.Op
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
                                 rs.Status = 1;
-                                rs.Enable = true;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
-                            string str = srv.LeaseIn("[" + Items + "]");
-                            string str1 = str;
+                            string result = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
                         collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));                        
                     }
@@ -1005,14 +1005,14 @@ namespace project.Presentation.Op
                                 rs.CustLongName = bc.Entity.ContractCustName;
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
-                                rs.Status = 1;
-                                rs.Enable = true;
+                                rs.Status = 2;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
-
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
-                            srv.LeaseDel("[" + Items + "]");
+                            string result = srv.LeaseDel("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
                     }
                 }

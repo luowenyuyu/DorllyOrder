@@ -1,6 +1,7 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Op.Readout,project"  %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Op.Readout,project" %>
+
 <!DOCTYPE>
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head id="head1" runat="server">
     <title>抄表管理</title>
     <!--[if lt IE 9]>
@@ -22,181 +23,206 @@
 </head>
 <body>
     <form id="form1" runat="server"></form>
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 表计管理 <span class="c-gray en">&gt;</span> 抄表管理 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:2px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
-            
-    <div class="pos-a" style="width:200px;left:15px;top:40px; bottom:0; height:100%; border-right:1px solid #e5e5e5; background-color:#f5f5f5;">
-	<ul id="ztree" class="ztree"></ul>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 表计管理 <span class="c-gray en">&gt;</span> 抄表管理 <a class="btn btn-success radius r mr-20" style="line-height: 1.6em; margin-top: 2px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+
+    <div class="pos-a" style="width: 200px; left: 15px; top: 40px; bottom: 0; height: 100%; border-right: 1px solid #e5e5e5; background-color: #f5f5f5;">
+        <ul id="ztree" class="ztree"></ul>
     </div>
-    
-    <div style="margin-left:200px;">
-    <div id="list" class="pt-5 pr-20 pb-5 pl-20">
-	    <div class="cl pd-5 bg-1 bk-gray mt-2"> 
-            <span class="l">
-                <%--<a href="javascript:;" onclick="insert()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
+
+    <div style="margin-left: 200px;">
+        <div id="list" class="pt-5 pr-20 pb-5 pl-20">
+            <div class="cl pd-5 bg-1 bk-gray mt-2">
+                <span class="l">
+                    <%--<a href="javascript:;" onclick="insert()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
                 <a href="javascript:;" onclick="update()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe60c;</i> 修改</a> 
                 <a href="javascript:;" onclick="del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 删除</a>
                 <a href="javascript:;" onclick="audit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 审核通过</a>--%>
-                <%--<a href="javascript:;" onclick="unaudit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 不通过</a>--%>
-                <%=Buttons %>
-                <input type="hidden" id="selectKey" />
-            </span> 
-	    </div>
-	    <div class="cl pd-10  bk-gray mt-2"> 
-		    房间编号&nbsp;<input type="text" class="input-text size-MINI" style="width:150px" placeholder="房间编号" id="RMIDS" />&nbsp;
-		    表记编号&nbsp;<input type="text" class="input-text size-MINI" style="width:150px" placeholder="表记编号" id="MeterNoS" />&nbsp;
-		    抄表日期&nbsp;从&nbsp;<input type="text" class="input-text size-MINI" style="width:150px" id="MinRODate" />&nbsp;
-		    &nbsp;至&nbsp;<input type="text" class="input-text size-MINI" style="width:150px" id="MaxRODate" />&nbsp;
+                    <%--<a href="javascript:;" onclick="unaudit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 不通过</a>--%>
+                    <%=Buttons %>
+                    <input type="hidden" id="selectKey" />
+                </span>
+            </div>
+            <div class="cl pd-10  bk-gray mt-2">
+                房间编号&nbsp;<input type="text" class="input-text size-MINI" style="width: 150px" placeholder="房间编号" id="RMIDS" />&nbsp;
+		    表记编号&nbsp;<input type="text" class="input-text size-MINI" style="width: 150px" placeholder="表记编号" id="MeterNoS" />&nbsp;
+		    抄表日期&nbsp;从&nbsp;<input type="text" class="input-text size-MINI" style="width: 150px" id="MinRODate" />&nbsp;
+		    &nbsp;至&nbsp;<input type="text" class="input-text size-MINI" style="width: 150px" id="MaxRODate" />&nbsp;
             <br />
-            抄表类型&nbsp;<select class="input-text size-MINI" style="width:120px" id="ReadoutTypeS">
-                <option value="" selected>全部</option>
-                <option value="1">正常抄表</option>
-                <option value="2">临时抄表</option>
-                <option value="0">租前抄表</option>
+                抄表类型&nbsp;<select class="input-text size-MINI" style="width: 120px" id="ReadoutTypeS">
+                    <option value="" selected>全部</option>
+                    <option value="1">正常抄表</option>
+                    <option value="2">临时抄表</option>
+                    <option value="0">租前抄表</option>
                 </select>&nbsp;
-            表记类型&nbsp;<select class="input-text size-MINI" style="width:120px" id="MeterTypeS">
+            表记类型&nbsp;<select class="input-text size-MINI" style="width: 120px" id="MeterTypeS">
                 <option value="" selected>全部</option>
                 <option value="wm">水表</option>
                 <option value="am">电表</option>
-                </select>&nbsp;
-            状态&nbsp;<select class="input-text size-MINI" style="width:120px" id="AuditStatusS">
+            </select>&nbsp;
+            状态&nbsp;<select class="input-text size-MINI" style="width: 120px" id="AuditStatusS">
                 <option value="" selected>全部</option>
                 <option value="0">待审核</option>
                 <option value="1">审核通过</option>
                 <option value="-1">审核不通过</option>
-                </select>&nbsp;
+            </select>&nbsp;
 		    <button type="submit" class="btn btn-success radius" onclick="select()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
-	    </div>     
-	    <div class="mt-5" id="outerlist">
-	        <%=list %>
+            </div>
+            <div class="mt-5" id="outerlist">
+                <%=list %>
+            </div>
+        </div>
+        <div id="edit" class="pt-5 pr-20 pb-5 pl-20" style="display: none;">
+            <div class="form form-horizontal bk-gray mt-15 pb-10" id="editlist">
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>表记编号：</label>
+                    <div class="formControls col-4">
+                        <input type="text" class="input-text required" placeholder="表记编号" id="MeterNo" style="width: 240px;" data-valid="isNonEmpty" data-error="请选择原表记编号" />
+                        <button type="button" class="btn btn-primary radius" id="chooseMeterNo">选择</button>
+                        <input type="hidden" id="MeterDigit" />
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>房间编号：</label>
+                    <div class="formControls col-4">
+                        <input type="text" class="input-text required" placeholder="房间编号" id="RMID" disabled="disabled" data-valid="between:0-30" data-error="" />
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>上期读数：</label>
+                    <div class="formControls col-4">
+                        <input type="text" class="input-text required" placeholder="上期读数" disabled="disabled" id="LastReadout" data-valid="onlyNum" data-error="未读取上期读数" />
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>本期读数：</label>
+                    <div class="formControls col-4">
+                        <input type="text" class="input-text required" placeholder="本期读数" id="Readout" data-valid="onlyNum" data-error="需是数字且不能小于0" />
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>关联表记读数：</label>
+                    <div class="formControls col-4">
+                        <input type="text" class="input-text required" placeholder="关联表记读数" id="JoinReadings" data-valid="onlyNum" data-error="需是数字且不能小于0" />
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row cl" style="display: none;">
+                    <label class="form-label col-2"><span class="c-red">*</span>倍率：</label>
+                    <div class="formControls col-4">
+                        <input type="text" class="input-text required" placeholder="倍率" id="MeteRate" data-valid="onlyNum" data-error="需是数字" />
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>行度：</label>
+                    <div class="formControls col-4">
+                        <input type="text" class="input-text required" placeholder="行度" disabled="disabled" id="Readings" data-valid="onlyNum" data-error="需是数字且不能小于0" />
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>抄表类型：</label>
+                    <div class="formControls col-4">
+                        <select class="input-text required" id="ReadoutType" data-valid="isNonEmpty" data-error="请选择抄表类型">
+                            <option value="">请选择抄表类型</option>
+                            <option value="1">正常抄表</option>
+                            <option value="2">临时抄表</option>
+                            <option value="0">租前抄表</option>
+                        </select>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>抄表人：</label>
+                    <div class="formControls col-4">
+                        <%=ROOperatorStr %>
+                        <%--<input type="text" class="input-text required" placeholder="抄表人" id="ROOperator" data-valid="isNonEmpty||between:1-30" data-error="请填写抄表人||抄表人长度为1-30位"/>--%>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>抄表日期：</label>
+                    <div class="formControls col-4">
+                        <input type="text" class="input-text required" placeholder="抄表日期" id="RODate" data-valid="isNonEmpty" data-error="请选择抄表日期" />
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>抄表图片：</label>
+                    <div class="formControls col-4">
+                        <form action="ReadouImg.ashx" method="post" id="upload" enctype="multipart/form-data">
+                            <div id="showimg" style="height: 120px; width: 120px; float: left; position: relative; margin-right: 15px; display: none;">
+                                <img src="#" id="showbtn" style="height: 100%; width: 100%;" />
+                                <i class="Hui-iconfont Hui-iconfont-close" style="position: absolute; right: 1px; top: 1px; padding: 0px 2px; color: red; background-color: #d6e1e3; cursor: pointer;" onclick="delimg()"></i>
+                            </div>
+                            <div id="addimg" style="height: 120px; width: 120px; float: left; border: 1px dashed #171515; position: relative;">
+                                <input id="addbtn" type="file" name="imgfile" style="height: 70px; width: 70px; position: absolute; left: 25px; top: 25px; overflow: hidden; opacity: 0; cursor: pointer;" onchange="addimg()" />
+                                <i class="Hui-iconfont Hui-iconfont-add" style="display: block; text-align: center; line-height: 120px; font-size: 32px; color: #5c5555;"></i>
+                            </div>
+                            <div style="display: none">
+                                <input type="hidden" id="Img" name="Img" value="" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+                <div class="row cl">
+                    <div class="col-9 col-offset-3">
+                        <input class="btn btn-primary radius" type="button" onclick="submit()" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+                        <input class="btn btn-primary radius" type="button" onclick="submit1()" value="&nbsp;&nbsp;提交继续录入&nbsp;&nbsp;" />
+                        <input class="btn btn-default radius" type="button" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
+                    </div>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+            </div>
         </div>
     </div>
-    <div id="edit" class="pt-5 pr-20 pb-5 pl-20" style="display:none;">
-        <div class="form form-horizontal bk-gray mt-15 pb-10" id="editlist">
-        <div class="row cl">
-            <label class="form-label col-2"><span class="c-red">*</span>表记编号：</label>
-            <div class="formControls col-4">
-            <input type="text" class="input-text required" placeholder="表记编号" id="MeterNo" style="width:240px;" data-valid="isNonEmpty" data-error="请选择原表记编号" />
-            <button type="button" class="btn btn-primary radius" id="chooseMeterNo">选择</button>
-            <input type="hidden" id="MeterDigit" />
-            </div>
-            <div class="col-1"></div>
-        </div>
 
-        <div class="row cl">
-            <label class="form-label col-2"><span class="c-red">*</span>房间编号：</label>
-            <div class="formControls col-4">
-            <input type="text" class="input-text required" placeholder="房间编号" id="RMID" disabled="disabled" data-valid="between:0-30" data-error="" />
-            </div>
-            <div class="col-1"></div>
-        </div>    
-
-        <div class="row cl">
-            <label class="form-label col-2"><span class="c-red">*</span>上期读数：</label>
-            <div class="formControls col-4">
-            <input type="text" class="input-text required" placeholder="上期读数" disabled="disabled" id="LastReadout" data-valid="onlyNum" data-error="未读取上期读数"/>
-            </div>
-            <div class="col-1"></div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-2"><span class="c-red">*</span>本期读数：</label>
-            <div class="formControls col-4">
-            <input type="text" class="input-text required" placeholder="本期读数" id="Readout" data-valid="onlyNum" data-error="需是数字且不能小于0"/>
-            </div>
-            <div class="col-1"></div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-2"><span class="c-red">*</span>关联表记读数：</label>
-            <div class="formControls col-4">
-            <input type="text" class="input-text required" placeholder="关联表记读数" id="JoinReadings" data-valid="onlyNum" data-error="需是数字且不能小于0"/>
-            </div>
-            <div class="col-1"></div>
-        </div>
-
-        <div class="row cl" style="display:none;">
-            <label class="form-label col-2"><span class="c-red">*</span>倍率：</label>
-            <div class="formControls col-4">
-            <input type="text" class="input-text required" placeholder="倍率" id="MeteRate" data-valid="onlyNum" data-error="需是数字"/>
-            </div>
-            <div class="col-1"></div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-2"><span class="c-red">*</span>行度：</label>
-            <div class="formControls col-4">
-            <input type="text" class="input-text required" placeholder="行度" disabled="disabled" id="Readings" data-valid="onlyNum" data-error="需是数字且不能小于0"/>
-        </div>
-            <div class="col-1"></div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-2"><span class="c-red">*</span>抄表类型：</label>
-            <div class="formControls col-4">
-            <select class="input-text required" id="ReadoutType" data-valid="isNonEmpty" data-error="请选择抄表类型">
-                <option value="">请选择抄表类型</option>
-                <option value="1">正常抄表</option>
-                <option value="2">临时抄表</option>
-                <option value="0">租前抄表</option>
-            </select>
-        </div>
-            <div class="col-1"></div>
-        </div>
-          
-        <div class="row cl">
-            <label class="form-label col-2"><span class="c-red">*</span>抄表人：</label>
-            <div class="formControls col-4">
-            <%=ROOperatorStr %>
-            <%--<input type="text" class="input-text required" placeholder="抄表人" id="ROOperator" data-valid="isNonEmpty||between:1-30" data-error="请填写抄表人||抄表人长度为1-30位"/>--%>
-            </div>
-            <div class="col-1"></div>
-        </div>
-
-        <div class="row cl">
-            <label class="form-label col-2"><span class="c-red">*</span>抄表日期：</label>
-            <div class="formControls col-4">
-            <input type="text" class="input-text required" placeholder="抄表日期" id="RODate" data-valid="isNonEmpty" data-error="请选择抄表日期"/>
-            </div>
-            <div class="col-1"></div>
-        </div>
-       
-        <div class="row cl">
-            <div class="col-9 col-offset-3">
-            <input class="btn btn-primary radius" type="button" onclick="submit()" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
-            <input class="btn btn-primary radius" type="button" onclick="submit1()" value="&nbsp;&nbsp;提交继续录入&nbsp;&nbsp;" />
-			<input class="btn btn-default radius" type="button" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
-            </div>
-        </div>
-        <br /><br /><br /><br /><br /><br /><br />
-        </div>
-    </div>
-    </div>
-     
-    <div id="auditdiv" style="display:none;">
-        <table style="width:380px; margin-top:10px;">
+    <div id="auditdiv" style="display: none;">
+        <table style="width: 380px; margin-top: 10px;">
             <tr>
-                <td style="width:80px; text-align:center; padding:8px; height:130px;">不通过原因</td>
-                <td style="width:300px;">
+                <td style="width: 80px; text-align: center; padding: 8px; height: 130px;">不通过原因</td>
+                <td style="width: 300px;">
                     <textarea cols="" rows="3" class="textarea required" placeholder="不通过原因" id="AuditReason"></textarea>
                 </td>
             </tr>
         </table>
-        <div style="margin:10px 30px;">
+        <div style="margin: 10px 30px;">
             <input class="btn btn-primary radius" type="button" onclick="auditsubmit()" value="&nbsp;确&nbsp;定&nbsp;" />&nbsp;&nbsp;
             <input class="btn btn-primary radius" type="button" onclick="auditcancel()" value="&nbsp;关&nbsp;闭&nbsp;" />
         </div>
-    </div> 
-    <iframe id="openfile" width="0" height="0" marginwidth="0" frameborder="0" src="about:blank" Content-Disposition="attachment"></iframe>
-    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script> 
+    </div>
+    <iframe id="openfile" width="0" height="0" marginwidth="0" frameborder="0" src="about:blank" content-disposition="attachment"></iframe>
+    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="../../jscript/script_common.js"></script>
     <script type="text/javascript" src="../../jscript/json2.js"></script>
-    <script type="text/javascript" src="../../jscript/H-ui.js"></script> 
-    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script> 
-    <script type="text/javascript" src="../../lib/layer/layer.js"></script> 
+    <script type="text/javascript" src="../../jscript/H-ui.js"></script>
+    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script>
+    <script type="text/javascript" src="../../jscript/jquery-form.js"></script>
+    <script type="text/javascript" src="../../lib/layer/layer.js"></script>
     <script type="text/javascript" src="../../lib/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="../../jscript/JsInputDate.js"></script>
-    
-    <script type="text/javascript" src="../../lib/zTree/js/jquery.ztree.all-3.5.min.js"></script> 
+
+    <script type="text/javascript" src="../../lib/zTree/js/jquery.ztree.all-3.5.min.js"></script>
     <script type="text/javascript">
         function BandResuleData(temp) {
             var vjson = JSON.parse(temp);
@@ -275,11 +301,15 @@
                     $("#ROOperator").val(vjson.ROOperator);
                     $("#RODate").val(vjson.RODate);
                     $("#MeterDigit").val(vjson.MeterDigit);
-
+                    $("#showimg img").attr("src", vjson.Img);
                     $("#chooseRMID").unbind('click');
                     $("#chooseMeterNo").unbind('click');
                     $("#list").css("display", "none");
                     $("#edit").css("display", "");
+                    if (vjson.Img != "") {
+                        $("#showimg img").attr("src", "../../upload/meter/" + vjson.Img);
+                        $("#showimg").show();
+                    }
                 }
                 else if (vjson.flag == "3") {
                     layer.alert("当前状态不允许修改！");
@@ -404,7 +434,7 @@
                         node.children = floornode;
                         zNodes.push(node);
                     }
-                    
+
                     var t = $("#ztree");
                     t = $.fn.zTree.init(t, setting, zNodes);
                     var zTree = $.fn.zTree.getZTreeObj("ztree");
@@ -423,7 +453,7 @@
                     $("#MeteRate").val(vjson.rate);
                     $("#MeterDigit").val(vjson.digit);
                     $("#JoinReadings").val("0");
-                    
+
                     if ($("#Readout").val() != "" && $("#LastReadout").val() != "") {
                         //$("#Readings").val(parseFloat($("#Readout").val()) - parseFloat($("#LastReadout").val()));
                         calureadout();
@@ -438,6 +468,7 @@
                 return;
             }
         }
+
 
         function insert() {
             $('#editlist').validate('reset');
@@ -456,8 +487,11 @@
             $("#MeteRate").val("");
             $("#ROOperator").val("");
             $("#RODate").val("<%=date %>");
+
             $("#list").css("display", "none");
             $("#edit").css("display", "");
+            $("#Img").val("");
+            $("#showimg").hide();
 
             if ($("#MeterNo").val() != "") {
                 var submitData = new Object();
@@ -498,6 +532,7 @@
                 submitData.MeteRate = $("#MeteRate").val();
                 submitData.ROOperator = $("#ROOperator").val();
                 submitData.RODate = $("#RODate").val();
+                submitData.Img = $("#Img").val();
 
                 submitData.tp = type;
                 submitData.RMIDS = $("#RMIDS").val();
@@ -527,6 +562,7 @@
                 submitData.MeteRate = $("#MeteRate").val();
                 submitData.ROOperator = $("#ROOperator").val();
                 submitData.RODate = $("#RODate").val();
+                submitData.Img = $("#Img").val();
 
                 submitData.tp = type;
                 submitData.RMIDS = $("#RMIDS").val();
@@ -680,6 +716,23 @@
             return;
         }
         function cancel() {
+            if (id == "" && $("#Img").val().length > 0) {
+                $("#upload").ajaxSubmit({
+                    url: "ReadoutImg.ashx?flag=2",
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                    success: function (data) {
+                        if (data.flag > 1) {
+                            console.log(data.info);
+                            console.log(data.exinfo);
+                        }
+                    },
+                    error: function () {
+                        console.log("数据加载有误！");
+                    }
+                });
+            }
             id = "";
             $("#list").css("display", "");
             $("#edit").css("display", "none");
@@ -802,7 +855,7 @@
 
             var submitData = new Object();
             submitData.Type = "gettreelist";
-            transmitData(datatostr(submitData));            
+            transmitData(datatostr(submitData));
         });
 
 
@@ -833,12 +886,59 @@
                 }
             }
         };
-        var meterNo = "";        
+        var meterNo = "";
         var zNodes = new Array();
-               
+
 
         var trid = "";
         reflist();
-</script>
+
+        //抄表图片处理
+
+        function addimg() {
+            if ($("#MeterNo").val().length <= 0) {
+                layer.msg("请选择表计！");
+                return;
+            }
+            $("#upload").ajaxSubmit({
+                url: "ReadoutImg.ashx?flag=1&meterNo=" + $("#MeterNo").val() + "&id=" + id,
+                type: "post",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                success: function (data) {
+                    if (data.flag == 1) {
+                        $("#Img").val(data.img);
+                        $("#showimg img").attr("src", "../../upload/meter/" + data.img);
+                        $("#showimg").show();
+                    }
+                    layer.alert(data.info);
+                    console.log(data.exinfo);
+                },
+                error: function () {
+                    layer.msg("数据加载有误！");
+                }
+            });
+        }
+        function delimg() {
+            $("#upload").ajaxSubmit({
+                url: "ReadoutImg.ashx?flag=2&id=" + id,
+                type: "post",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                success: function (data) {
+                    if (data.flag == 1) {
+                        $("#Img").val("");
+                        $("#showimg img").attr("src", "");
+                        $("#showimg").hide();
+                    }
+                    layer.alert(data.info);
+                    console.log(data.exinfo);
+                },
+                error: function () {
+                    layer.msg("数据加载有误！");
+                }
+            });
+        }
+    </script>
 </body>
 </html>

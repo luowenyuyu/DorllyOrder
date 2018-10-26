@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Xml;
 using System.Collections;
 using System.Net.Json;
+using System.IO;
 
 /// <summary>
 /// ImportService 的摘要说明
@@ -16,9 +17,11 @@ using System.Net.Json;
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 // 若要允许使用 ASP.NET AJAX 从脚本中调用此 Web 服务，请取消注释以下行。 
 // [System.Web.Script.Services.ScriptService]
-public class Service : System.Web.Services.WebService {
+public class Service : System.Web.Services.WebService
+{
 
     Data obj = new Data();
+    public string ReadoutImgPath { get { return Server.MapPath("~/upload/meter/"); } }
     public Service()
     {
 
@@ -47,7 +50,7 @@ public class Service : System.Web.Services.WebService {
 
     //艾众管家
     [WebMethod]
-    public string GenOrderFromParkinLot(string PRTableName,string MCTableName,string Guid,string Date)
+    public string GenOrderFromParkinLot(string PRTableName, string MCTableName, string Guid, string Date)
     {
         string InfoMsg = "";
         SqlConnection con = null;
@@ -82,7 +85,7 @@ public class Service : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string GenOrderFromConferenceRepair(string ResourceNo, string ResourceName, decimal amount, string Remark,string KEY)
+    public string GenOrderFromConferenceRepair(string ResourceNo, string ResourceName, decimal amount, string Remark, string KEY)
     {
         if (KEY != "6E5F0C851FD4") return "";
 
@@ -158,7 +161,7 @@ public class Service : System.Web.Services.WebService {
             detail.Save();
 
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
             InfoMsg = ex.Message;
         }
@@ -338,7 +341,7 @@ public class Service : System.Web.Services.WebService {
 
     //工单
     [WebMethod]
-    public string GetMeterInfo(string MeterNo, string KEY, out string meterRMID, out decimal readout,out int digit)
+    public string GetMeterInfo(string MeterNo, string KEY, out string meterRMID, out decimal readout, out int digit)
     {
         meterRMID = "";
         readout = 0;
@@ -363,18 +366,24 @@ public class Service : System.Web.Services.WebService {
                 InfoMsg = "当前表记编号不存在！";
             }
         }
-        catch { InfoMsg = "获取表记信息"; }
+        catch { InfoMsg = "获取表记信息异常"; }
         return InfoMsg;
     }
 
     [WebMethod]
-    public string MeterReadout(string MeterNo, string ReadoutType, decimal LastReadout, decimal Readout, decimal JoinReadings, decimal Readings, string UserName, string KEY)
+    public string MeterReadout(string MeterNo, string ReadoutType, decimal LastReadout, decimal Readout,
+        decimal JoinReadings, decimal Readings, string UserName, string KEY, byte[] ImgByte)
     {
         if (KEY != "6E5F0C851FD4") return "";
 
         string InfoMsg = "";
+        string imgName = MeterNo + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+        string imgPath = ReadoutImgPath + imgName;
         try
         {
+            if (ImgByte != null) SaveReadoutImg(MeterNo, imgName, ImgByte);//保存图片
+            else imgName = string.Empty;
+
             project.Business.Op.BusinessReadout bc = new project.Business.Op.BusinessReadout();
             string id = Guid.NewGuid().ToString();
             bc.Entity.RowPointer = id;
@@ -393,6 +402,7 @@ public class Service : System.Web.Services.WebService {
             {
                 isOk = "0";
                 InfoMsg = "当前表记未找到！";
+                DelReadoutImg(imgPath);
             }
 
             if (isOk == "1")
@@ -404,7 +414,7 @@ public class Service : System.Web.Services.WebService {
                 bc.Entity.Readings = Readings;
                 bc.Entity.ROOperator = UserName;
                 bc.Entity.RODate = GetDate();
-
+                bc.Entity.Img = imgName;
                 bc.Entity.ROCreateDate = GetDate();
                 bc.Entity.ROCreator = UserName;
 
@@ -433,7 +443,9 @@ public class Service : System.Web.Services.WebService {
                 int r = bc.Save("insert");
                 if (r <= 0)
                 {
+                    DelReadoutImg(imgPath);
                     InfoMsg = "抄表写入失败！";
+
                 }
                 else
                 {
@@ -446,6 +458,7 @@ public class Service : System.Web.Services.WebService {
         }
         catch (Exception ex)
         {
+            DelReadoutImg(imgPath);
             InfoMsg = ex.Message;
         }
 
@@ -682,7 +695,7 @@ public class Service : System.Web.Services.WebService {
 
     private DateTime GetDate()
     {
-        Data obj=new Data();
+        Data obj = new Data();
         return DateTime.Parse(obj.PopulateDataSet("select DT=getdate()").Tables[0].Rows[0]["DT"].ToString());
     }
     private System.DateTime ParseDateForString(string val)
@@ -702,10 +715,51 @@ public class Service : System.Web.Services.WebService {
         return decimal.Parse(val);
     }
     private int ParseIntForString(string val)
-        {
-            if (string.IsNullOrEmpty(val))
-                return 0;
+    {
+        if (string.IsNullOrEmpty(val))
+            return 0;
 
-            return Int32.Parse(val);
+        return Int32.Parse(val);
+    }
+    public bool SaveReadoutImg(string meterNo, string imgName, byte[] imgByte)
+    {
+        FileStream fs = null;
+        bool success = false;
+        string imgPath = ReadoutImgPath + imgName;
+        try
+        {
+            //保存图片
+            if (!Directory.Exists(ReadoutImgPath)) Directory.CreateDirectory(ReadoutImgPath);
+            fs = new FileStream(imgPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            fs.Write(imgByte, 0, imgByte.Length);
+
+            //数据做保留三张图片
+            DataTable dt = obj.PopulateDataSet(string.Format("SELECT * FROM Op_Readout WHERE MeterNo='{0}' AND Img <>'' ORDER BY RODate DESC", meterNo)).Tables[0];
+            for (int i = 2; i < dt.Rows.Count; i++)
+            {
+                string deleteFilePath = string.Format("{0}{1}", ReadoutImgPath, dt.Rows[i]["ImgUrl"].ToString());
+                if (File.Exists(deleteFilePath)) File.Delete(deleteFilePath);
+                obj.ExecuteNonQuery(string.Format("UPDATE Op_Readout SET Img='' WHERE RowPointer='{0}'", dt.Rows[i]["RowPointer"].ToString()));
+            }
+            success = true;
         }
+        catch (Exception)
+        {
+            DelReadoutImg(imgPath);
+        }
+        finally
+        {
+            if (fs != null)
+            {
+                fs.Close();
+                fs.Dispose();
+            }
+        }
+        return success;
+    }
+    public void DelReadoutImg(string imgPath)
+    {
+        try { if (File.Exists(imgPath)) File.Delete(imgPath); }
+        catch { }
+    }
 }

@@ -470,15 +470,16 @@ namespace project.Presentation.Op
                             rs.BusinessType = 2;
                             rs.RentBeginTime = bc.Entity.FeeStartDate;
                             rs.RentEndTime = ParseDateForString(jp.getValue("RefundDate"));
-                            rs.Status = 1;
-                            rs.Enable = false;
+                            rs.Status = 2;
+                            rs.RentType = 1;
                             rs.UpdateTime = GetDate();
                             rs.UpdateUser = user.Entity.UserName;
 
                             Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                         }
 
-                        srv.LeaseOut("[" + Items + "]");
+                        string result = srv.LeaseOut("[" + Items + "]");
+                        collection.Add(new JsonStringValue("syncreturn", result));
                     }
                 }
             }

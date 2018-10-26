@@ -30,7 +30,8 @@ namespace project.Entity.Op
         private string _ROCreator;
         private DateTime _ROCreateDate;
         private bool _IsOrder;
-        
+        public string Img { get; set; }
+
         /// <summary>缺省构造函数</summary>
         public EntityReadout() { }
 

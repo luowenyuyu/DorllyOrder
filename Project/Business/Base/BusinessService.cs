@@ -40,12 +40,13 @@ namespace project.Business.Base
         /// </summary>
         public void load(string id)
         {
-            DataRow dr = objdata.PopulateDataSet("select a.*,b.SPShortName as SRVSPName,c.SRVTypeName as SRVTypeNo1Name,d.SRVTypeName as SRVTypeNo2Name,e.CAName "+
+            DataRow dr = objdata.PopulateDataSet("select a.*,b.SPShortName as SRVSPName,c.SRVTypeName as SRVTypeNo1Name,d.SRVTypeName as SRVTypeNo2Name,e.CAName,isnull(f.Rate,0) as NewRate " +
                 "from Mstr_Service a " +
                 "left join Mstr_ServiceProvider b on a.SRVSPNo=b.SPNo " +
                 "left join Mstr_ServiceType c on a.SRVTypeNo1=c.SRVTypeNo " +
                 "left join Mstr_ServiceType d on a.SRVTypeNo2=d.SRVTypeNo " +
                 "left join Mstr_ChargeAccount e on a.CANo=e.CANo and a.SRVSPNo=e.CASPNo " +
+                "left join Mstr_TaxRate f on f.SRVNo=a.SRVNo " +
                 "where a.SRVNo='" + id + "'").Tables[0].Rows[0];
             _entity.SRVNo = dr["SRVNo"].ToString();
             _entity.SRVName = dr["SRVName"].ToString();
@@ -61,7 +62,8 @@ namespace project.Business.Base
             _entity.SRVRoundType = dr["SRVRoundType"].ToString();
             _entity.SRVDecimalPoint = ParseIntForString(dr["SRVDecimalPoint"].ToString());
             _entity.SRVRate = ParseDecimalForString(dr["SRVRate"].ToString());
-            _entity.SRVTaxRate = ParseDecimalForString(dr["SRVTaxRate"].ToString());
+            //_entity.SRVTaxRate = ParseDecimalForString(dr["SRVTaxRate"].ToString());
+            _entity.SRVTaxRate = ParseDecimalForString(dr["NewRate"].ToString());
             _entity.SRVStatus = bool.Parse(dr["SRVStatus"].ToString());
             _entity.SRVRemark = dr["SRVRemark"].ToString();
         }

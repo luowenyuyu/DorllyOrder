@@ -538,9 +538,9 @@ namespace project.Presentation
         public string ReserveName { get; set; }
         public string Remark { get; set; }
         public Nullable<int> Status { get; set; }
-        public Nullable<bool> Enable { get; set; }
         public string UpdateUser { get; set; }
         public Nullable<System.DateTime> UpdateTime { get; set; }
+        public Nullable<int> RentType { get; set; }
     }
 
 }

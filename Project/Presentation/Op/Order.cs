@@ -1645,32 +1645,43 @@ namespace project.Presentation.Op
                 collection.Add(new JsonStringValue("SRVSPNo", bc.Entity.SRVSPNo));
                 collection.Add(new JsonStringValue("SRVCalType", bc.Entity.SRVCalType));
                 collection.Add(new JsonStringValue("SRVTaxRate", bc.Entity.SRVTaxRate.ToString()));
-
-                string amount = "";
-                string taxAmount = "";
+                collection.Add(new JsonStringValue("SRVRoundType", bc.Entity.SRVRoundType.ToString()));
+                decimal amount = 0;
+                decimal taxAmount = 0;
                 if (ParseDecimalForString(jp.getValue("ODQTY")) > 0 && ParseDecimalForString(jp.getValue("ODUnitPrice")) > 0)
                 {
-                    Business.Base.BusinessService bc1 = new Business.Base.BusinessService();
-                    bc1.load(jp.getValue("ODSRVNo"));
+                    //Business.Base.BusinessService bc1 = new Business.Base.BusinessService();
+                    //bc1.load(jp.getValue("ODSRVNo"));
 
-                    if (bc1.Entity.SRVRoundType.ToUpper() == "FLOOR")
+                    if (bc.Entity.SRVRoundType.ToUpper() == "FLOOR")
                     {
-                        amount = Math.Floor(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice"))).ToString();
-                        taxAmount = Math.Floor(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice")) * ParseDecimalForString(jp.getValue("ODTaxRate"))).ToString();
+                        amount = Math.Floor(ParseDecimalForString(jp.getValue("ODQTY"))
+                            * ParseDecimalForString(jp.getValue("ODUnitPrice")));
+                        //taxAmount = Math.Floor(ParseDecimalForString(jp.getValue("ODQTY"))
+                        //    * ParseDecimalForString(jp.getValue("ODUnitPrice"))
+                        //    * ParseDecimalForString(jp.getValue("ODTaxRate")));
+                        taxAmount = amount - (Math.Floor(amount / (1 + bc.Entity.SRVTaxRate)));
                     }
-                    else if (bc1.Entity.SRVRoundType.ToUpper() == "CEILING")
+                    else if (bc.Entity.SRVRoundType.ToUpper() == "CEILING")
                     {
-                        amount = Math.Ceiling(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice"))).ToString();
-                        taxAmount = Math.Ceiling(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice")) * ParseDecimalForString(jp.getValue("ODTaxRate"))).ToString();
+                        amount = Math.Ceiling(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice")));
+                        taxAmount = amount - (Math.Ceiling(amount / (1 + bc.Entity.SRVTaxRate)));
+                        //taxAmount = Math.Ceiling(ParseDecimalForString(jp.getValue("ODQTY")) 
+                        //    * ParseDecimalForString(jp.getValue("ODUnitPrice")) 
+                        //    * ParseDecimalForString(jp.getValue("ODTaxRate")));
                     }
                     else
                     {
-                        amount = Math.Round(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice")), bc1.Entity.SRVDecimalPoint).ToString();
-                        taxAmount = Math.Round(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice")) * ParseDecimalForString(jp.getValue("ODTaxRate")), bc1.Entity.SRVDecimalPoint).ToString();
+                        amount = Math.Round(ParseDecimalForString(jp.getValue("ODQTY")) 
+                            * ParseDecimalForString(jp.getValue("ODUnitPrice")), bc.Entity.SRVDecimalPoint);
+                        taxAmount = amount - (Math.Round(amount / (1 + bc.Entity.SRVTaxRate)));
+                        //taxAmount = Math.Round(ParseDecimalForString(jp.getValue("ODQTY")) 
+                        //    * ParseDecimalForString(jp.getValue("ODUnitPrice")) 
+                        //    * ParseDecimalForString(jp.getValue("ODTaxRate")), bc1.Entity.SRVDecimalPoint);
                     }
                 }
-                collection.Add(new JsonStringValue("amount", amount));
-                collection.Add(new JsonStringValue("taxAmount", taxAmount));
+                collection.Add(new JsonStringValue("amount", amount.ToString()));
+                collection.Add(new JsonStringValue("taxAmount", taxAmount.ToString()));
             }
             catch
             { flag = "2"; }

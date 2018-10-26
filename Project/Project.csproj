@@ -421,6 +421,7 @@
     <Compile Include="Presentation\Op\Readout.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Presentation\Op\ReadoutImg.cs" />
     <Compile Include="Presentation\Op\Refund.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

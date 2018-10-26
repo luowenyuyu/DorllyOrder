@@ -339,6 +339,7 @@
 
                     layer.closeAll();
                     layer.alert("退租成功！");
+                    console.log(vjson.syncreturn);
                 }
                 else if (vjson.flag == "3") {
                     layer.alert("当前状态不允许退租！");

@@ -65,6 +65,7 @@ namespace project.Business.Op
             _entity.ROCreateDate = ParseDateTimeForString(dr["ROCreateDate"].ToString());
             _entity.ROCreator = dr["ROCreator"].ToString();
             _entity.IsOrder = bool.Parse(dr["IsOrder"].ToString());
+            _entity.Img = dr["Img"].ToString();
         }
 
         /// </summary>
@@ -75,20 +76,20 @@ namespace project.Business.Op
             string sqlstr = "";
             if (type == "insert")
                 sqlstr = "insert into Op_Readout(RowPointer,RMID,MeterNo,ReadoutType,LastReadout,Readout,JoinReadings,Readings,MeteRate,IsChange," +
-                        "CMRP,OldMeterReadings,AuditStatus,Auditor,AuditDate,AuditReason,RODate,ROOperator,ROCreateDate,ROCreator,IsOrder)" +
-                    "values('"+Entity.RowPointer +"'," + "'" + Entity.RMID + "'" + "," + "'" + Entity.MeterNo + "'" + "," + "'" + Entity.ReadoutType + "'" + "," +
-                    Entity.LastReadout + "," + Entity.Readout + "," + Entity.JoinReadings + "," + Entity.Readings + "," + 
-                    Entity.MeteRate + ","+(Entity.IsChange?"1":"0")+"," +
+                        "CMRP,OldMeterReadings,AuditStatus,Auditor,AuditDate,AuditReason,RODate,ROOperator,ROCreateDate,ROCreator,IsOrder,Img)" +
+                    "values('" + Entity.RowPointer + "'," + "'" + Entity.RMID + "'" + "," + "'" + Entity.MeterNo + "'" + "," + "'" + Entity.ReadoutType + "'" + "," +
+                    Entity.LastReadout + "," + Entity.Readout + "," + Entity.JoinReadings + "," + Entity.Readings + "," +
+                    Entity.MeteRate + "," + (Entity.IsChange ? "1" : "0") + "," +
                     "'" + Entity.CMRP + "'" + "," + Entity.OldMeterReadings + "," + "'0','',null,''," +
                     "'" + Entity.RODate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + ",'" + Entity.ROOperator + "'" + "," +
-                    "'" + Entity.ROCreateDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + ",'" + Entity.ROCreator + "',0)";
+                    "'" + Entity.ROCreateDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + ",'" + Entity.ROCreator + "',0,'" + Entity.Img + "')";
             else
                 sqlstr = "update Op_Readout" +
                     " set RMID=" + "'" + Entity.RMID + "'" + "," + "MeterNo=" + "'" + Entity.MeterNo + "'" + "," +
                     "ReadoutType=" + "'" + Entity.ReadoutType + "'" + "," + "LastReadout=" + Entity.LastReadout + "," +
-                    "Readout=" + Entity.Readout + "," + "JoinReadings=" + Entity.JoinReadings + "," + 
+                    "Readout=" + Entity.Readout + "," + "JoinReadings=" + Entity.JoinReadings + "," +
                     "Readings=" + Entity.Readings + "," + "MeteRate=" + Entity.MeteRate + "," +
-                    "RODate='" + Entity.RODate.ToString("yyyy-MM-dd HH:mm:ss") + "'," + "ROOperator='" + Entity.ROOperator + "'" + 
+                    "RODate='" + Entity.RODate.ToString("yyyy-MM-dd HH:mm:ss") + "'," + "ROOperator='" + Entity.ROOperator + "'," + "Img='" + Entity.Img + "'" +
                     " where RowPointer='" + Entity.RowPointer + "'";
             return objdata.ExecuteNonQuery(sqlstr);
         }
@@ -301,12 +302,12 @@ namespace project.Business.Op
             System.Collections.IList entitys = null;
             if (startRow > START_ROW_INIT && pageSize > START_ROW_INIT)
             {
-                entitys = Query(objdata.ExecSelect("Op_Readout a left join Mstr_Meter b on a.MeterNo=b.MeterNo left join Mstr_Room c on c.RMID=b.MeterRMID", 
+                entitys = Query(objdata.ExecSelect("Op_Readout a left join Mstr_Meter b on a.MeterNo=b.MeterNo left join Mstr_Room c on c.RMID=b.MeterRMID",
                     "a.*,b.MeterType,c.RMNo", wherestr, startRow, pageSize, OrderField));
             }
             else
             {
-                entitys = Query(objdata.ExecSelect("Op_Readout a left join Mstr_Meter b on a.MeterNo=b.MeterNo left join Mstr_Room c on c.RMID=b.MeterRMID", 
+                entitys = Query(objdata.ExecSelect("Op_Readout a left join Mstr_Meter b on a.MeterNo=b.MeterNo left join Mstr_Room c on c.RMID=b.MeterRMID",
                     "a.*,b.MeterType,c.RMNo", wherestr, START_ROW_INIT, START_ROW_INIT, OrderField));
             }
             return entitys;

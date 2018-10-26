@@ -204,7 +204,7 @@ namespace project.Presentation.Op
 
             return sb.ToString();
         }
-        
+
         //广告位信息
         private string createItemList3(string RefRP, string type)
         {
@@ -272,7 +272,7 @@ namespace project.Presentation.Op
             string result = "";
             JsonArrayParse jp = new JsonArrayParse(this._clientArgument);
             if (jp.getValue("Type") == "insert")
-                result = insertaction(jp); 
+                result = insertaction(jp);
             else if (jp.getValue("Type") == "delete")
                 result = deleteaction(jp);
             else if (jp.getValue("Type") == "update")
@@ -310,7 +310,7 @@ namespace project.Presentation.Op
                 result = getTimeUnitaction(jp);
             return result;
         }
-        
+
         private string checkaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
@@ -866,7 +866,7 @@ namespace project.Presentation.Op
                             string KSQL = "insert into Op_ContractBBRentalDetail(RowPointer,RefRP,SRVNo,BBNo,BBName,BBSize,BBAddr,BBStartDate,BBEndDate,TimeUnit,BBRentalMonths," +
                                 "RentalUnitPrice,RentalAmount,Remark,Creator,CreateDate,LastReviser,LastReviseDate)" +
                                 "select NEWID(),'" + id + "',SRVNo,BBNo,BBName,BBSize,BBAddr,BBStartDate,BBEndDate,TimeUnit,BBRentalMonths," +
-                                "RentalUnitPrice,RentalAmount,Remark,"+
+                                "RentalUnitPrice,RentalAmount,Remark," +
                                 "'" + user.Entity.UserName + "',GetDate(),'" + user.Entity.UserName + "',GetDate() " +
                                 "from Op_ContractBBRentalDetail where RefRP='" + jp.getValue("copyid") + "' order by CreateDate";
                             obj.ExecuteNonQuery(KSQL);
@@ -936,20 +936,21 @@ namespace project.Presentation.Op
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
                                 rs.Status = 1;
-                                rs.Enable = true;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            srv.LeaseIn("[" + Items + "]");
+                            string result = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
-                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));                        
+                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
                     }
                     else
                     {
-                        if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer+ "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
+                        if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer + "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
                         {
                             flag = "4";
                         }
@@ -979,15 +980,16 @@ namespace project.Presentation.Op
                                 rs.CustLongName = bc.Entity.ContractCustName;
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
-                                rs.Status = 1;
-                                rs.Enable = true;
+                                rs.Status = 2;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            srv.LeaseDel("[" + Items + "]");
+                            string result = srv.LeaseDel("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
                     }
                 }
@@ -1099,7 +1101,7 @@ namespace project.Presentation.Op
                 bc.Entity.RentalUnitPrice = ParseDecimalForString(jp.getValue("RentalUnitPrice"));
                 bc.Entity.RentalAmount = ParseDecimalForString(jp.getValue("RentalUnitPrice")) * ParseIntForString(jp.getValue("BBRentalMonths"));
                 bc.Entity.Remark = jp.getValue("Remark");
-                
+
                 int r = bc.Save();
                 if (r <= 0)
                     flag = "2";
@@ -1151,7 +1153,7 @@ namespace project.Presentation.Op
                 collection.Add(new JsonStringValue("RentalUnitPrice", bc.Entity.RentalUnitPrice.ToString("0.####")));
                 collection.Add(new JsonStringValue("RentalAmount", bc.Entity.RentalAmount.ToString("0.####")));
                 collection.Add(new JsonStringValue("Remark", bc.Entity.Remark));
-                
+
                 collection.Add(new JsonStringValue("ItemId", jp.getValue("itemid")));
             }
             catch

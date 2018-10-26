@@ -73,7 +73,7 @@ namespace project.Presentation.Op
 
                         list = createList(string.Empty, string.Empty, "12", string.Empty, string.Empty, string.Empty,
                                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 1);
-                        
+
                         date = GetDate().ToString("yyyy-MM-dd");
 
                         ContractTypeStr = "<select class=\"input-text required\" id=\"ContractType\" disabled=\"disabled\">";
@@ -83,7 +83,7 @@ namespace project.Presentation.Op
                         Business.Base.BusinessContractType bc = new project.Business.Base.BusinessContractType();
                         foreach (Entity.Base.EntityContractType it in bc.GetListQuery(string.Empty, string.Empty))
                         {
-                            ContractTypeStr += "<option value='" + it.ContractTypeNo+ "'>" + it.ContractTypeName + "</option>";
+                            ContractTypeStr += "<option value='" + it.ContractTypeNo + "'>" + it.ContractTypeName + "</option>";
                             ContractTypeStrS += "<option value='" + it.ContractTypeNo + "'>" + it.ContractTypeName + "</option>";
                         }
                         ContractTypeStr += "</select>";
@@ -146,7 +146,7 @@ namespace project.Presentation.Op
                         PTRentFee = setting.Entity.DecimalValue.ToString("0.####");
                         SRVNo4Str = "<select class=\"input-text size-MINI\" id=\"SRVNo4\">";
                         SRVNo4Str += "<option value='" + setting.Entity.SRVNo + "'>" + setting.Entity.SRVName + "</option>";
-                        SRVNo4Str += "</select>"; 
+                        SRVNo4Str += "</select>";
 
                         setting.load("WPPTSPNO");
                         PTSPNo = setting.Entity.StringValue;
@@ -267,7 +267,7 @@ namespace project.Presentation.Op
                 foreach (Entity.Op.EntityContractPropertyFee it in bc.GetListQuery(RefRP))
                 {
                     sb.Append("<tr class=\"text-c\" id=\"" + it.RowPointer + "\">");
-                    sb.Append("<td align='center'>" + r.ToString() + "</td>");                    
+                    sb.Append("<td align='center'>" + r.ToString() + "</td>");
                     sb.Append("<td>" + it.RMID + "</td>");
                     sb.Append("<td>" + it.WPNo + "</td>");
                     sb.Append("<td>" + it.SRVName + "</td>");
@@ -302,7 +302,7 @@ namespace project.Presentation.Op
             string result = "";
             JsonArrayParse jp = new JsonArrayParse(this._clientArgument);
             if (jp.getValue("Type") == "insert")
-                result = insertaction(jp); 
+                result = insertaction(jp);
             else if (jp.getValue("Type") == "delete")
                 result = deleteaction(jp);
             else if (jp.getValue("Type") == "update")
@@ -342,7 +342,7 @@ namespace project.Presentation.Op
                 result = getwpnoaction(jp);
             return result;
         }
-        
+
         private string checkaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
@@ -972,21 +972,21 @@ namespace project.Presentation.Op
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
                                 rs.Status = 1;
-                                rs.Enable = true;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            string str = srv.LeaseIn("[" + Items + "]");
-                            string str1 = str;
+                            string result = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
-                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));                        
+                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
                     }
                     else
                     {
-                        if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer+ "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
+                        if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer + "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
                         {
                             flag = "4";
                         }
@@ -1016,15 +1016,16 @@ namespace project.Presentation.Op
                                 rs.CustLongName = bc.Entity.ContractCustName;
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
-                                rs.Status = 1;
-                                rs.Enable = true;
+                                rs.Status = 2;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            srv.LeaseDel("[" + Items + "]");
+                            string result = srv.LeaseDel("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
                     }
                 }
@@ -1099,7 +1100,7 @@ namespace project.Presentation.Op
                 jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
-        
+
 
         #region Item4 工位服务费 超额电费
         private string itemsave4action(JsonArrayParse jp)

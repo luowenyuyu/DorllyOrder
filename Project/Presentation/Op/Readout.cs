@@ -97,7 +97,7 @@ namespace project.Presentation.Op
         protected string date = "";
         protected string ROOperatorStr = "";
         protected string treelist = "";
-        private string createList(string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType,string MinRODate,string MaxRODate, int page)
+        private string createList(string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType, string MinRODate, string MaxRODate, int page)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder("");
 
@@ -222,6 +222,7 @@ namespace project.Presentation.Op
                     //collection.Add(new JsonStringValue("OldMeterReadings", bc.Entity.OldMeterReadings.ToString("0.####")));
                     collection.Add(new JsonStringValue("ROOperator", bc.Entity.ROOperator));
                     collection.Add(new JsonStringValue("RODate", ParseStringForDate(bc.Entity.RODate)));
+                    collection.Add(new JsonStringValue("Img", bc.Entity.Img));
 
                     Business.Base.BusinessMeter met = new Business.Base.BusinessMeter();
                     met.load(bc.Entity.MeterNo);
@@ -244,7 +245,7 @@ namespace project.Presentation.Op
             {
                 Business.Op.BusinessReadout bc = new project.Business.Op.BusinessReadout();
                 bc.load(jp.getValue("id"));
-
+                string imgPath = Server.MapPath("~/upload/meter/") + bc.Entity.Img;
                 if (bc.Entity.AuditStatus != "0")
                 {
                     flag = "3";
@@ -255,7 +256,12 @@ namespace project.Presentation.Op
                     if (r <= 0)
                         flag = "2";
                     else
+                    {
+                        if (File.Exists(imgPath)) File.Delete(imgPath);
                         obj.ExecuteNonQuery("delete from Op_Readout_ChangeList where RefRP='" + bc.Entity.RowPointer + "'");
+
+                    }
+
                 }
             }
             catch { flag = "2"; }
@@ -278,7 +284,7 @@ namespace project.Presentation.Op
                     bc.load(jp.getValue("id"));
                     //bc.Entity.RMID = jp.getValue("RMID");
                     bc.Entity.MeterNo = jp.getValue("MeterNo");
-                    
+
                     string isOk = "1";
                     try
                     {
@@ -301,13 +307,15 @@ namespace project.Presentation.Op
                         //bc.Entity.MeteRate = ParseDecimalForString(jp.getValue("MeteRate"));
                         bc.Entity.ROOperator = jp.getValue("ROOperator");
                         bc.Entity.RODate = ParseDateForString(jp.getValue("RODate"));
+                        bc.Entity.Img = jp.getValue("Img");
                         //bc.Entity.OldMeterReadings = ParseDecimalForString(jp.getValue("OldMeterReadings"));
 
                         int r = bc.Save("update");
                         if (r <= 0)
                             flag = "2";
                     }
-                    else {
+                    else
+                    {
                         flag = "3";
                     }
                     collection.Add(new JsonStringValue("MeterNo", ""));
@@ -316,7 +324,7 @@ namespace project.Presentation.Op
                 }
                 else
                 {
-                    string id =  Guid.NewGuid().ToString();
+                    string id = Guid.NewGuid().ToString();
                     bc.Entity.RowPointer = id;
                     //bc.Entity.RMID = jp.getValue("RMID");
                     bc.Entity.MeterNo = jp.getValue("MeterNo");
@@ -344,7 +352,7 @@ namespace project.Presentation.Op
                         bc.Entity.Readings = ParseDecimalForString(jp.getValue("Readings"));
                         bc.Entity.ROOperator = jp.getValue("ROOperator");
                         bc.Entity.RODate = ParseDateForString(jp.getValue("RODate"));
-
+                        bc.Entity.Img = jp.getValue("Img");
                         bc.Entity.ROCreateDate = GetDate();
                         bc.Entity.ROCreator = user.Entity.UserName;
 
@@ -431,6 +439,7 @@ namespace project.Presentation.Op
                         //bc.Entity.MeteRate = ParseDecimalForString(jp.getValue("MeteRate"));
                         bc.Entity.ROOperator = jp.getValue("ROOperator");
                         bc.Entity.RODate = ParseDateForString(jp.getValue("RODate"));
+                        bc.Entity.Img = jp.getValue("Img");
                         //bc.Entity.OldMeterReadings = ParseDecimalForString(jp.getValue("OldMeterReadings"));
 
                         int r = bc.Save("update");
@@ -475,6 +484,7 @@ namespace project.Presentation.Op
                         bc.Entity.Readings = ParseDecimalForString(jp.getValue("Readings"));
                         bc.Entity.ROOperator = jp.getValue("ROOperator");
                         bc.Entity.RODate = ParseDateForString(jp.getValue("RODate"));
+                        bc.Entity.Img = jp.getValue("Img");
 
                         bc.Entity.ROCreateDate = GetDate();
                         bc.Entity.ROCreator = user.Entity.UserName;
@@ -604,7 +614,7 @@ namespace project.Presentation.Op
             try
             {
                 pathName = "抄表记录" + GetDate().ToString("yyMMddHHmmss") + getRandom(4) + ".xls";
-                
+
                 HSSFWorkbook workbook = new HSSFWorkbook();
                 HSSFSheet sheet = (HSSFSheet)workbook.CreateSheet("抄表记录");
                 HSSFRow headerRow = (HSSFRow)sheet.CreateRow(0);
@@ -636,7 +646,7 @@ namespace project.Presentation.Op
                 foreach (Entity.Op.EntityReadout it in bc.GetListQuery(jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                         jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), MinRODateS, MaxRODateS))
                 {
-                    Business.Base.BusinessMeter bm=new Business.Base.BusinessMeter();
+                    Business.Base.BusinessMeter bm = new Business.Base.BusinessMeter();
                     bm.load(it.MeterNo);
 
                     HSSFRow dataRow = (HSSFRow)sheet.CreateRow(rowIndex);
@@ -719,7 +729,7 @@ namespace project.Presentation.Op
                 }
             }
             collection.Add(new JsonStringValue("list", collection2.ToString()));
-            collection.Add(new JsonNumericValue("count", row-1));
+            collection.Add(new JsonNumericValue("count", row - 1));
 
 
             collection.Add(new JsonStringValue("type", "gettreelist"));

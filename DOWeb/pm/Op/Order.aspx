@@ -1,8 +1,9 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Op.Order,project"  %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Op.Order,project" %>
+
 <!DOCTYPE>
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head id="head1" runat="server">
-    <title>订单管理</title>    
+    <title>订单管理</title>
     <!--[if lt IE 9]>
     <script type="text/javascript" src="../../jscript/html5.js"></script>
     <script type="text/javascript" src="../../jscript/respond.min.js"></script>
@@ -22,9 +23,9 @@
 </head>
 <body>
     <form id="form1" runat="server"></form>
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;&gt;</span> 订单管理 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:2px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;&gt;</span> 订单管理 <a class="btn btn-success radius r mr-20" style="line-height: 1.6em; margin-top: 2px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div id="list" class="pt-5 pr-20 pb-5 pl-20">
-	    <div class="cl pd-3 bg-1 bk-gray mt-2"> 
+        <div class="cl pd-3 bg-1 bk-gray mt-2">
             <span class="l">
                 <%--<a href="javascript:;" onclick="insert()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
                 <a href="javascript:;" onclick="update()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe60c;</i> 修改</a> 
@@ -32,65 +33,67 @@
                 <a href="javascript:;" onclick="view()" class="btn btn-secondary radius"><i class="Hui-iconfont">&#xe627;</i> 查看</a>&nbsp;&nbsp;&nbsp;
                 <a href="javascript:;" onclick="auditpass()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 审核通过</a>
                 <a href="javascript:;" onclick="raudit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 反审核</a>--%>
-                <%--<a href="javascript:;" onclick="auditfailed()" class="btn btn-warning radius"><i class="Hui-iconfont">&#xe60b;</i> 审核不通过</a>--%> 
+                <%--<a href="javascript:;" onclick="auditfailed()" class="btn btn-warning radius"><i class="Hui-iconfont">&#xe60b;</i> 审核不通过</a>--%>
                 <%=Buttons %>
                 <input type="hidden" id="selectKey" />
-            </span> 
-	    </div>
-	    <div class="cl pd-10  bk-gray mt-2"> 
-		    订单编号&nbsp;<input type="text" class="input-text size-MINI" placeholder="订单编号" id="OrderNoS" style="width:110px" />
+            </span>
+        </div>
+        <div class="cl pd-10  bk-gray mt-2">
+            订单编号&nbsp;<input type="text" class="input-text size-MINI" placeholder="订单编号" id="OrderNoS" style="width: 110px" />
             订单类型&nbsp;<%=OrderTypeStrS %>
-            客户&nbsp;<input type="text" class="input-text size-MINI" placeholder="" id="CustNoS" style="width:110px" />
-            状态&nbsp;<select class="input-text size-MINI" id="OrderStatusS" style="width:110px">
-                        <option value="">全部</option>
-                        <option value="0">制单</option>
-                        <option value="1">审核通过</option>
-                        <option value="2">部分收款</option>
-                        <option value="3">完成收款</option>
-                        <option value="-1">审核不通过</option>
-                    </select>
+            客户&nbsp;<input type="text" class="input-text size-MINI" placeholder="" id="CustNoS" style="width: 110px" />
+            状态&nbsp;<select class="input-text size-MINI" id="OrderStatusS" style="width: 110px">
+                <option value="">全部</option>
+                <option value="0">制单</option>
+                <option value="1">审核通过</option>
+                <option value="2">部分收款</option>
+                <option value="3">完成收款</option>
+                <option value="-1">审核不通过</option>
+            </select>
             主体&nbsp;<%=serviceProvider %>
             <br />
-            所属年月&nbsp;<input type="text" class="input-text size-MINI" id="OrderTimeS" style="width:110px" readonly="readonly" /> 
-            应收日期 从&nbsp;<input type="text" class="input-text size-MINI" id="MinOrderCreateDate" style="width:110px" />
-            至&nbsp;<input type="text" class="input-text size-MINI" id="MaxOrderCreateDate" style="width:110px" />
-            排序字段&nbsp;<select class="input-text size-MINI" id="OrderField" style="width:110px">
-                        <option value="OrderNo DESC" selected="selected">订单编号</option>
-                        <option value="ResourceNo ASC">房间编号</option>
-                    </select>
-            每页行数&nbsp;<select class="input-text size-MINI" id="PageCount" style="width:90px">
-                        <option value="15" selected="selected">15</option>
-                        <option value="30">30</option>
-                        <option value="60">60</option>
-                        <option value="90">90</option>
-                        <option value="120">120</option>
-                        <option value="150">150</option>
-                        <option value="200">200</option>
-                        <option value="ALL">全部</option>
-                    </select>
-		    <button type="submit" class="btn btn-success radius" onclick="select()"><i class="Hui-iconfont">&#xe665;</i> 检索</button>
-	    </div>
-	    <div class="mt-5" id="outerlist">
-	    <%=list %>
-	    </div>
+            所属年月&nbsp;<input type="text" class="input-text size-MINI" id="OrderTimeS" style="width: 110px" readonly="readonly" />
+            应收日期 从&nbsp;<input type="text" class="input-text size-MINI" id="MinOrderCreateDate" style="width: 110px" />
+            至&nbsp;<input type="text" class="input-text size-MINI" id="MaxOrderCreateDate" style="width: 110px" />
+            排序字段&nbsp;<select class="input-text size-MINI" id="OrderField" style="width: 110px">
+                <option value="OrderNo DESC" selected="selected">订单编号</option>
+                <option value="ResourceNo ASC">房间编号</option>
+            </select>
+            每页行数&nbsp;<select class="input-text size-MINI" id="PageCount" style="width: 90px">
+                <option value="15" selected="selected">15</option>
+                <option value="30">30</option>
+                <option value="60">60</option>
+                <option value="90">90</option>
+                <option value="120">120</option>
+                <option value="150">150</option>
+                <option value="200">200</option>
+                <option value="ALL">全部</option>
+            </select>
+            <button type="submit" class="btn btn-success radius" onclick="select()"><i class="Hui-iconfont">&#xe665;</i> 检索</button>
+        </div>
+        <div class="mt-5" id="outerlist">
+            <%=list %>
+        </div>
     </div>
-    <div id="edit" class="editdiv" style="display:none;">        
+    <div id="edit" class="editdiv" style="display: none;">
         <div class="itab">
-  	        <ul> 
-                <li><a href="javascript:void(0)" onclick="show(1)" id="itemtab1" class="selected">基本信息</a></li> 
+            <ul>
+                <li><a href="javascript:void(0)" onclick="show(1)" id="itemtab1" class="selected">基本信息</a></li>
                 <li><a href="javascript:void(0)" onclick="show(2)" id="itemtab2">费用明细</a></li>
-  	        </ul>
+            </ul>
         </div>
 
         <div id="topeditdiv">
             <table class="tabedit">
                 <tr>
                     <td class="tdl1">订单编号</td>
-                    <td class="tdr1"><input type="text" id="OrderNo" disabled="disabled" class="input-text size-MINI" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderNo" disabled="disabled" class="input-text size-MINI" /></td>
                     <td class="tdl1">订单类型</td>
                     <td class="tdr1"><%=OrderTypeStr %></td>
                     <td class="tdl1">订单状态</td>
-                    <td class="tdr1"><input type="text" id="OrderStatus" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderStatus" class="input-text size-MINI" disabled="disabled" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">客户</td>
@@ -100,57 +103,72 @@
                         <img id="CustImg" alt="" src="../../images/view_detail.png" class="view_detail" />
                     </td>
                     <td class="tdl1">所属月份</td>
-                    <td class="tdr1"><input type="text" id="OrderTime" class="input-text size-MINI" readonly="readonly" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderTime" class="input-text size-MINI" readonly="readonly" /></td>
                     <td class="tdl1"></td>
                     <td class="tdr1"></td>
                 </tr>
                 <tr>
                     <td class="tdl1">应收日期</td>
-                    <td class="tdr1"><input type="text" id="ARDate" class="input-text size-MINI" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ARDate" class="input-text size-MINI" /></td>
                     <td class="tdl1">当月天数</td>
-                    <td class="tdr1"><input type="text" id="DaysofMonth" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="DaysofMonth" class="input-text size-MINI" disabled="disabled" /></td>
                     <td class="tdl1"></td>
                     <td class="tdr1"></td>
                 </tr>
                 <tr>
                     <td class="tdl">备注</td>
-                    <td class="tdr" colspan="7"><textarea cols="" rows="3" class="textarea required" id="Remark"></textarea></td>
+                    <td class="tdr" colspan="7">
+                        <textarea cols="" rows="3" class="textarea required" id="Remark"></textarea></td>
                 </tr>
                 <tr>
                     <td class="tdl1">制单人</td>
-                    <td class="tdr1"><input type="text" id="OrderCreator" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderCreator" class="input-text size-MINI" disabled="disabled" /></td>
                     <td class="tdl1">制单日期</td>
-                    <td class="tdr1"><input type="text" id="OrderCreateDate" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderCreateDate" class="input-text size-MINI" disabled="disabled" /></td>
                     <td class="tdl1"></td>
                     <td class="tdr1"></td>
                 </tr>
                 <tr>
                     <td class="tdl1">审核人</td>
-                    <td class="tdr1"><input type="text" id="OrderAuditor" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderAuditor" class="input-text size-MINI" disabled="disabled" /></td>
                     <td class="tdl1">审核日期</td>
-                    <td class="tdr1"><input type="text" id="OrderAuditDate" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderAuditDate" class="input-text size-MINI" disabled="disabled" /></td>
                     <td class="tdl1">不通过原因</td>
-                    <td class="tdr1"><input type="text" id="OrderAuditReason" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderAuditReason" class="input-text size-MINI" disabled="disabled" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">反审核人</td>
-                    <td class="tdr1"><input type="text" id="OrderRAuditor" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderRAuditor" class="input-text size-MINI" disabled="disabled" /></td>
                     <td class="tdl1">反审核日期</td>
-                    <td class="tdr1"><input type="text" id="OrderRAuditDate" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderRAuditDate" class="input-text size-MINI" disabled="disabled" /></td>
                     <td class="tdl1">反审核原因</td>
-                    <td class="tdr1"><input type="text" id="OrderRAuditReason" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="OrderRAuditReason" class="input-text size-MINI" disabled="disabled" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">应收总金额</td>
-                    <td class="tdr1"><input type="text" id="ARAmount" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ARAmount" class="input-text size-MINI" disabled="disabled" /></td>
                     <td class="tdl1">减免总金额</td>
-                    <td class="tdr1"><input type="text" id="ReduceAmount" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ReduceAmount" class="input-text size-MINI" disabled="disabled" /></td>
                     <td class="tdl1">实收总金额</td>
-                    <td class="tdr1"><input type="text" id="PaidinAmount" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="PaidinAmount" class="input-text size-MINI" disabled="disabled" /></td>
                 </tr>
             </table>
         </div>
-        <div id="bodyeditdiv1">        
+        <div id="bodyeditdiv1">
             <table class="tabedit">
                 <tr>
                     <td class="tdl1">所属服务大类</td>
@@ -166,18 +184,21 @@
                         <select class="input-text size-MINI" id="ODSRVNo"></select>
                     </td>
                     <td class="tdl1">服务项说明</td>
-                    <td class="tdr1"><input type="text" id="ODSRVRemark" class="input-text size-MINI" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODSRVRemark" class="input-text size-MINI" /></td>
                     <td class="tdl1">订单主体</td>
                     <td class="tdr1"><%=ODContractSPNoStr %></td>
                 </tr>
                 <tr>
                     <td class="tdl1">订单编号</td>
-                    <td class="tdr1"><input type="text" id="ODContractNo" class="input-text size-MINI" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODContractNo" class="input-text size-MINI" /></td>
                     <td class="tdl1">手工订单编号</td>
-                    <td class="tdr1"><input type="text" id="ODContractNoManual" class="input-text size-MINI" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODContractNoManual" class="input-text size-MINI" /></td>
                     <td class="tdl1"></td>
                     <td class="tdr1">
-                        <select class="input-text size-MINI" id="ODSRVCalType" style="display:none;">
+                        <select class="input-text size-MINI" id="ODSRVCalType" style="display: none;">
                             <option value="1">按出租面积</option>
                             <option value="2">按使用量</option>
                             <option value="3">按天数</option>
@@ -189,35 +210,46 @@
                 <tr>
                     <td class="tdl1">资源编号</td>
                     <td class="tdr1">
-                        <input type="text" id="ResourceNo" class="input-text size-MINI" /> 
+                        <input type="text" id="ResourceNo" class="input-text size-MINI" />
                         <img id="ChooseImg" alt="" src="../../images/view_detail.png" class="view_detail" /></td>
                     <td class="tdl1">资源名称</td>
-                    <td class="tdr1"><input type="text" id="ResourceName" class="input-text size-MINI" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ResourceName" class="input-text size-MINI" /></td>
                     <td class="tdl1">单位</td>
-                    <td class="tdr1"><input type="text" id="ODUnit" class="input-text size-MINI" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODUnit" class="input-text size-MINI" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">计费开始日期</td>
-                    <td class="tdr1"><input type="text" id="ODFeeStartDate" class="input-text size-MINI" onchange="ODFeeStartDateChange()" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODFeeStartDate" class="input-text size-MINI" onchange="ODFeeStartDateChange()" /></td>
                     <td class="tdl1">计费结束日期</td>
-                    <td class="tdr1"><input type="text" id="ODFeeEndDate" class="input-text size-MINI" onchange="ODFeeStartDateChange()" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODFeeEndDate" class="input-text size-MINI" onchange="ODFeeStartDateChange()" /></td>
                     <td class="tdl1">计费天数</td>
-                    <td class="tdr1"><input type="text" id="BillingDays" class="input-text size-MINI" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="BillingDays" class="input-text size-MINI" disabled="disabled" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">数量</td>
-                    <td class="tdr1"><input type="text" id="ODQTY" class="input-text size-MINI" onchange="CaluAmount(this.id)" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODQTY" class="input-text size-MINI" onchange="CaluAmount(this.id)" /></td>
                     <td class="tdl1">单价</td>
-                    <td class="tdr1"><input type="text" id="ODUnitPrice" class="input-text size-MINI" onchange="CaluAmount(this.id)" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODUnitPrice" class="input-text size-MINI" onchange="CaluAmount(this.id)" /></td>
                     <td class="tdl1">应收金额</td>
-                    <td class="tdr1"><input type="text" id="ODARAmount" class="input-text size-MINI" onchange="CaluTaxAmount(this.id)" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODARAmount" class="input-text size-MINI" onchange="CaluTaxAmount(this.id)" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">税率</td>
-                    <td class="tdr1"><input type="text" id="ODTaxRate" class="input-text size-MINI" onchange="CaluTaxAmount(this.id)" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODTaxRate" class="input-text size-MINI" onchange="CaluTaxAmount(this.id)" /></td>
                     <td class="tdl1">税额</td>
-                    <td class="tdr1"><input type="text" id="ODTaxAmount" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
-                    <td class="tdl1"></td>
+                    <td class="tdr1">
+                        <input type="text" id="ODTaxAmount" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdl1">
+                        <input type="hidden" id="SRVRoundType" class="input-text size-MINI" /></td>
                     <td class="tdr1"></td>
                 </tr>
                 <tr>
@@ -227,102 +259,111 @@
                     </td>
                 </tr>
             </table>
-            <div style="width:100%;height:5px;"></div>
-            <div id="itemlist1"style="width:1058px; height:320px; overflow:auto; margin:0px; padding:0px;"></div>
+            <div style="width: 100%; height: 5px;"></div>
+            <div id="itemlist1" style="width: 1058px; height: 320px; overflow: auto; margin: 0px; padding: 0px;"></div>
         </div>
-        
-        <div style="margin-top:10px;">
+
+        <div style="margin-top: 10px;">
             <input class="btn btn-primary radius" type="button" id="submit" onclick="submit()" value="保存退出" />
             <input class="btn btn-primary radius" type="button" id="submit1" onclick="submit1()" value="保存继续" />
-	        <input class="btn btn-default radius" type="button" id="cancel" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
+            <input class="btn btn-default radius" type="button" id="cancel" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
         </div>
         <br />
         <br />
-    </div>    
-    
-    <div id="rauditdiv" style="display:none;">
-        <table style="width:400px; margin-top:20px;">
+    </div>
+
+    <div id="rauditdiv" style="display: none;">
+        <table style="width: 400px; margin-top: 20px;">
             <tr>
-                <td style="width:70px; text-align:center; padding:8px; height:40px;">原因</td>
-                <td style="width:300px;">
+                <td style="width: 70px; text-align: center; padding: 8px; height: 40px;">原因</td>
+                <td style="width: 300px;">
                     <textarea cols="" rows="3" class="textarea required" placeholder="反审核原因" id="OrderRAuditReason1"></textarea>
                 </td>
-                <td style="width:30px;"></td>
+                <td style="width: 30px;"></td>
             </tr>
         </table>
-        <div style="margin:10px 30px;">
+        <div style="margin: 10px 30px;">
             <input class="btn btn-primary radius" type="button" onclick="rauditsubmit()" value="&nbsp;确&nbsp;定&nbsp;" />&nbsp;&nbsp;
             <input class="btn btn-primary radius" type="button" onclick="rauditcancel()" value="&nbsp;关&nbsp;闭&nbsp;" />
         </div>
-    </div> 
+    </div>
 
-    <div id="auditfaileddiv" style="display:none;">
-        <table style="width:400px; margin-top:20px;">
+    <div id="auditfaileddiv" style="display: none;">
+        <table style="width: 400px; margin-top: 20px;">
             <tr>
-                <td style="width:70px; text-align:center; padding:8px; height:40px;">原因</td>
-                <td style="width:300px;">
+                <td style="width: 70px; text-align: center; padding: 8px; height: 40px;">原因</td>
+                <td style="width: 300px;">
                     <textarea cols="" rows="3" class="textarea required" placeholder="审核不通过原因" id="OrderAuditReason1"></textarea>
                 </td>
-                <td style="width:30px;"></td>
+                <td style="width: 30px;"></td>
             </tr>
         </table>
-        <div style="margin:10px 30px;">
+        <div style="margin: 10px 30px;">
             <input class="btn btn-primary radius" type="button" onclick="auditfailedsubmit()" value="&nbsp;确&nbsp;定&nbsp;" />&nbsp;&nbsp;
             <input class="btn btn-primary radius" type="button" onclick="auditfailedcancel()" value="&nbsp;关&nbsp;闭&nbsp;" />
         </div>
-    </div> 
-    <div id="resourceDiv" style="display:none;text-align:center">
-        <input class="btn btn-primary radius" type="button" onclick="getResourceData(1)" value="选择房间"  style="display:block;margin:20px;margin-left:30%"/>
-        <input class="btn btn-primary radius" type="button" onclick="getResourceData(2)" value="选择工位" style="display:block;margin:20px;margin-left:30%"/>
-        <input class="btn btn-primary radius" type="button" onclick="getResourceData(3)" value="选择广告位" style="display:block;margin:20px;margin-left:30%"/>
     </div>
-    
-    <div id="feediv" style="display:none;">
-        <table style="width:600px; margin-top:10px;">
+    <div id="resourceDiv" style="display: none; text-align: center">
+        <input class="btn btn-primary radius" type="button" onclick="getResourceData(1)" value="选择房间" style="display: block; margin: 20px; margin-left: 30%" />
+        <input class="btn btn-primary radius" type="button" onclick="getResourceData(2)" value="选择工位" style="display: block; margin: 20px; margin-left: 30%" />
+        <input class="btn btn-primary radius" type="button" onclick="getResourceData(3)" value="选择广告位" style="display: block; margin: 20px; margin-left: 30%" />
+    </div>
+
+    <div id="feediv" style="display: none;">
+        <table style="width: 600px; margin-top: 10px;">
             <tr>
-                <td style="width:80px; text-align:center; padding:8px;">主体</td>
-                <td style="width:520px;" colspan="3"><input type="text" id="ODSPName" class="input-text size-MINI" style="width:490px;" disabled="disabled" /></td>
+                <td style="width: 80px; text-align: center; padding: 8px;">主体</td>
+                <td style="width: 520px;" colspan="3">
+                    <input type="text" id="ODSPName" class="input-text size-MINI" style="width: 490px;" disabled="disabled" /></td>
             </tr>
             <tr>
-                <td style="width:80px; text-align:center; padding:8px;">客户名称</td>
-                <td style="width:520px;" colspan="3"><input type="text" id="ODCustName" class="input-text size-MINI" style="width:490px;" disabled="disabled" /></td>
+                <td style="width: 80px; text-align: center; padding: 8px;">客户名称</td>
+                <td style="width: 520px;" colspan="3">
+                    <input type="text" id="ODCustName" class="input-text size-MINI" style="width: 490px;" disabled="disabled" /></td>
             </tr>
             <tr>
-                <td style="width:80px; text-align:center; padding:8px;">原应收金额</td>
-                <td style="width:215px;"><input type="text" id="RODARAmount" class="input-text size-MINI" style="width:180px;" disabled="disabled" /></td>
-                <td style="width:80px; text-align:center; padding:8px;">应收总金额</td>
-                <td style="width:220px;"><input type="text" id="RODUnAmount" class="input-text size-MINI" style="width:180px;" disabled="disabled" /></td>
+                <td style="width: 80px; text-align: center; padding: 8px;">原应收金额</td>
+                <td style="width: 215px;">
+                    <input type="text" id="RODARAmount" class="input-text size-MINI" style="width: 180px;" disabled="disabled" /></td>
+                <td style="width: 80px; text-align: center; padding: 8px;">应收总金额</td>
+                <td style="width: 220px;">
+                    <input type="text" id="RODUnAmount" class="input-text size-MINI" style="width: 180px;" disabled="disabled" /></td>
             </tr>
             <tr>
-                <td style="width:80px; text-align:center; padding:8px;">减免金额</td>
-                <td style="width:215px;"><input type="text" id="RReduceAmount" class="input-text size-MINI" style="width:180px;" disabled="disabled" /></td>
-                <td style="width:80px; text-align:center; padding:15px;">减免日期</td>
-                <td style="width:220px;"><input type="text" id="ReduceDate" class="input-text size-MINI" style="width:180px;" /></td>
+                <td style="width: 80px; text-align: center; padding: 8px;">减免金额</td>
+                <td style="width: 215px;">
+                    <input type="text" id="RReduceAmount" class="input-text size-MINI" style="width: 180px;" disabled="disabled" /></td>
+                <td style="width: 80px; text-align: center; padding: 15px;">减免日期</td>
+                <td style="width: 220px;">
+                    <input type="text" id="ReduceDate" class="input-text size-MINI" style="width: 180px;" /></td>
             </tr>
             <tr>
-                <td style="width:80px; text-align:center; padding:15px;">备注</td>
-                <td style="width:520px;" colspan="3"><textarea cols="" rows="3" style ="width:490px" class="textarea required" placeholder="备注" id="RODRemark"></textarea></td>
+                <td style="width: 80px; text-align: center; padding: 15px;">备注</td>
+                <td style="width: 520px;" colspan="3">
+                    <textarea cols="" rows="3" style="width: 490px" class="textarea required" placeholder="备注" id="RODRemark"></textarea></td>
             </tr>
             <tr>
-                <td style="width:600px;" colspan="4"><div id="paylist"></div></td>
+                <td style="width: 600px;" colspan="4">
+                    <div id="paylist"></div>
+                </td>
             </tr>
         </table>
-        <div style="margin:15px 100px;">
+        <div style="margin: 15px 100px;">
             <input class="btn btn-primary radius" type="button" onclick="reduce()" value="&nbsp;确&nbsp;定&nbsp;" />&nbsp;&nbsp;
             <input class="btn btn-primary radius" type="button" onclick="feecancel()" value="&nbsp;关&nbsp;闭&nbsp;" />
         </div>
     </div>
 
-    <iframe id="openfile" width="0" height="0" marginwidth="0" frameborder="0" src="about:blank" Content-Disposition="attachment"></iframe>
-    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script> 
+    <iframe id="openfile" width="0" height="0" marginwidth="0" frameborder="0" src="about:blank" content-disposition="attachment"></iframe>
+    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="../../jscript/script_ajax.js"></script>
     <script type="text/javascript" src="../../jscript/script_common.js"></script>
     <script type="text/javascript" src="../../jscript/JsInputDate.js"></script>
     <script type="text/javascript" src="../../jscript/jquery.monthpicker.js"></script>
     <script type="text/javascript" src="../../jscript/json2.js"></script>
-    <script type="text/javascript" src="../../jscript/H-ui.js"></script> 
-    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script> 
-    <script type="text/javascript" src="../../lib/layer/layer.js"></script> 
+    <script type="text/javascript" src="../../jscript/H-ui.js"></script>
+    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script>
+    <script type="text/javascript" src="../../lib/layer/layer.js"></script>
     <script type="text/javascript">
         function BandResuleData(temp) {
             var vjson = JSON.parse(temp);
@@ -800,9 +841,10 @@
             }
             if (vjson.type == "ODSRVNoChange") {
                 if (vjson.flag == "1") {
-                    $("#ODSRVCalType").val(vjson.SRVCalType); 
+                    $("#ODSRVCalType").val(vjson.SRVCalType);
                     $("#ODContractSPNo").val(vjson.SRVSPNo);
                     $("#ODTaxRate").val(vjson.SRVTaxRate);
+                    $("#SRVRoundType").val(vjson.SRVRoundType);
                     $("#ODARAmount").val(vjson.amount);
                     $("#ODTaxAmount").val(vjson.taxAmount);
                 }
@@ -1164,7 +1206,7 @@
 
             $("#TotReduceAmt").html(amount.toFixed(2));
             $("#TotUnReduceAmount").html(TotUnReduceAmount.toFixed(2));
-            
+
             $("#RReduceAmount").val(amount.toFixed(2));
             $("#RODUnAmount").val(TotUnReduceAmount.toFixed(2));
         }
@@ -1365,7 +1407,7 @@
             submitData.ODARAmount = $("#ODARAmount").val();
             submitData.ODTaxRate = $("#ODTaxRate").val();
             submitData.ODTaxAmount = $("#ODTaxAmount").val();
-            
+
             transmitData(datatostr(submitData));
             return;
         }
@@ -1420,7 +1462,7 @@
                 $("#ResourceNo").val("");
                 var temp = "../Base/ChooseRMID.aspx?id=ResourceNo";
                 layer.open({
-                    type:2,
+                    type: 2,
                     title: '选择房间页面',
                     content: temp,
                     area: ['800px', '630px'],
@@ -1454,7 +1496,7 @@
             transmitData(datatostr(submitData));
             return;
         });
-                
+
         var page = 1;
         function jump(pageindex) {
             page = pageindex;
@@ -1521,7 +1563,7 @@
             transmitData(datatostr(submitData));
             return;
         }
-        function OrderTimeChange(){
+        function OrderTimeChange() {
             var date = new Date($("#OrderTime").val() + "-01");
             date.setMonth(date.getMonth() + 1);
             date.setDate(date.getDate() - 1);
@@ -1548,6 +1590,26 @@
         });
 
         function CaluAmount(id) {
+            validDecimal("ODQTY");
+            validDecimal("ODUnitPrice");
+            if ($("#ODQTY").val() != "" && $("#ODUnitPrice").val() != "" && $("#ODSRVNo").val() != "") {
+                if (parseFloat($("#ODQTY").val()) > 0 && parseFloat($("#ODUnitPrice").val()) > 0) {
+                    var type = $("#SRVRoundType").val();
+                    var amount= parseFloat($("#ODQTY").val()) * parseFloat($("#ODUnitPrice").val());
+                    if (type.toUpperCase == "FLOOR") {
+                        $("#ODARAmount").val(Math.floor(amount)).change();
+                    } else if (type.toUpperCase == "CEILING") {
+                        $("#ODARAmount").val(Math.ceil(amount)).change();
+                    } else {
+                        $("#ODARAmount").val(Math.round(amount)).change();
+                    }
+                    return;
+                }
+            }
+            $("#ODARAmount").val("");
+            $("#ODTaxAmount").val("");
+            return;
+            //田工代码
             validDecimal(id);
             if ($("#ODQTY").val() != "" && $("#ODUnitPrice").val() != "" && $("#ODSRVNo").val() != "") {
                 if (parseFloat($("#ODQTY").val()) > 0 && parseFloat($("#ODUnitPrice").val()) > 0) {
@@ -1567,6 +1629,25 @@
         }
 
         function CaluTaxAmount(id) {
+            validDecimal("ODARAmount");
+            validDecimal("ODTaxRate");
+            if ($("#ODARAmount").val() != "" && $("#ODTaxRate").val() != "" && $("#ODSRVNo").val() != "") {
+                if (parseFloat($("#ODARAmount").val()) > 0 && parseFloat($("#ODTaxRate").val()) > 0) {
+                    var type = $("#SRVRoundType").val();
+                    var taxamount = parseFloat($("#ODARAmount").val()) - parseFloat($("#ODARAmount").val()) / (1 + parseFloat($("#ODTaxRate").val()));
+                    if (type.toUpperCase == "FLOOR") {
+                        $("#ODTaxAmount").val(Math.floor(taxamount));
+                    } else if (type.toUpperCase == "CEILING") {
+                        $("#ODTaxAmount").val(Math.ceil(taxamount));
+                    } else {
+                        $("#ODTaxAmount").val(Math.round(taxamount));
+                    }
+                    return;
+                }
+            }
+            $("#ODTaxAmount").val("")
+            return;
+            //田工代码
             validDecimal(id);
             if ($("#ODARAmount").val() != "" && $("#ODTaxRate").val() != "" && $("#ODSRVNo").val() != "") {
                 if (parseFloat($("#ODARAmount").val()) > 0 && parseFloat($("#ODTaxRate").val()) > 0) {
@@ -1616,15 +1697,15 @@
         var resourceLayer;
         $("#ChooseImg").hide();
         $("#ChooseImg").click(function () {
-            resourceLayer= layer.open({
+            resourceLayer = layer.open({
                 type: 1,
                 //area:['140','210'],
                 area: ['250', '210'],
-                title:'选择资源',
+                title: '选择资源',
                 content: $("#resourceDiv")
             });
         });
         reflist();
-</script>
+    </script>
 </body>
 </html>

@@ -73,7 +73,7 @@ namespace project.Presentation.Op
 
                         list = createList(string.Empty, string.Empty, "02", string.Empty, string.Empty, string.Empty,
                                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 1);
-                        
+
                         date = GetDate().ToString("yyyy-MM-dd");
 
                         ContractTypeStr = "<select class=\"input-text required\" id=\"ContractType\" disabled=\"disabled\">";
@@ -111,7 +111,7 @@ namespace project.Presentation.Op
 
                         SRVNo2Str = "<select class=\"input-text size-MINI\" id=\"SRVNo2\">";
                         SRVNo2Str += "<option value='" + setting.Entity.SRVNo + "'>" + setting.Entity.SRVName + "</option>";
-                        
+
                         setting.load("WPFWF");
                         SRVNo2Str += "<option value='" + setting.Entity.SRVNo + "'>" + setting.Entity.SRVName + "</option>";
 
@@ -211,7 +211,7 @@ namespace project.Presentation.Op
 
             return sb.ToString();
         }
-        
+
         //工位信息
         private string createItemList2(string RefRP, string type)
         {
@@ -273,7 +273,7 @@ namespace project.Presentation.Op
             string result = "";
             JsonArrayParse jp = new JsonArrayParse(this._clientArgument);
             if (jp.getValue("Type") == "insert")
-                result = insertaction(jp); 
+                result = insertaction(jp);
             else if (jp.getValue("Type") == "delete")
                 result = deleteaction(jp);
             else if (jp.getValue("Type") == "update")
@@ -311,7 +311,7 @@ namespace project.Presentation.Op
                 result = getprice2action(jp);
             return result;
         }
-        
+
         private string checkaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
@@ -788,7 +788,7 @@ namespace project.Presentation.Op
                     if (r <= 0)
                         flag = "2";
                     collection.Add(new JsonStringValue("RowPointer", jp.getValue("id")));
-                } 
+                }
                 #endregion
                 else
                 {
@@ -952,20 +952,21 @@ namespace project.Presentation.Op
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
                                 rs.Status = 1;
-                                rs.Enable = true;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            srv.LeaseIn("[" + Items + "]");
+                            string result = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
-                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));                        
+                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
                     }
                     else
                     {
-                        if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer+ "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
+                        if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer + "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
                         {
                             flag = "4";
                         }
@@ -1001,15 +1002,16 @@ namespace project.Presentation.Op
                                 rs.CustLongName = bc.Entity.ContractCustName;
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
-                                rs.Status = 1;
-                                rs.Enable = true;
+                                rs.Status = 2;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            srv.LeaseDel("[" + Items + "]");
+                            string result = srv.LeaseDel("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
                     }
                 }

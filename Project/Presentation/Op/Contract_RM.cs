@@ -145,9 +145,9 @@ namespace project.Presentation.Op
         protected string RMRentFee = "";
         protected string RMRentSRVNo = "";
         protected string RMSPNo = "";
-        
+
         private string createList(string ContractNo, string ContractNoManual, string ContractType, string ContractSPNo, string ContractCustNo,
-            string MinContractSignedDate, string MaxContractSignedDate, string MinContractEndDate, string MaxContractEndDate, string ContractStatusS, 
+            string MinContractSignedDate, string MaxContractSignedDate, string MinContractEndDate, string MaxContractEndDate, string ContractStatusS,
             string OffLeaseStatus, string MinOffLeaseActulDate, string MaxOffLeaseActulDate, int page)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder("");
@@ -168,8 +168,8 @@ namespace project.Presentation.Op
             sb.Append("<th width='8%'>实际退租日期</th>");
             sb.Append("<th width='10%'>退租原因</th>");
             sb.Append("</tr>");
-            sb.Append("</thead>");								
-            
+            sb.Append("</thead>");
+
             int r = 1;
             sb.Append("<tbody>");
             Business.Op.BusinessContract bc = new project.Business.Op.BusinessContract();
@@ -201,7 +201,7 @@ namespace project.Presentation.Op
             }
             sb.Append("</tbody>");
             sb.Append("</table>");
-            
+
             sb.Append(Paginat(bc.GetListCount(ContractNo, ContractNoManual, ContractType, ContractSPNo, ContractCustNo,
                             ParseSearchDateForString(MinContractSignedDate), ParseSearchDateForString(MaxContractSignedDate),
                             ParseSearchDateForString(MinContractEndDate), ParseSearchDateForString(MaxContractEndDate), string.Empty, OffLeaseStatus,
@@ -270,7 +270,7 @@ namespace project.Presentation.Op
             string result = "";
             JsonArrayParse jp = new JsonArrayParse(this._clientArgument);
             if (jp.getValue("Type") == "insert")
-                result = insertaction(jp); 
+                result = insertaction(jp);
             else if (jp.getValue("Type") == "delete")
                 result = deleteaction(jp);
             else if (jp.getValue("Type") == "update")
@@ -306,7 +306,7 @@ namespace project.Presentation.Op
                 result = getrmidaction(jp);
             return result;
         }
-        
+
         private string checkaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
@@ -715,7 +715,7 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("flag", flag));
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
                 jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
-                jp.getValue("MinContractEndDate"),  jp.getValue("MaxContractEndDate"), jp.getValue("ContractStatusS"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
+                jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("ContractStatusS"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
                 jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
@@ -880,7 +880,7 @@ namespace project.Presentation.Op
                                 "'" + user.Entity.UserName + "',GetDate(),'" + user.Entity.UserName + "',GetDate() " +
                                 "from Op_ContractRMRentalDetail where RefRP='" + jp.getValue("copyid") + "' order by CreateDate";
                             obj.ExecuteNonQuery(KSQL);
-                            
+
                             collection.Add(new JsonStringValue("itemlist1", createItemList1(id, "insert")));
                         }
                     }
@@ -899,7 +899,7 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
                 jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
                 jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("ContractStatusS"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
-                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page"))))); 
+                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
         private string approveaction(JsonArrayParse jp)
@@ -947,16 +947,17 @@ namespace project.Presentation.Op
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
                                 rs.Status = 1;
-                                rs.Enable = true;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            srv.LeaseIn("[" + Items + "]");
+                            string result = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
-                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));                        
+                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
                     }
                     else
                     {
@@ -998,15 +999,16 @@ namespace project.Presentation.Op
                                 rs.CustLongName = bc.Entity.ContractCustName;
                                 rs.CustShortName = cust.Entity.CustShortName;
                                 rs.CustTel = cust.Entity.CustTel;
-                                rs.Status = 1;
-                                rs.Enable = true;
+                                rs.Status = 2;
+                                rs.RentType = 1;
                                 rs.UpdateTime = GetDate();
                                 rs.UpdateUser = user.Entity.UserName;
 
-                                Items += (Items == ""?"":",") + JsonConvert.SerializeObject(rs);
+                                Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            srv.LeaseDel("["+Items+"]");
+                            string result = srv.LeaseDel("[" + Items + "]");
+                            collection.Add(new JsonStringValue("syncreturn", result));
                         }
                     }
                 }
@@ -1065,7 +1067,7 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
                 jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
                 jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("ContractStatusS"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
-                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page"))))); 
+                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
         private string jumpaction(JsonArrayParse jp)
@@ -1150,7 +1152,7 @@ namespace project.Presentation.Op
                 collection.Add(new JsonStringValue("RMArea", bc.Entity.RMArea.ToString("0.####")));
                 collection.Add(new JsonStringValue("RentalUnitPrice", bc.Entity.RentalUnitPrice.ToString("0.####")));
                 collection.Add(new JsonStringValue("Remark", bc.Entity.Remark));
-                collection.Add(new JsonStringValue("IsFixedAmt", (bc.Entity.IsFixedAmt?"true":"false")));
+                collection.Add(new JsonStringValue("IsFixedAmt", (bc.Entity.IsFixedAmt ? "true" : "false")));
                 collection.Add(new JsonStringValue("Amount", bc.Entity.Amount.ToString("0.####")));
                 collection.Add(new JsonStringValue("IncreaseType", bc.Entity.IncreaseType));
                 collection.Add(new JsonStringValue("IncreaseStartDate1", ParseStringForDate(bc.Entity.IncreaseStartDate1)));

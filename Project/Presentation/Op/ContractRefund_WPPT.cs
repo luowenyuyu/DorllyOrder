@@ -384,15 +384,15 @@ namespace project.Presentation.Op
                             rs.BusinessType = 2;//1租赁，2物业
                             rs.RentBeginTime = bc.Entity.FeeStartDate;
                             rs.RentEndTime = GetDate();
-                            rs.Status = 1;
-                            rs.Enable = false;
+                            rs.Status = 2;
+                            rs.RentType = 1;
                             rs.UpdateTime = GetDate();
                             rs.UpdateUser = user.Entity.UserName;
 
                             Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                         }
-                        string str = srv.LeaseOut("[" + Items + "]");
-                        string str1 = str;
+                        string result = srv.LeaseOut("[" + Items + "]");
+                        collection.Add(new JsonStringValue("syncreturn", result));
                     }
                 }
             }
