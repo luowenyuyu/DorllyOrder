@@ -73,6 +73,7 @@ namespace project.Business.Base
             _entity.BBStatus = dr["BBStatus"].ToString();
             _entity.BBCreateDate = ParseDateTimeForString(dr["BBCreateDate"].ToString());
             _entity.BBCreator = dr["BBCreator"].ToString();
+            _entity.IsStatistics = bool.Parse(string.IsNullOrEmpty(dr["IsStatistics"].ToString()) ? "false" : dr["IsStatistics"].ToString());
         }
 
         /// </summary>
@@ -84,21 +85,22 @@ namespace project.Business.Base
             if (type == "insert")
                 sqlstr = "insert into Mstr_Billboard(BBNo,BBName,BBSPNo,BBLOCNo,BBAddr,BBSize,BBType,"+
                         "BBINPriceDay,BBOUTPriceDay,BBINPriceMonth,BBOUTPriceMonth,BBINPriceQuarter,BBOUTPriceQuarter,BBINPriceYear,BBOUTPriceYear," +
-                        "BBDeposit,BBImage,BBISEnable,BBStatus,BBCurrentCustNo,BBCreateDate,BBCreator)" +
+                        "BBDeposit,BBImage,BBISEnable,BBStatus,BBCurrentCustNo,BBCreateDate,BBCreator,IsStatistics)" +
                     "values('" + Entity.BBNo + "'" + "," + "'" + Entity.BBName + "'" + "," + "'" + Entity.BBSPNo + "'" + "," + "'" + Entity.BBLOCNo + "'" + "," +
                     "'" + Entity.BBAddr + "'" + "," + "'" + Entity.BBSize + "'" + "," + "'" + Entity.BBType + "'" + "," +
                     Entity.BBINPriceDay + "," + Entity.BBOUTPriceDay + "," + Entity.BBINPriceMonth + "," + Entity.BBOUTPriceMonth + "," +
                     Entity.BBINPriceQuarter + "," + Entity.BBOUTPriceQuarter + "," + Entity.BBINPriceYear + "," + Entity.BBOUTPriceYear + "," +
                     Entity.BBDeposit + "," + "'" + Entity.BBImage + "'" + "," + "0,'free',''," +
-                    "'" + Entity.BBCreateDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + ",'" + Entity.BBCreator + "')";
+                    "'" + Entity.BBCreateDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + ",'" + Entity.BBCreator + "'," + (Entity.IsStatistics == true ? "1" : "0") + ")";
             else
                 sqlstr = "update Mstr_Billboard" +
                     " set BBName=" + "'" + Entity.BBName + "'" + "," + "BBSPNo=" + "'" + Entity.BBSPNo + "'" + "," + "BBLOCNo=" + "'" + Entity.BBLOCNo + "'" + "," +
                     "BBAddr=" + "'" + Entity.BBAddr + "'" + "," + "BBSize=" + "'" + Entity.BBSize + "'" + "," + "BBType=" + "'" + Entity.BBType + "'" + "," +
                     "BBINPriceDay=" + Entity.BBINPriceDay + "," + "BBOUTPriceDay=" + Entity.BBOUTPriceDay + "," +
                     "BBINPriceMonth=" + Entity.BBINPriceMonth + "," + "BBOUTPriceMonth=" + Entity.BBOUTPriceMonth + "," +
-                    "BBINPriceQuarter=" + Entity.BBINPriceQuarter + "," + "BBOUTPriceYear=" + Entity.BBOUTPriceYear + "," + 
-                    "BBDeposit=" + Entity.BBDeposit + "," + "BBImage=" + "'" + Entity.BBImage + "'" + 
+                    "BBINPriceQuarter=" + Entity.BBINPriceQuarter + "," + "BBOUTPriceYear=" + Entity.BBOUTPriceYear + "," +
+                    "BBDeposit=" + Entity.BBDeposit + "," + "BBImage=" + "'" + Entity.BBImage + "'" + "," +
+                    "IsStatistics=" + (Entity.IsStatistics == true ? "1" : "0") +
                     " where BBNo='" + Entity.BBNo + "'";
             return objdata.ExecuteNonQuery(sqlstr);
         }

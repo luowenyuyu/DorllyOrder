@@ -224,6 +224,7 @@ namespace project.Presentation.Base
                 collection.Add(new JsonStringValue("BBOUTPriceYear", bc.Entity.BBOUTPriceYear.ToString("0.####")));
                 collection.Add(new JsonStringValue("BBDeposit", bc.Entity.BBDeposit.ToString("0.####")));
                 collection.Add(new JsonStringValue("BBImage", bc.Entity.BBImage));
+                collection.Add(new JsonStringValue("IsStatistics", (bc.Entity.IsStatistics ? "true" : "false")));
             }
             catch
             { flag = "2"; }
@@ -258,8 +259,10 @@ namespace project.Presentation.Base
                             flag = "2";
                         else
                         {
+                            //同步到资源系统
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                            srv.DeleteResource(bc.Entity.BBNo);
+                            string syncResult = srv.DeleteResource(bc.Entity.BBNo);
+                            collection.Add(new JsonStringValue("sync", syncResult));
                         }
                     }
                 }
@@ -298,16 +301,18 @@ namespace project.Presentation.Base
                     bc.Entity.BBOUTPriceYear = ParseDecimalForString(jp.getValue("BBOUTPriceYear"));
                     bc.Entity.BBDeposit = ParseDecimalForString(jp.getValue("BBDeposit"));
                     bc.Entity.BBImage = jp.getValue("BBImage");
-                                        
+                    bc.Entity.IsStatistics = bool.Parse(jp.getValue("IsStatistics"));
+             
                     int r = bc.Save("update");
 
                     if (r <= 0)
                         flag = "2";
                     else
                     {
+                        //同步到资源系统
                         ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        string aa = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
-                        string ss = aa;
+                        string syncResult = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                        collection.Add(new JsonStringValue("sync", syncResult));
                     }
                 }
                 else
@@ -335,6 +340,7 @@ namespace project.Presentation.Base
                         bc.Entity.BBOUTPriceYear = ParseDecimalForString(jp.getValue("BBOUTPriceYear"));
                         bc.Entity.BBDeposit = ParseDecimalForString(jp.getValue("BBDeposit"));
                         bc.Entity.BBImage = jp.getValue("BBImage");
+                        bc.Entity.IsStatistics = bool.Parse(jp.getValue("IsStatistics"));
 
                         bc.Entity.BBCreator = user.Entity.UserName;
                         bc.Entity.BBCreateDate = GetDate();
@@ -344,8 +350,10 @@ namespace project.Presentation.Base
                             flag = "2";
                         else
                         {
+                            //同步到资源系统
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                            srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                            string syncResult = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                            collection.Add(new JsonStringValue("sync", syncResult));
                         }
                     }
                 }
@@ -393,6 +401,13 @@ namespace project.Presentation.Base
 
                 int r = bc.valid();
                 if (r <= 0) flag = "2";
+                else
+                {
+                    //同步到资源系统
+                    ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                    string syncResult = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                    collection.Add(new JsonStringValue("sync", syncResult));
+                }
                 if (bc.Entity.BBISEnable)
                     collection.Add(new JsonStringValue("stat", "<span class=\"label radius\">禁用</span>"));
                 else

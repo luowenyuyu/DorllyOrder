@@ -133,7 +133,7 @@ namespace project.Presentation.Base
                 if (it.RMStatus == "use")
                     sb.Append("<td></td>");
                 else if (it.RMStatus == "free")
-                    sb.Append("<td><input class=\"btn btn-primary radius size-MINI\" style=\"padding:0px 10px; margin:0px;\" type=\"button\" value=\"预留\" onclick=\"reserve('"+it.RMID+"')\" /></td>");
+                    sb.Append("<td><input class=\"btn btn-primary radius size-MINI\" style=\"padding:0px 10px; margin:0px;\" type=\"button\" value=\"预留\" onclick=\"reserve('" + it.RMID + "')\" /></td>");
                 else
                     sb.Append("<td><input class=\"btn btn-primary radius size-MINI\" style=\"padding:0px 10px; margin:0px;\" type=\"button\" value=\"取消预留\" onclick=\"unreserve('" + it.RMID + "')\" /></td>");
                 sb.Append("</tr>");
@@ -219,6 +219,7 @@ namespace project.Presentation.Base
                 collection.Add(new JsonStringValue("RMAddr", bc.Entity.RMAddr));
                 collection.Add(new JsonStringValue("RMRemark", bc.Entity.RMRemark));
                 collection.Add(new JsonStringValue("HaveAirCondition", (bc.Entity.HaveAirCondition ? "true" : "false")));
+                collection.Add(new JsonStringValue("IsStatistics", (bc.Entity.IsStatistics ? "true" : "false")));
 
                 string subtype = "";
                 int row = 0;
@@ -268,7 +269,7 @@ namespace project.Presentation.Base
                 Business.Base.BusinessRoom bc = new project.Business.Base.BusinessRoom();
                 bc.load(jp.getValue("id"));
 
-                if (bc.Entity.RMStatus == "use") 
+                if (bc.Entity.RMStatus == "use")
                 {
                     flag = "4";
                 }
@@ -279,8 +280,10 @@ namespace project.Presentation.Base
                         flag = "2";
                     else
                     {
+                        //同步到资源系统
                         ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        srv.DeleteResource(bc.Entity.RMID);
+                        string syncResult = srv.DeleteResource(bc.Entity.RMID);
+                        collection.Add(new JsonStringValue("sync", syncResult));
                     }
                 }
             }
@@ -308,19 +311,22 @@ namespace project.Presentation.Base
                     bc.Entity.RMLOCNo3 = jp.getValue("RMLOCNo3");
                     bc.Entity.RMLOCNo4 = jp.getValue("RMLOCNo4");
                     bc.Entity.RMRentType = jp.getValue("RMRentType");
+                    bc.Entity.IsStatistics = bool.Parse(jp.getValue("IsStatistics"));
                     bc.Entity.RMBuildSize = ParseDecimalForString(jp.getValue("RMBuildSize"));
                     bc.Entity.RMRentSize = ParseDecimalForString(jp.getValue("RMRentSize"));
                     bc.Entity.RMAddr = jp.getValue("RMAddr");
                     bc.Entity.RMRemark = jp.getValue("RMRemark");
                     bc.Entity.HaveAirCondition = bool.Parse(jp.getValue("HaveAirCondition"));
-                    
+
                     int r = bc.Save("update");
                     if (r <= 0)
                         flag = "2";
                     else
                     {
+                        //同步到资源系统
                         ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        srv.AddOrUpdateRoom(JsonConvert.SerializeObject(bc.Entity));
+                        string syncResult = srv.AddOrUpdateRoom(JsonConvert.SerializeObject(bc.Entity));
+                        collection.Add(new JsonStringValue("sync", syncResult));
                     }
                 }
                 else
@@ -338,6 +344,7 @@ namespace project.Presentation.Base
                         bc.Entity.RMLOCNo3 = jp.getValue("RMLOCNo3");
                         bc.Entity.RMLOCNo4 = jp.getValue("RMLOCNo4");
                         bc.Entity.RMRentType = jp.getValue("RMRentType");
+                        bc.Entity.IsStatistics = bool.Parse(jp.getValue("IsStatistics"));
                         bc.Entity.RMBuildSize = ParseDecimalForString(jp.getValue("RMBuildSize"));
                         bc.Entity.RMRentSize = ParseDecimalForString(jp.getValue("RMRentSize"));
                         bc.Entity.RMAddr = jp.getValue("RMAddr");
@@ -346,14 +353,16 @@ namespace project.Presentation.Base
 
                         bc.Entity.RMCreator = user.Entity.UserName;
                         bc.Entity.RMCreateDate = GetDate();
-                        
+
                         int r = bc.Save("insert");
                         if (r <= 0)
                             flag = "2";
                         else
                         {
+                            //同步到资源系统
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                            srv.AddOrUpdateRoom(JsonConvert.SerializeObject(bc.Entity));
+                            string syncResult = srv.AddOrUpdateRoom(JsonConvert.SerializeObject(bc.Entity));
+                            collection.Add(new JsonStringValue("sync", syncResult));
                         }
                     }
                 }
@@ -404,6 +413,13 @@ namespace project.Presentation.Base
 
                 int r = bc.valid();
                 if (r <= 0) flag = "2";
+                else
+                {
+                    //同步到资源系统
+                    ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                    string syncResult = srv.AddOrUpdateRoom(JsonConvert.SerializeObject(bc.Entity));
+                    collection.Add(new JsonStringValue("sync", syncResult));
+                }
                 if (bc.Entity.RMISEnable)
                     collection.Add(new JsonStringValue("stat", "<span class=\"label radius\">禁用</span>"));
                 else
@@ -497,6 +513,6 @@ namespace project.Presentation.Base
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("RMIDS"), jp.getValue("RMLOCNo1S"), jp.getValue("RMLOCNo2S"), jp.getValue("RMLOCNo3S"),
                 jp.getValue("RMLOCNo4S"), jp.getValue("CustNoS"), jp.getValue("RMStatusS"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
-        }        
+        }
     }
 }

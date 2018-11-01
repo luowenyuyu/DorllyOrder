@@ -350,10 +350,10 @@
   </wsdl:binding>
   <wsdl:service name="ResourceService">
     <wsdl:port name="ResourceServiceSoap" binding="tns:ResourceServiceSoap">
-      <soap:address location="http://zy.dorlly.com/webapi/resourceservice.asmx" />
+      <soap:address location="http://120.76.154.6:8998/webapi/resourceservice.asmx" />
     </wsdl:port>
     <wsdl:port name="ResourceServiceSoap12" binding="tns:ResourceServiceSoap12">
-      <soap12:address location="http://zy.dorlly.com/webapi/resourceservice.asmx" />
+      <soap12:address location="http://120.76.154.6:8998/webapi/resourceservice.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

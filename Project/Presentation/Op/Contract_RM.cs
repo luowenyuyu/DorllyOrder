@@ -927,6 +927,8 @@ namespace project.Presentation.Op
                         }
                         else
                         {
+                            #region 同步到资源系统
+
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
                             string Items = "";
 
@@ -940,6 +942,7 @@ namespace project.Presentation.Op
                                 rs.ResourceID = dr["RMID"].ToString();
                                 rs.RentArea = ParseDecimalForString(dr["RentArea"].ToString());
                                 rs.BusinessID = bc.Entity.RowPointer;
+                                rs.BusinessNo = bc.Entity.ContractNo;
                                 rs.BusinessType = 1;//1租赁，2物业
                                 rs.RentBeginTime = bc.Entity.FeeStartDate;
                                 rs.RentEndTime = bc.Entity.ContractEndDate;
@@ -954,13 +957,17 @@ namespace project.Presentation.Op
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            string result = srv.LeaseIn("[" + Items + "]");
-                            collection.Add(new JsonStringValue("syncreturn", result));
+                            string syncResult = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("sync", syncResult));
+ 
+                            #endregion
+
                         }
                         collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
                     }
                     else
                     {
+                        //取消审核
                         if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer + "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
                         {
                             flag = "4";
@@ -979,6 +986,7 @@ namespace project.Presentation.Op
                             }
                             catch { }
 
+                            #region 同步到资源系统
 
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
                             string Items = "";
@@ -993,6 +1001,7 @@ namespace project.Presentation.Op
                                 rs.ResourceID = dr["RMID"].ToString();
                                 rs.RentArea = ParseDecimalForString(dr["RentArea"].ToString());
                                 rs.BusinessID = bc.Entity.RowPointer;
+                                rs.BusinessNo = bc.Entity.ContractNo;
                                 rs.BusinessType = 1;//1租赁，2物业
                                 rs.RentBeginTime = bc.Entity.FeeStartDate;
                                 rs.RentEndTime = bc.Entity.ContractEndDate;
@@ -1007,8 +1016,10 @@ namespace project.Presentation.Op
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
 
-                            string result = srv.LeaseDel("[" + Items + "]");
-                            collection.Add(new JsonStringValue("syncreturn", result));
+                            string syncResult = srv.LeaseDel("[" + Items + "]");
+                            collection.Add(new JsonStringValue("sync", syncResult));
+                            
+                            #endregion
                         }
                     }
                 }

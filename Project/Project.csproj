@@ -541,10 +541,10 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>project_ButlerSrv_AppService</CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://zy.dorlly.com/webapi/resourceservice.asmx">
+    <WebReferenceUrl Include="http://120.76.154.6:8998/webapi/resourceservice.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\ResourceService\</RelPath>
-      <UpdateFromURL>http://zy.dorlly.com/webapi/resourceservice.asmx</UpdateFromURL>
+      <UpdateFromURL>http://120.76.154.6:8998/webapi/resourceservice.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

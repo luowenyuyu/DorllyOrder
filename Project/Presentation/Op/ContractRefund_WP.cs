@@ -367,10 +367,10 @@ namespace project.Presentation.Op
                                 jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
                                 jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
 
+                        #region 同步到资源系统
 
                         ResourceService.ResourceService srv = new ResourceService.ResourceService();
                         string Items = "";
-
                         Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
                         cust.load(bc.Entity.ContractCustNo);
                         DataTable dt = obj.PopulateDataSet("SELECT WPNo FROM Op_ContractWPRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY WPNo").Tables[0];
@@ -380,6 +380,7 @@ namespace project.Presentation.Op
                             rs.SysID = 1; //1.订单
                             rs.ResourceID = dr["WPNo"].ToString();
                             rs.BusinessID = bc.Entity.RowPointer;
+                            rs.BusinessNo = bc.Entity.ContractNo;
                             rs.BusinessType = 1;//1租赁，2物业
                             rs.RentBeginTime = bc.Entity.FeeStartDate;
                             rs.RentEndTime = GetDate();
@@ -390,8 +391,10 @@ namespace project.Presentation.Op
 
                             Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                         }
-                        string result = srv.LeaseOut("[" + Items + "]");
-                        collection.Add(new JsonStringValue("syncreturn", result));
+                        string syncResult = srv.LeaseOut("[" + Items + "]");
+                        collection.Add(new JsonStringValue("sync", syncResult));
+                        
+                        #endregion
                     }
                 }
             }

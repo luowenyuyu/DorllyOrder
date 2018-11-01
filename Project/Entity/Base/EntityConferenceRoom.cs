@@ -245,5 +245,10 @@ namespace project.Entity.Base
             get { return _CRCreator; }
             set { _CRCreator = value; }
         }
+        /// <summary>
+        /// 是否纳入统计：0：否；1：是
+        /// bit类型
+        /// </summary>
+        public bool IsStatistics { get; set; }
     }
 }

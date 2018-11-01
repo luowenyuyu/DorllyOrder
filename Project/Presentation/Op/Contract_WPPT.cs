@@ -953,6 +953,8 @@ namespace project.Presentation.Op
                         }
                         else
                         {
+                            #region 同步到资源系统
+                            /*
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
                             string Items = "";
 
@@ -965,6 +967,7 @@ namespace project.Presentation.Op
                                 rs.SysID = 1; //1.订单
                                 rs.ResourceID = dr["WPNo"].ToString();
                                 rs.BusinessID = bc.Entity.RowPointer;
+                                rs.BusinessNo = bc.Entity.ContractNo;
                                 rs.BusinessType = 2;//1租赁，2物业
                                 rs.RentBeginTime = bc.Entity.FeeStartDate;
                                 rs.RentEndTime = bc.Entity.ContractEndDate;
@@ -978,9 +981,10 @@ namespace project.Presentation.Op
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
-
-                            string result = srv.LeaseIn("[" + Items + "]");
-                            collection.Add(new JsonStringValue("syncreturn", result));
+                            string syncResult = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("sync", syncResult));
+                            */
+                            #endregion
                         }
                         collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
                     }
@@ -998,7 +1002,8 @@ namespace project.Presentation.Op
                             bc.invalid();
                             collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
 
-
+                            #region 同步到资源系统
+                            /*
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
                             string Items = "";
                             Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
@@ -1010,6 +1015,7 @@ namespace project.Presentation.Op
                                 rs.SysID = 1; //1.订单
                                 rs.ResourceID = dr["WPNo"].ToString();
                                 rs.BusinessID = bc.Entity.RowPointer;
+                                rs.BusinessNo = bc.Entity.ContractNo;
                                 rs.BusinessType = 2;//1租赁，2物业
                                 rs.RentBeginTime = bc.Entity.FeeStartDate;
                                 rs.RentEndTime = bc.Entity.ContractEndDate;
@@ -1023,9 +1029,10 @@ namespace project.Presentation.Op
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
-
-                            string result = srv.LeaseDel("[" + Items + "]");
-                            collection.Add(new JsonStringValue("syncreturn", result));
+                            string syncResult = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("sync", syncResult));
+                            */
+                            #endregion
                         }
                     }
                 }

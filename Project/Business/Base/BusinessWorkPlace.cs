@@ -69,6 +69,7 @@ namespace project.Business.Base
             _entity.WPISEnable = bool.Parse(dr["WPISEnable"].ToString());
             _entity.WPCreateDate = ParseDateTimeForString(dr["WPCreateDate"].ToString());
             _entity.WPCreator = dr["WPCreator"].ToString();
+            _entity.IsStatistics = bool.Parse(string.IsNullOrEmpty(dr["IsStatistics"].ToString()) ? "false" : dr["IsStatistics"].ToString());
         }
 
         /// </summary>
@@ -78,18 +79,19 @@ namespace project.Business.Base
         {
             string sqlstr = "";
             if (type == "insert")
-                sqlstr = "insert into Mstr_WorkPlace(WPNo,WPType,WPSeat,WPSeatPrice,WPLOCNo1,WPLOCNo2,WPLOCNo3,WPLOCNo4,WPRMID,WPProject,WPAddr,"+
-                    "WPStatus,WPISEnable,WPCreateDate,WPCreator)" +
+                sqlstr = "insert into Mstr_WorkPlace(WPNo,WPType,WPSeat,WPSeatPrice,WPLOCNo1,WPLOCNo2,WPLOCNo3,WPLOCNo4,WPRMID,WPProject,WPAddr," +
+                    "WPStatus,WPISEnable,WPCreateDate,WPCreator,IsStatistics)" +
                     "values('" + Entity.WPNo + "'" + "," + "'" + Entity.WPType + "'" + "," + Entity.WPSeat + "," + Entity.WPSeatPrice + "," +
                     "'" + Entity.WPLOCNo1 + "'" + "," + "'" + Entity.WPLOCNo2 + "'" + "," + "'" + Entity.WPLOCNo3 + "'" + "," + "'" + Entity.WPLOCNo4 + "'" + "," +
-                    "'" + Entity.WPRMID + "'" + "," + "'" + Entity.WPProject + "'" + "," + "'" + Entity.WPAddr + "'" + ",'free',0,"+
-                    "'" + Entity.WPCreateDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + "," + "'" + Entity.WPCreator + "'" + ")";
+                    "'" + Entity.WPRMID + "'" + "," + "'" + Entity.WPProject + "'" + "," + "'" + Entity.WPAddr + "'" + ",'free',0," +
+                    "'" + Entity.WPCreateDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + "," + "'" + Entity.WPCreator + "'" + "," + (Entity.IsStatistics == true ? "1" : "0") + ")";
             else
                 sqlstr = "update Mstr_WorkPlace" +
                     " set WPType=" + "'" + Entity.WPType + "'" + "," + "WPSeat=" + Entity.WPSeat + "," + "WPSeatPrice=" + Entity.WPSeatPrice + "," +
                     "WPLOCNo1=" + "'" + Entity.WPLOCNo1 + "'" + "," + "WPLOCNo2=" + "'" + Entity.WPLOCNo2 + "'" + "," + "WPLOCNo3=" + "'" + Entity.WPLOCNo3 + "'" + "," +
                     "WPLOCNo4=" + "'" + Entity.WPLOCNo4 + "'" + "," + "WPRMID=" + "'" + Entity.WPRMID + "'" + "," + "WPProject=" + "'" + Entity.WPProject + "'" + "," +
-                    "WPAddr=" + "'" + Entity.WPAddr + "'" +
+                    "WPAddr=" + "'" + Entity.WPAddr + "'" + "," +
+                    "IsStatistics=" + (Entity.IsStatistics == true ? "1" : "0") +
                     " where WPNo='" + Entity.WPNo + "'";
             return objdata.ExecuteNonQuery(sqlstr);
         }
@@ -258,7 +260,7 @@ namespace project.Business.Base
                     "left join Mstr_Location c on c.LOCNo=a.WPLOCNo1 " +
                     "left join Mstr_Location d on d.LOCNo=a.WPLOCNo2 " +
                     "left join Mstr_Location e on e.LOCNo=a.WPLOCNo3 " +
-                    "left join Mstr_Location f on f.LOCNo=a.WPLOCNo4 ", 
+                    "left join Mstr_Location f on f.LOCNo=a.WPLOCNo4 ",
                     "a.*,b.WPTypeName,c.LOCName as WPLOCNo1Name,d.LOCName as WPLOCNo2Name,e.LOCName as WPLOCNo3Name,f.LOCName as WPLOCNo4Name", wherestr, startRow, pageSize, OrderField));
             }
             else

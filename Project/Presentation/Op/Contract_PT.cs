@@ -73,7 +73,7 @@ namespace project.Presentation.Op
 
                         list = createList(string.Empty, string.Empty, "04", string.Empty, string.Empty, string.Empty,
                                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 1);
-                        
+
                         date = GetDate().ToString("yyyy-MM-dd");
 
                         ContractTypeStr = "<select class=\"input-text required\" id=\"ContractType\" disabled=\"disabled\">";
@@ -290,7 +290,7 @@ namespace project.Presentation.Op
             string result = "";
             JsonArrayParse jp = new JsonArrayParse(this._clientArgument);
             if (jp.getValue("Type") == "insert")
-                result = insertaction(jp); 
+                result = insertaction(jp);
             else if (jp.getValue("Type") == "delete")
                 result = deleteaction(jp);
             else if (jp.getValue("Type") == "update")
@@ -328,7 +328,7 @@ namespace project.Presentation.Op
                 result = getprice4action(jp);
             return result;
         }
-        
+
         private string checkaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
@@ -943,6 +943,8 @@ namespace project.Presentation.Op
                         }
                         else
                         {
+                            #region 同步到资源系统
+                            /*
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
                             string Items = "";
 
@@ -955,6 +957,7 @@ namespace project.Presentation.Op
                                 rs.SysID = 1; //1.订单
                                 rs.ResourceID = dr["RMID"].ToString();
                                 rs.BusinessID = bc.Entity.RowPointer;
+                                rs.BusinessNo = bc.Entity.ContractNo;
                                 rs.BusinessType = 2;//1租赁，2物业
                                 rs.RentBeginTime = bc.Entity.FeeStartDate;
                                 rs.RentEndTime = bc.Entity.ContractEndDate;
@@ -968,10 +971,12 @@ namespace project.Presentation.Op
 
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
-                            string result = srv.LeaseIn("[" + Items + "]");
-                            collection.Add(new JsonStringValue("syncreturn", result));
+                            string syncResult = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("sync", syncResult)); 
+                            */
+                            #endregion
                         }
-                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));                        
+                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
                     }
                     else
                     {
@@ -987,6 +992,8 @@ namespace project.Presentation.Op
                             bc.invalid();
                             collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
 
+                            #region 同步到资源系统
+                            /*
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
                             string Items = "";
 
@@ -999,6 +1006,7 @@ namespace project.Presentation.Op
                                 rs.SysID = 1; //1.订单
                                 rs.ResourceID = dr["RMID"].ToString();
                                 rs.BusinessID = bc.Entity.RowPointer;
+                                rs.BusinessNo = bc.Entity.ContractNo;
                                 rs.BusinessType = 2;//1租赁，2物业
                                 rs.RentBeginTime = bc.Entity.FeeStartDate;
                                 rs.RentEndTime = bc.Entity.ContractEndDate;
@@ -1011,8 +1019,10 @@ namespace project.Presentation.Op
                                 rs.UpdateUser = user.Entity.UserName;
                                 Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                             }
-                            string result = srv.LeaseDel("[" + Items + "]");
-                            collection.Add(new JsonStringValue("syncreturn", result));
+                            string syncResult = srv.LeaseIn("[" + Items + "]");
+                            collection.Add(new JsonStringValue("sync", syncResult));
+                            */
+                            #endregion
                         }
                     }
                 }
@@ -1087,7 +1097,7 @@ namespace project.Presentation.Op
                 jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
-        
+
 
         #region Item4 管理费、空调费
         private string itemsave4action(JsonArrayParse jp)

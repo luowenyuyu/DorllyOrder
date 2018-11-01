@@ -503,12 +503,12 @@
                     if (vjson.status == "1") {
                         $("#" + vjson.id + " td").eq(7).html("<label style=\"color:red;\">制单</label>");
                         layer.alert("取消审核成功！");
-                        console.log(vjson.syncreturn);
+                        //console.log(vjson.sync);
                     }
                     else {
                         $("#" + vjson.id + " td").eq(7).html("<label style=\"color:blue;\">已审核</label>");
                         layer.alert("审核成功！");
-                        console.log(vjson.syncreturn);
+                        //console.log(vjson.sync);
                     }
                 }
                 else if (vjson.flag == "3") {

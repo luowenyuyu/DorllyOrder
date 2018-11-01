@@ -1,6 +1,7 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Base.Room,project"  %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Base.Room,project" %>
+
 <!DOCTYPE>
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head id="head1" runat="server">
     <title>房间资料</title>
     <!--[if lt IE 9]>
@@ -21,9 +22,9 @@
 </head>
 <body>
     <form id="form1" runat="server"></form>
-   <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 基础资料 <span class="c-gray en">&gt;</span>房间资料 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:2px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 基础资料 <span class="c-gray en">&gt;</span>房间资料 <a class="btn btn-success radius r mr-20" style="line-height: 1.6em; margin-top: 2px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div id="list" class="pt-5 pr-20 pb-5 pl-20">
-	    <div class="cl pd-5 bg-1 bk-gray mt-2"> 
+        <div class="cl pd-5 bg-1 bk-gray mt-2">
             <span class="l">
                 <%--<a href="javascript:;" onclick="insert()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
                 <a href="javascript:;" onclick="update()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe60c;</i> 修改</a> 
@@ -31,164 +32,178 @@
                 <a href="javascript:;" onclick="valid()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 启用(禁用)</a>--%>
                 <%=Buttons %>
                 <input type="hidden" id="selectKey" />
-            </span> 
-	    </div>
-        
-	    <div class="cl pd-10  bk-gray mt-2"> 
+            </span>
+        </div>
+
+        <div class="cl pd-10  bk-gray mt-2">
             园区&nbsp;<%=RMLOCNo1StrS %>&nbsp;
-            建设期&nbsp;<select class="input-text required size-MINI" id="RMLOCNo2S" style="width:120px"><option value="">全部</option></select>&nbsp;
-            楼栋&nbsp;<select class="input-text required size-MINI" id="RMLOCNo3S" style="width:120px"><option value="">全部</option></select>&nbsp;
-            楼层&nbsp;<select class="input-text required size-MINI" id="RMLOCNo4S" style="width:120px"><option value="">全部</option></select>
+            建设期&nbsp;<select class="input-text required size-MINI" id="RMLOCNo2S" style="width: 120px"><option value="">全部</option>
+            </select>&nbsp;
+            楼栋&nbsp;<select class="input-text required size-MINI" id="RMLOCNo3S" style="width: 120px"><option value="">全部</option>
+            </select>&nbsp;
+            楼层&nbsp;<select class="input-text required size-MINI" id="RMLOCNo4S" style="width: 120px"><option value="">全部</option>
+            </select>
             <br />
-		    房间编号&nbsp;<input type="text" class="input-text size-MINI" style="width:150px" placeholder="房间编号" id="RMIDS" />&nbsp;
+            房间编号&nbsp;<input type="text" class="input-text size-MINI" style="width: 150px" placeholder="房间编号" id="RMIDS" />&nbsp;
 		    客户&nbsp;            
-            <input type="text" class="input-text size-MINI" placeholder="名称" id="CustNoSName" onblur="check('CustNoS','Cust')" style="width:150px;" />
+            <input type="text" class="input-text size-MINI" placeholder="名称" id="CustNoSName" onblur="check('CustNoS','Cust')" style="width: 150px;" />
             <input type="hidden" id="CustNoS" />
             <img id="CustNoSImg" alt="" src="../../images/view_detail.png" class="view_detail" />
-            状态&nbsp;<select class="input-text size-MINI" id="RMStatusS" style="width:150px">
+            状态&nbsp;<select class="input-text size-MINI" id="RMStatusS" style="width: 150px">
                 <option value="" selected>全部</option>
                 <option value="free">空闲</option>
                 <option value="use">占用</option>
                 <option value="reserve">预留</option>
             </select>&nbsp;
 		    <button type="submit" class="btn btn-success radius" onclick="select()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
-	    </div>
-	    <div class="mt-5" id="outerlist">
-	    <%=list %>
-	    </div>
+        </div>
+        <div class="mt-5" id="outerlist">
+            <%=list %>
+        </div>
     </div>
-    <div id="edit" class="pt-5 pr-20 pb-5 pl-20 " style="display:none;">
-      <div class="form form-horizontal bk-gray mt-15 pb-10" id="editlist">
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>房间编号：</label>
-          <div class="formControls col-2">
-            <input type="text" class="input-text required" placeholder="房间编号" disabled="disabled" id="RMID" data-valid="isNonEmpty||between:1-30" data-error="房间号不能为空||房间编号长度为1-30位" />
-          </div>
-          <div class="col-1"></div>
-        </div>
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>房间号：</label>
-          <div class="formControls col-2">
-            <input type="text" class="input-text required" placeholder="房间号" id="RMNo" data-valid="isNonEmpty||between:1-16" data-error="房间号不能为空||房间号长度为1-16位"/>
-          </div>
-         
-          <label class="form-label col-3"><span class="c-red">*</span>园区：</label>
-          <div class="formControls col-2">
-            <%=RMLOCNo1Str %>
-          </div>
-          <div class="col-1"></div>
-        </div>
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>建设期：</label>
-          <div class="formControls col-2">
-            <select class="input-text required" id="RMLOCNo2" data-valid="isNonEmpty" data-error="建设期不能为空" ></select>
-          </div>
-        
-          <label class="form-label col-3"><span class="c-red">*</span>楼栋：</label>
-          <div class="formControls col-2">
-            <select class="input-text required" id="RMLOCNo3" data-valid="isNonEmpty" data-error="楼栋不能为空" ></select>
-          </div>
-          <div class="col-1"></div>
-        </div>
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>楼层：</label>
-          <div class="formControls col-2">
-            <select class="input-text required" id="RMLOCNo4" data-valid="isNonEmpty" data-error="楼层不能为空" ></select>
-          </div>
-       
-          <label class="form-label col-3"><span class="c-red">*</span>出租类型：</label>
-          <div class="formControls col-2">
-            <select class="input-text required" id="RMRentType" data-valid="isNonEmpty" data-error="出租类型不能为空">
-                <option value="1">办公楼</option>
-                <option value="2">住宅</option>
-                <option value="3">仓库</option>
-                <option value="4">商铺</option>
-                <option value="5">厂房</option>
-            </select>
-          </div>
-          <div class="col-1"></div>
-        </div>
-        <div class="row cl">        
-          <label class="form-label col-2"><span class="c-red">*</span>出租面积：</label>
-          <div class="formControls col-2">
-            <input type="text" class="input-text required" placeholder="出租面积" id="RMRentSize" onchange="validDecimal(this.id)" data-valid="isNonEmpty" data-error="出租面积不能为空"/>
-          </div>
+    <div id="edit" class="pt-5 pr-20 pb-5 pl-20 " style="display: none;">
+        <div class="form form-horizontal bk-gray mt-15 pb-10" id="editlist">
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>房间编号：</label>
+                <div class="formControls col-2">
+                    <input type="text" class="input-text required" placeholder="房间编号" disabled="disabled" id="RMID" data-valid="isNonEmpty||between:1-30" data-error="房间号不能为空||房间编号长度为1-30位" />
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>房间号：</label>
+                <div class="formControls col-2">
+                    <input type="text" class="input-text required" placeholder="房间号" id="RMNo" data-valid="isNonEmpty||between:1-16" data-error="房间号不能为空||房间号长度为1-16位" />
+                </div>
 
-          <label class="form-label col-3">建筑面积：</label>
-          <div class="formControls col-2">
-            <input type="text" class="input-text required" placeholder="建筑面积" id="RMBuildSize" onchange="validDecimal(this.id)" data-valid="between:0-30" data-error=""/>
-          </div>        
-          <div class="col-1"></div>
-        </div>
-        <div class="row cl">
-          <label class="form-label col-2">位置：</label>
-          <div class="formControls col-7">
-            <textarea cols="" rows="3" class="textarea required" placeholder="位置" id="RMAddr" data-valid="between:0-300" data-error="位置长度为0-300位"></textarea>
-          </div>
-          <div class="col-1"></div>
-        </div>
-        <div class="row cl">
-          <label class="form-label col-2">备注：</label>
-          <div class="formControls col-7">
-            <textarea cols="" rows="3" class="textarea required" placeholder="备注" id="RMRemark" data-valid="between:0-500" data-error="备注长度为0-500位"></textarea>
-          </div>
-          <div class="col-1"></div>
-        </div>
-          
-        <div class="row cl" style="display:none;">
-          <label class="form-label col-3"><span class="c-red">*</span>是否有空调：</label>
-          <div class="formControls col-2">
-            <select class="input-text required" id="HaveAirCondition" data-valid="isNonEmpty" data-error="请选择">
-                <option value="false">无</option>
-                <option value="true">有</option>
-            </select>
-          </div>
-          <div class="col-1"></div>
-        </div>
+                <label class="form-label col-3"><span class="c-red">*</span>园区：</label>
+                <div class="formControls col-2">
+                    <%=RMLOCNo1Str %>
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>建设期：</label>
+                <div class="formControls col-2">
+                    <select class="input-text required" id="RMLOCNo2" data-valid="isNonEmpty" data-error="建设期不能为空"></select>
+                </div>
 
-        <div class="row cl">
-          <div class="col-9 col-offset-4">
-            <input class="btn btn-primary radius" type="button" onclick="submit()" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
-			<input class="btn btn-default radius" type="button" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
-          </div>
+                <label class="form-label col-3"><span class="c-red">*</span>楼栋：</label>
+                <div class="formControls col-2">
+                    <select class="input-text required" id="RMLOCNo3" data-valid="isNonEmpty" data-error="楼栋不能为空"></select>
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>楼层：</label>
+                <div class="formControls col-2">
+                    <select class="input-text required" id="RMLOCNo4" data-valid="isNonEmpty" data-error="楼层不能为空"></select>
+                </div>
+
+                <label class="form-label col-3"><span class="c-red">*</span>出租类型：</label>
+                <div class="formControls col-2">
+                    <select class="input-text required" id="RMRentType" data-valid="isNonEmpty" data-error="出租类型不能为空">
+                        <option value="1">办公楼</option>
+                        <option value="2">住宅</option>
+                        <option value="3">仓库</option>
+                        <option value="4">商铺</option>
+                        <option value="5">厂房</option>
+                    </select>
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>出租面积：</label>
+                <div class="formControls col-2">
+                    <input type="text" class="input-text required" placeholder="出租面积" id="RMRentSize" onchange="validDecimal(this.id)" data-valid="isNonEmpty" data-error="出租面积不能为空" />
+                </div>
+
+                <label class="form-label col-3">建筑面积：</label>
+                <div class="formControls col-2">
+                    <input type="text" class="input-text required" placeholder="建筑面积" id="RMBuildSize" onchange="validDecimal(this.id)" data-valid="between:0-30" data-error="" />
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>是否纳入统计：</label>
+                <div class="formControls col-2">
+                    <select class="input-text required" id="IsStatistics" data-valid="isNonEmpty" data-error="纳入统计不能为空">
+                        <option value="true" selected>是</option>
+                        <option value="false">否</option>
+                    </select>
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-2">位置：</label>
+                <div class="formControls col-7">
+                    <textarea cols="" rows="3" class="textarea required" placeholder="位置" id="RMAddr" data-valid="between:0-300" data-error="位置长度为0-300位"></textarea>
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-2">备注：</label>
+                <div class="formControls col-7">
+                    <textarea cols="" rows="3" class="textarea required" placeholder="备注" id="RMRemark" data-valid="between:0-500" data-error="备注长度为0-500位"></textarea>
+                </div>
+                <div class="col-1"></div>
+            </div>
+
+            <div class="row cl" style="display: none;">
+                <label class="form-label col-3"><span class="c-red">*</span>是否有空调：</label>
+                <div class="formControls col-2">
+                    <select class="input-text required" id="HaveAirCondition" data-valid="isNonEmpty" data-error="请选择">
+                        <option value="false">无</option>
+                        <option value="true">有</option>
+                    </select>
+                </div>
+                <div class="col-1"></div>
+            </div>
+
+            <div class="row cl">
+                <div class="col-9 col-offset-4">
+                    <input class="btn btn-primary radius" type="button" onclick="submit()" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+                    <input class="btn btn-default radius" type="button" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    
-    <div id="reservediv" style="display:none;">
-        <table style="width:400px; margin-top:10px;">
+
+    <div id="reservediv" style="display: none;">
+        <table style="width: 400px; margin-top: 10px;">
             <tr>
-                <td style="width:100px; text-align:center; padding:8px; height:40px;">房间号</td>
-                <td style="width:300px;">
-                    <input type="text" id="ReserveRMID" disabled="disabled" class="input-text size-MINI" style="width:200px;" />
+                <td style="width: 100px; text-align: center; padding: 8px; height: 40px;">房间号</td>
+                <td style="width: 300px;">
+                    <input type="text" id="ReserveRMID" disabled="disabled" class="input-text size-MINI" style="width: 200px;" />
                 </td>
             </tr>
             <tr>
-                <td style="width:100px; text-align:center; padding:8px; height:40px;">预留客户</td>
-                <td style="width:300px;">
-                    <input type="text" id="ReserveCustName" onblur="check('ReserveCust','Cust')" class="input-text size-MINI" style="width:200px;" />
-                    <input style="display:none;" type="text" id="ReserveCust" />
+                <td style="width: 100px; text-align: center; padding: 8px; height: 40px;">预留客户</td>
+                <td style="width: 300px;">
+                    <input type="text" id="ReserveCustName" onblur="check('ReserveCust','Cust')" class="input-text size-MINI" style="width: 200px;" />
+                    <input style="display: none;" type="text" id="ReserveCust" />
                     <img id="ReserveCustImg" alt="" src="../../images/view_detail.png" class="view_detail" />
                 </td>
             </tr>
             <tr>
-                <td style="width:100px; text-align:center; padding:8px; height:40px;">预留到期日期</td>
-                <td style="width:300px;"><input type="text" id="ReserveDate" class="input-text size-MINI" style="width:200px;"/></td>
+                <td style="width: 100px; text-align: center; padding: 8px; height: 40px;">预留到期日期</td>
+                <td style="width: 300px;">
+                    <input type="text" id="ReserveDate" class="input-text size-MINI" style="width: 200px;" /></td>
             </tr>
         </table>
-        <div style="margin:10px 30px;">
+        <div style="margin: 10px 30px;">
             <input class="btn btn-primary radius" type="button" onclick="reservesubmit()" value="&nbsp;确&nbsp;定&nbsp;" />&nbsp;&nbsp;
             <input class="btn btn-primary radius" type="button" onclick="reservecancel()" value="&nbsp;关&nbsp;闭&nbsp;" />
         </div>
-    </div> 
-    
-    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script> 
+    </div>
+
+    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="../../jscript/script_common.js"></script>
     <script type="text/javascript" src="../../jscript/script_ajax.js"></script>
     <script type="text/javascript" src="../../jscript/json2.js"></script>
-    <script type="text/javascript" src="../../jscript/H-ui.js"></script> 
-    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script> 
-    <script type="text/javascript" src="../../lib/layer/layer.js"></script> 
+    <script type="text/javascript" src="../../jscript/H-ui.js"></script>
+    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script>
+    <script type="text/javascript" src="../../lib/layer/layer.js"></script>
     <script type="text/javascript" src="../../lib/validate/jquery.validate.js"></script>
     <script src="../../jscript/JsInputDate.js"></script>
     <script type="text/javascript">
@@ -214,6 +229,7 @@
                     $("#outerlist").html(vjson.liststr);
                     $("#selectKey").val("");
                     reflist();
+                    console.log(vjson.sync);
                 }
                 else {
                     layer.alert("数据操作出错！");
@@ -227,6 +243,7 @@
                     $("#list").css("display", "");
                     $("#edit").css("display", "none");
                     reflist();
+                    console.log(vjson.sync);
                 }
                 else if (vjson.flag == "3") {
                     showMsg("RMID", "此房间编号已存在", "1");
@@ -247,7 +264,7 @@
                     $("#RMAddr").val(vjson.RMAddr);
                     $("#RMRemark").val(vjson.RMRemark);
                     $("#HaveAirCondition").val(vjson.HaveAirCondition);
-                    
+                    $("#IsStatistics").val(vjson.IsStatistics);
                     $("#RMLOCNo2").empty();
                     $("#RMLOCNo2").append("<option value=''>请选择</option>");
                     for (var i = 0; i <= vjson.row - 1; i++) {
@@ -298,6 +315,7 @@
                     $("#outerlist").html(vjson.liststr);
                     $("#selectKey").val("");
                     reflist();
+                    console.log(vjson.sync);
                 }
                 else {
                     layer.alert("停止(启用)出现异常！");
@@ -450,6 +468,7 @@
                 submitData.RMLOCNo3 = $("#RMLOCNo3").val();
                 submitData.RMLOCNo4 = $("#RMLOCNo4").val();
                 submitData.RMRentType = $("#RMRentType").val();
+                submitData.IsStatistics = $("#IsStatistics").val();
                 submitData.RMBuildSize = $("#RMBuildSize").val();
                 submitData.RMRentSize = $("#RMRentSize").val();
                 submitData.RMAddr = $("#RMAddr").val();
@@ -600,7 +619,7 @@
             submitData.child = "RMLOCNo4S";
             transmitData(datatostr(submitData));
             return;
-        }); 
+        });
 
         jQuery("#RMLOCNo4").change(function () {
             GenRMID();
@@ -637,9 +656,9 @@
             layer.open({
                 type: 1,
                 area: ["400px", "240px"],
-                fix: true, 
+                fix: true,
                 maxmin: true,
-                scrollbar: false, 
+                scrollbar: false,
                 shade: 0.5,
                 title: "预留信息填写",
                 content: $("#reservediv")
@@ -718,13 +737,13 @@
                 return false;
             }
         }, tiptype = "1");
-        
+
         jQuery(function () {
             var ReserveDate = new JsInputDate("ReserveDate");
         });
 
         var trid = "";
         reflist();
-</script>
+    </script>
 </body>
 </html>

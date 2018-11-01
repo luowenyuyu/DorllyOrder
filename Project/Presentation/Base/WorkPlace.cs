@@ -127,7 +127,7 @@ namespace project.Presentation.Base
             sb.Append("<th width='21%'>地址</th>");
             sb.Append("</tr>");
             sb.Append("</thead>");
-            
+
             int r = 1;
             sb.Append("<tbody>");
             Business.Base.BusinessWorkPlace bc = new project.Business.Base.BusinessWorkPlace();
@@ -222,6 +222,7 @@ namespace project.Presentation.Base
                 collection.Add(new JsonStringValue("WPRMID", bc.Entity.WPRMID));
                 collection.Add(new JsonStringValue("WPProject", bc.Entity.WPProject));
                 collection.Add(new JsonStringValue("WPAddr", bc.Entity.WPAddr));
+                collection.Add(new JsonStringValue("IsStatistics", (bc.Entity.IsStatistics ? "true" : "false")));
 
                 string subtype = "";
                 int row = 0;
@@ -288,8 +289,10 @@ namespace project.Presentation.Base
                         flag = "2";
                     else
                     {
+                        //同步到资源系统
                         ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        srv.DeleteResource(bc.Entity.WPNo);
+                        string syncResult = srv.DeleteResource(bc.Entity.WPNo);
+                        collection.Add(new JsonStringValue("sync", syncResult));
                     }
                 }
                 //}
@@ -323,15 +326,17 @@ namespace project.Presentation.Base
                     bc.Entity.WPRMID = jp.getValue("WPRMID");
                     bc.Entity.WPProject = jp.getValue("WPProject");
                     bc.Entity.WPAddr = jp.getValue("WPAddr");
-
+                    bc.Entity.IsStatistics = bool.Parse(jp.getValue("IsStatistics"));
                     int r = bc.Save("update");
 
                     if (r <= 0)
                         flag = "2";
                     else
                     {
+                        //同步到资源系统
                         ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                        string syncResult = srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                        collection.Add(new JsonStringValue("sync", syncResult));
                     }
                 }
                 else
@@ -353,7 +358,7 @@ namespace project.Presentation.Base
                         bc.Entity.WPRMID = jp.getValue("WPRMID");
                         bc.Entity.WPProject = jp.getValue("WPProject");
                         bc.Entity.WPAddr = jp.getValue("WPAddr");
-
+                        bc.Entity.IsStatistics = bool.Parse(jp.getValue("IsStatistics"));
                         bc.Entity.WPCreator = user.Entity.UserName;
                         bc.Entity.WPCreateDate = GetDate();
 
@@ -362,8 +367,10 @@ namespace project.Presentation.Base
                             flag = "2";
                         else
                         {
+                            //同步到资源系统
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                            srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                            string syncResult = srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                            collection.Add(new JsonStringValue("sync", syncResult));
                         }
                     }
                 }
@@ -414,6 +421,13 @@ namespace project.Presentation.Base
 
                 int r = bc.valid();
                 if (r <= 0) flag = "2";
+                else
+                {
+                    //同步到资源系统
+                    ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                    string syncResult = srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                    collection.Add(new JsonStringValue("sync", syncResult));
+                }
                 if (bc.Entity.WPISEnable)
                     collection.Add(new JsonStringValue("stat", "<span class=\"label radius\">禁用</span>"));
                 else

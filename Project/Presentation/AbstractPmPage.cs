@@ -525,9 +525,10 @@ namespace project.Presentation
         public SycnResourceStatus() { }
 
         public Nullable<int> SysID { get; set; }
-        public string ResourceID { get; set; }
+        public string ResourceID { get; set; }      
         public decimal RentArea { get; set; }
         public string BusinessID { get; set; }
+        public string BusinessNo { get; set; }
         public Nullable<int> BusinessType { get; set; }
         public Nullable<System.DateTime> RentBeginTime { get; set; }
         public Nullable<System.DateTime> RentEndTime { get; set; }

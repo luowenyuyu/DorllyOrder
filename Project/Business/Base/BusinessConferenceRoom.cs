@@ -64,6 +64,7 @@ namespace project.Business.Base
             _entity.CRStatus = dr["CRStatus"].ToString();
             _entity.CRCreateDate = ParseDateTimeForString(dr["CRCreateDate"].ToString());
             _entity.CRCreator = dr["CRCreator"].ToString();
+            _entity.IsStatistics = bool.Parse(string.IsNullOrEmpty(dr["IsStatistics"].ToString()) ? "0" : dr["IsStatistics"].ToString());
         }
 
         /// </summary>

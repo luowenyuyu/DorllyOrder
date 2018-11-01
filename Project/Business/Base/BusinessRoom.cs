@@ -73,6 +73,7 @@ namespace project.Business.Base
             _entity.RMCreateDate = ParseDateTimeForString(dr["RMCreateDate"].ToString());
             _entity.RMCreator = dr["RMCreator"].ToString();
             _entity.HaveAirCondition = bool.Parse(dr["HaveAirCondition"].ToString());
+            _entity.IsStatistics = bool.Parse(string.IsNullOrEmpty(dr["IsStatistics"].ToString()) ? "false" : dr["IsStatistics"].ToString());
         }
 
         /// </summary>
@@ -83,12 +84,12 @@ namespace project.Business.Base
             string sqlstr = "";
             if (type == "insert")
                 sqlstr = "insert into Mstr_Room(RMID,RMNo,RMLOCNo1,RMLOCNo2,RMLOCNo3,RMLOCNo4,RMRentType,RMBuildSize,RMRentSize,RMAddr,RMRemark,RMISEnable," +
-                        "RMStatus,RMReservedDate,RMEndReservedDate,RMCurrentCustNo,RMCreateDate,RMCreator,HaveAirCondition)" +
+                        "RMStatus,RMReservedDate,RMEndReservedDate,RMCurrentCustNo,RMCreateDate,RMCreator,HaveAirCondition,IsStatistics)" +
                     "values('" + Entity.RMID + "'" + "," + "'" + Entity.RMNo + "'" + "," + "'" + Entity.RMLOCNo1 + "'" + "," + "'" + Entity.RMLOCNo2 + "'" + "," +
                     "'" + Entity.RMLOCNo3 + "'" + "," + "'" + Entity.RMLOCNo4 + "'" + "," + "'" + Entity.RMRentType + "'" + "," + Entity.RMBuildSize + "," +
                     Entity.RMRentSize + "," + "'" + Entity.RMAddr + "'" + "," + "'" + Entity.RMRemark + "'" + "," + "0,'free',null,null,''," +
                     "'" + Entity.RMCreateDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + ",'" + Entity.RMCreator + "'" + "," +
-                    (Entity.HaveAirCondition == true ? "1" : "0") + ")";
+                    (Entity.HaveAirCondition == true ? "1" : "0") + "," + (Entity.IsStatistics == true ? "1" : "0") + ")";
             else
                 sqlstr = "update Mstr_Room" +
                     " set RMLOCNo1=" + "'" + Entity.RMLOCNo1 + "'" + "," +
@@ -96,7 +97,8 @@ namespace project.Business.Base
                     "RMLOCNo4=" + "'" + Entity.RMLOCNo4 + "'" + "," + "RMRentType=" + "'" + Entity.RMRentType + "'" + "," +
                     "RMBuildSize=" + Entity.RMBuildSize + "," + "RMRentSize=" + Entity.RMRentSize + "," +
                     "RMAddr=" + "'" + Entity.RMAddr + "'" + "," + "RMRemark=" + "'" + Entity.RMRemark + "'" + "," +
-                    "HaveAirCondition=" + (Entity.HaveAirCondition == true ? "1" : "0") +
+                    "HaveAirCondition=" + (Entity.HaveAirCondition == true ? "1" : "0") + "," +
+                    "IsStatistics=" + (Entity.IsStatistics == true ? "1" : "0")+
                     " where RMID='" + Entity.RMID + "'";
             return objdata.ExecuteNonQuery(sqlstr);
         }
