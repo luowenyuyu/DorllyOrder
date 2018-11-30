@@ -400,10 +400,10 @@ namespace project.Presentation.Op
                 result = gettypeaction(jp);
             else if (jp.getValue("Type") == "getsubtype")
                 result = getsubtypeaction(jp);
-            else if (jp.getValue("Type") == "CaluAmount")
-                result = CaluAmountaction(jp);
-            else if (jp.getValue("Type") == "CaluTaxAmount")
-                result = CaluTaxAmountaction(jp);
+            else if (jp.getValue("Type") == "CalcAmount")
+                result = CalcAmountaction(jp);
+            else if (jp.getValue("Type") == "CalcTax")
+                result = CalcTaxaction(jp);
 
             else if (jp.getValue("Type") == "getfee")
                 result = getfeeaction(jp);
@@ -1642,9 +1642,10 @@ namespace project.Presentation.Op
             {
                 Business.Base.BusinessService bc = new Business.Base.BusinessService();
                 bc.load(jp.getValue("ODSRVNo"));
-                collection.Add(new JsonStringValue("SRVSPNo", bc.Entity.SRVSPNo));
-                collection.Add(new JsonStringValue("SRVCalType", bc.Entity.SRVCalType));
                 collection.Add(new JsonStringValue("SRVTaxRate", bc.Entity.SRVTaxRate.ToString()));
+                /*
+                collection.Add(new JsonStringValue("SRVSPNo", bc.Entity.SRVSPNo));
+                collection.Add(new JsonStringValue("SRVCalType", bc.Entity.SRVCalType));                
                 collection.Add(new JsonStringValue("SRVRoundType", bc.Entity.SRVRoundType.ToString()));
                 decimal amount = 0;
                 decimal taxAmount = 0;
@@ -1672,7 +1673,7 @@ namespace project.Presentation.Op
                     }
                     else
                     {
-                        amount = Math.Round(ParseDecimalForString(jp.getValue("ODQTY")) 
+                        amount = Math.Round(ParseDecimalForString(jp.getValue("ODQTY"))
                             * ParseDecimalForString(jp.getValue("ODUnitPrice")), bc.Entity.SRVDecimalPoint);
                         taxAmount = amount - (Math.Round(amount / (1 + bc.Entity.SRVTaxRate)));
                         //taxAmount = Math.Round(ParseDecimalForString(jp.getValue("ODQTY")) 
@@ -1682,6 +1683,7 @@ namespace project.Presentation.Op
                 }
                 collection.Add(new JsonStringValue("amount", amount.ToString()));
                 collection.Add(new JsonStringValue("taxAmount", taxAmount.ToString()));
+                */
             }
             catch
             { flag = "2"; }
@@ -1762,68 +1764,98 @@ namespace project.Presentation.Op
 
             return collection.ToString();
         }
-        private string CaluAmountaction(JsonArrayParse jp)
+        private string CalcAmountaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
             string flag = "1";
             try
             {
+                string ODSRVNo = jp.getValue("ODSRVNo");
+                decimal ODQTY = ParseDecimalForString(jp.getValue("ODQTY"));
+                decimal ODUnitPrice = ParseDecimalForString(jp.getValue("ODUnitPrice"));
                 decimal amount = 0;
-                decimal taxAmount = 0;
                 Business.Base.BusinessService bc = new Business.Base.BusinessService();
-                bc.load(jp.getValue("ODSRVNo"));
+                bc.load(ODSRVNo);
+                if (bc.Entity.SRVRoundType.ToUpper() == "FLOOR") amount = Math.Floor(ODQTY * ODUnitPrice);
+                else if (bc.Entity.SRVRoundType.ToUpper() == "CEILING") amount = Math.Ceiling(ODQTY * ODUnitPrice);
+                else amount = Math.Round(ODQTY * ODUnitPrice, bc.Entity.SRVDecimalPoint);
+                collection.Add(new JsonStringValue("amount", amount.ToString()));
+            }
+            catch { flag = "2"; }
+
+            collection.Add(new JsonStringValue("type", "CalcAmount"));
+            collection.Add(new JsonStringValue("flag", flag));
+
+            return collection.ToString();
+        }
+        private string CalcTaxaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+            try
+            {
+
+                string ODSRVNo = jp.getValue("ODSRVNo");
+                decimal amount = ParseDecimalForString(jp.getValue("ODARAmount"));
+                decimal rate = ParseDecimalForString(jp.getValue("ODTaxRate"));
+                decimal tax = 0;
+                Business.Base.BusinessService bc = new Business.Base.BusinessService();
+                bc.load(ODSRVNo);
+                if (bc.Entity.SRVRoundType.ToUpper() == "FLOOR")
+                    tax = Math.Floor(amount - Math.Round(amount / (1 + rate), 2));
+                else if (bc.Entity.SRVRoundType.ToUpper() == "CEILING")
+                    tax = Math.Ceiling(amount - Math.Round(amount / (1 + rate), 2));
+                else
+                    tax = Math.Round(amount - Math.Round(amount / (1 + rate), 2), bc.Entity.SRVDecimalPoint);
+                collection.Add(new JsonStringValue("tax", tax.ToString()));
+            }
+            catch { flag = "2"; }
+
+            collection.Add(new JsonStringValue("type", "CalcTax"));
+            collection.Add(new JsonStringValue("flag", flag));
+
+            return collection.ToString();
+        }
+
+        private string CalcAmountAction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+            try
+            {
+                string ODSRVNo = jp.getValue("ODSRVNo");
+                decimal ODQTY = ParseDecimalForString(jp.getValue("ODQTY"));
+                decimal ODUnitPrice = ParseDecimalForString(jp.getValue("ODUnitPrice"));
+                decimal ODTaxRate = ParseDecimalForString(jp.getValue("ODTaxRate"));
+                decimal total = 0;
+                decimal tax = 0;
+                Business.Base.BusinessService bc = new Business.Base.BusinessService();
+                bc.load(ODSRVNo);
                 decimal SRVRate = bc.Entity.SRVRate;
                 if (SRVRate <= 0) SRVRate = 0;
 
                 if (bc.Entity.SRVRoundType.ToUpper() == "FLOOR")
                 {
-                    amount = Math.Floor(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice")));
-                    taxAmount = Math.Floor(amount - Math.Round((amount / (1 + ParseDecimalForString(jp.getValue("ODTaxRate")))), 2));
+                    total = Math.Floor(ODQTY * ODUnitPrice);
+                    tax = Math.Floor(total - Math.Round(total / (1 + ODTaxRate), 2));
                 }
                 else if (bc.Entity.SRVRoundType.ToUpper() == "CEILING")
                 {
-                    amount = Math.Ceiling(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice")));
-                    taxAmount = Math.Ceiling(amount - Math.Round((amount / (1 + ParseDecimalForString(jp.getValue("ODTaxRate")))), 2));
+                    total = Math.Ceiling(ODQTY * ODUnitPrice);
+                    tax = Math.Ceiling(total - Math.Round(total / (1 + ODTaxRate), 2));
                 }
                 else
                 {
-                    amount = Math.Round(ParseDecimalForString(jp.getValue("ODQTY")) * ParseDecimalForString(jp.getValue("ODUnitPrice")), bc.Entity.SRVDecimalPoint);
-                    taxAmount = Math.Round(amount - Math.Round((amount / (1 + ParseDecimalForString(jp.getValue("ODTaxRate")))), 2), bc.Entity.SRVDecimalPoint);
+                    total = Math.Round(ODQTY * ODUnitPrice, bc.Entity.SRVDecimalPoint);
+                    tax = Math.Round(total - Math.Round(total / (1 + ODTaxRate), 2), bc.Entity.SRVDecimalPoint);
                 }
 
-                collection.Add(new JsonStringValue("amount", amount.ToString()));
-                collection.Add(new JsonStringValue("taxAmount", taxAmount.ToString()));
+                collection.Add(new JsonStringValue("total", total.ToString()));
+                collection.Add(new JsonStringValue("tax", tax.ToString()));
             }
             catch { flag = "2"; }
 
-            collection.Add(new JsonStringValue("type", "CaluAmount"));
-            collection.Add(new JsonStringValue("flag", flag));
-
-            return collection.ToString();
-        }
-        private string CaluTaxAmountaction(JsonArrayParse jp)
-        {
-            JsonObjectCollection collection = new JsonObjectCollection();
-            string flag = "1";
-            try
-            {
-                decimal amount = 0;
-                Business.Base.BusinessService bc = new Business.Base.BusinessService();
-                bc.load(jp.getValue("ODSRVNo"));
-
-                decimal amt = ParseDecimalForString(jp.getValue("ODARAmount"));
-                if (bc.Entity.SRVRoundType.ToUpper() == "FLOOR")
-                    amount = Math.Floor(amt - Math.Round(amt / (1 + ParseDecimalForString(jp.getValue("ODTaxRate"))), 2));
-                else if (bc.Entity.SRVRoundType.ToUpper() == "CEILING")
-                    amount = Math.Ceiling(amt - Math.Round(amt / (1 + ParseDecimalForString(jp.getValue("ODTaxRate"))), 2));
-                else
-                    amount = Math.Round(amt - Math.Round(amt / (1 + ParseDecimalForString(jp.getValue("ODTaxRate"))), 2), bc.Entity.SRVDecimalPoint);
-
-                collection.Add(new JsonStringValue("amount", amount.ToString()));
-            }
-            catch { flag = "2"; }
-
-            collection.Add(new JsonStringValue("type", "CaluTaxAmount"));
+            collection.Add(new JsonStringValue("type", "CalcAmount"));
             collection.Add(new JsonStringValue("flag", flag));
 
             return collection.ToString();

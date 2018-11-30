@@ -1,0 +1,13 @@
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\MeterLabelPrintService.exe
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\MeterLabelPrintService.pdb
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\log4net.dll
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\Newtonsoft.Json.dll
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\log4net.xml
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\Newtonsoft.Json.xml
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\obj\Debug\MeterLabelPrintService.exe
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\obj\Debug\MeterLabelPrintService.pdb
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\MeterLabelPrintService.exe.config
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\obj\Debug\Interop.MSXML2.dll
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\obj\Debug\MeterLabelPrintService.csproj.ResolveComReference.cache
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\obj\Debug\MeterLabelPrintService.ProjectInstaller.resources
+E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\obj\Debug\MeterLabelPrintService.csproj.GenerateResource.Cache

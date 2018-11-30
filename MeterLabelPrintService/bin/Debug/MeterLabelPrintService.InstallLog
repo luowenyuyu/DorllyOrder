@@ -1,0 +1,13 @@
+﻿正在安装程序集“E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\MeterLabelPrintService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\MeterLabelPrintService.InstallLog
+   assemblypath = E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\MeterLabelPrintService.exe
+正在安装服务 MeterLabelPrintService...
+已成功安装服务 MeterLabelPrintService。
+正在日志 Application 中创建 EventLog 源 MeterLabelPrintService...
+正在提交程序集“E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\MeterLabelPrintService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\MeterLabelPrintService.InstallLog
+   assemblypath = E:\MineDev\Projects\DorllyOrder\MeterLabelPrintService\bin\Debug\MeterLabelPrintService.exe

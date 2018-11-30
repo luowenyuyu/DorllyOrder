@@ -259,6 +259,19 @@
             <input class="btn btn-primary radius" type="button" onclick="applyrefundcancel()" value="&nbsp;关&nbsp;闭&nbsp;" />
         </div>
     </div> 
+    <div id="refunddatediv" style="display: none;">
+        <table style="width: 320px; margin-top: 30px; margin-bottom: 20px;">
+            <tr>
+                <td style="width: 100px; text-align: center; padding: 10px;">实际退租日期</td>
+                <td style="width: 250px;">
+                    <input type="text" id="ActuallyLeaveDate" class="input-text size-MINI" /></td>
+            </tr>
+        </table>
+        <div style="margin: 15px 100px;">
+            <input class="btn btn-primary radius" type="button" onclick="refunddatesubmit()" value="&nbsp;确定&nbsp;" />&nbsp;&nbsp;
+            <input class="btn btn-primary radius" type="button" onclick="refunddatecancel()" value="&nbsp;取消&nbsp;" />
+        </div>
+    </div>
     <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script> 
     <script type="text/javascript" src="../../jscript/script_ajax.js"></script>
     <script type="text/javascript" src="../../jscript/script_common.js"></script>
@@ -323,10 +336,16 @@
 
                     layer.closeAll();
                     layer.alert("退租成功！");
-                    //console.log(vjson.sync);
+                    console.log(vjson.sync);
+                }
+                else if (vjson.flag = "2") {
+                    layer.alert("退租时间有误！");
                 }
                 else if (vjson.flag == "3") {
                     layer.alert("当前状态不允许退租！");
+                }
+                else if (vjson.flag == "4") {
+                    layer.alert(vjson.InfoBar);
                 }
                 else {
                     layer.alert("提取数据出错！");
@@ -541,28 +560,55 @@
                 layer.msg("请先选择一条记录", { icon: 3, time: 1000 });
                 return;
             }
-            layer.confirm('确认要退租吗？', function (index) {
-                var submitData = new Object();
-                submitData.Type = "refundsubmit";
-                submitData.id = $("#selectKey").val();
+            //layer.confirm('确认要退租吗？', function (index) {
+            //    var submitData = new Object();
+            //    submitData.Type = "refundsubmit";
+            //    submitData.id = $("#selectKey").val();
 
-                submitData.ContractNoS = $("#ContractNoS").val();
-                submitData.ContractNoManualS = $("#ContractNoManualS").val();
-                submitData.ContractTypeS = "12";
-                submitData.ContractSPNoS = $("#ContractSPNoS").val();
-                submitData.ContractCustNoS = $("#ContractCustNoS").val();
-                submitData.MinContractSignedDate = $("#MinContractSignedDate").val();
-                submitData.MaxContractSignedDate = $("#MaxContractSignedDate").val();
-                submitData.MinContractEndDate = $("#MinContractEndDate").val();
-                submitData.MaxContractEndDate = $("#MaxContractEndDate").val();
-                submitData.OffLeaseStatusS = $("#OffLeaseStatusS").val();
-                submitData.MinOffLeaseActulDate = $("#MinOffLeaseActulDate").val();
-                submitData.MaxOffLeaseActulDate = $("#MaxOffLeaseActulDate").val();
-                submitData.page = page;
-                transmitData(datatostr(submitData));
-                layer.close(index);
+            //    submitData.ContractNoS = $("#ContractNoS").val();
+            //    submitData.ContractNoManualS = $("#ContractNoManualS").val();
+            //    submitData.ContractTypeS = "12";
+            //    submitData.ContractSPNoS = $("#ContractSPNoS").val();
+            //    submitData.ContractCustNoS = $("#ContractCustNoS").val();
+            //    submitData.MinContractSignedDate = $("#MinContractSignedDate").val();
+            //    submitData.MaxContractSignedDate = $("#MaxContractSignedDate").val();
+            //    submitData.MinContractEndDate = $("#MinContractEndDate").val();
+            //    submitData.MaxContractEndDate = $("#MaxContractEndDate").val();
+            //    submitData.OffLeaseStatusS = $("#OffLeaseStatusS").val();
+            //    submitData.MinOffLeaseActulDate = $("#MinOffLeaseActulDate").val();
+            //    submitData.MaxOffLeaseActulDate = $("#MaxOffLeaseActulDate").val();
+            //    submitData.page = page;
+            //    transmitData(datatostr(submitData));
+            //    layer.close(index);
+            //});
+            //return;
+            $("#ActuallyLeaveDate").val("");
+            layer.open({
+                type: 1,
+                area: ["400px", "200px"],
+                fix: true,
+                maxmin: true,
+                scrollbar: false,
+                shade: 0.5,
+                title: "选择退租日期",
+                content: $("#refunddatediv")
             });
+        }
+        function refunddatesubmit() {
+            if ($("#ActuallyLeaveDate").val() == "") {
+                layer.msg("请选择退租日期", 7, 1000);
+                $("#ActuallyLeaveDate").focus();
+                return;
+            }
+            var submitData = new Object();
+            submitData.Type = "refundsubmit";
+            submitData.id = $("#selectKey").val();
+            submitData.RefundDate = $("#ActuallyLeaveDate").val();
+            transmitData(datatostr(submitData));
             return;
+        }
+        function refunddatecancel() {
+            layer.closeAll();
         }
         function view() {
             if ($("#selectKey").val() == "") {
@@ -754,9 +800,13 @@
             MaxOffLeaseActulDate.setDisabled(false);
             MaxOffLeaseActulDate.setWidth("100px");
 
-            var MaxOffLeaseActulDate = new JsInputDate("OffLeaseScheduleDate");
+            var OffLeaseScheduleDate = new JsInputDate("OffLeaseScheduleDate");
             OffLeaseScheduleDate.setDisabled(false);
             OffLeaseScheduleDate.setWidth("120px");
+
+            var ActuallyLeaveDate = new JsInputDate("ActuallyLeaveDate");
+            ActuallyLeaveDate.setDisabled(false);
+            ActuallyLeaveDate.setWidth("150px");
         });
 
         var id = "";

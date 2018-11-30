@@ -347,18 +347,21 @@ namespace project.Presentation.Op
             {
                 Business.Op.BusinessContract bc = new Business.Op.BusinessContract();
                 bc.load(jp.getValue("id"));
-                if (bc.Entity.ContractStatus != "2")
+                if (bc.Entity.ContractStartDate >= Convert.ToDateTime(jp.getValue("RefundDate")))
+                {
+                    flag = "2";
+                }
+                else if (bc.Entity.ContractStatus != "2")
                 {
                     flag = "3";
                 }
                 else
                 {
-                    string sqlcmd = "UPDATE Op_Contract SET ContractStatus='3',OffLeaseStatus='3',OffLeaseActulDate=GETDATE()" +
-                                "WHERE RowPointer='" + jp.getValue("id") + "'";
-                    int r = obj.ExecuteNonQuery(sqlcmd);
-                    if (r <= 0)
+                    string infoMsg = bc.ConfirmLeaveWithNoFee(jp.getValue("RefundDate"));
+                    if (infoMsg != "")
                     {
-                        flag = "2";
+                        collection.Add(new JsonStringValue("InfoBar", infoMsg));
+                        flag = "4";
                     }
                     else
                     {
@@ -368,13 +371,13 @@ namespace project.Presentation.Op
                                 jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
 
                         #region 同步到资源系统
-                        /*
-                        ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        string Items = "";
 
+                        ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                        srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                        string Items = "";
                         Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
                         cust.load(bc.Entity.ContractCustNo);
-                        DataTable dt = obj.PopulateDataSet("SELECT WPNo FROM Op_ContractPropertyFee WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY WPNo").Tables[0];
+                        DataTable dt = obj.PopulateDataSet("SELECT WPNo FROM Op_ContractWPRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY WPNo").Tables[0];
                         foreach (DataRow dr in dt.Rows)
                         {
                             SycnResourceStatus rs = new SycnResourceStatus();
@@ -382,7 +385,7 @@ namespace project.Presentation.Op
                             rs.ResourceID = dr["WPNo"].ToString();
                             rs.BusinessID = bc.Entity.RowPointer;
                             rs.BusinessNo = bc.Entity.ContractNo;
-                            rs.BusinessType = 2;//1租赁，2物业
+                            rs.BusinessType = 1;//1租赁，2物业
                             rs.RentBeginTime = bc.Entity.FeeStartDate;
                             rs.RentEndTime = GetDate();
                             rs.Status = 2;
@@ -394,9 +397,10 @@ namespace project.Presentation.Op
                         }
                         string syncResult = srv.LeaseOut("[" + Items + "]");
                         collection.Add(new JsonStringValue("sync", syncResult));
-                        */
+
                         #endregion
                     }
+
                 }
             }
             catch { }

@@ -412,7 +412,8 @@ public class Service : System.Web.Services.WebService
                 bc.Entity.Readout = Readout;
                 bc.Entity.JoinReadings = JoinReadings;
                 bc.Entity.Readings = Readings;
-                bc.Entity.ROOperator = UserName;
+                DataTable tempDt = obj.PopulateDataSet(string.Format("SELECT READERNO FROM Mstr_MeterReader WHERE READERNAME='{0}'", UserName)).Tables[0];
+                bc.Entity.ROOperator = tempDt.Rows.Count > 0 ? tempDt.Rows[0]["ReaderNo"].ToString() : "";
                 bc.Entity.RODate = GetDate();
                 bc.Entity.Img = imgName;
                 bc.Entity.ROCreateDate = GetDate();

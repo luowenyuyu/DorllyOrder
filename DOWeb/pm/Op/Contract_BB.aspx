@@ -1,8 +1,9 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Op.Contract_BB,project"  %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Op.Contract_BB,project" %>
+
 <!DOCTYPE>
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head id="head1" runat="server">
-    <title>广告位租赁合同</title>    
+    <title>广告位租赁合同</title>
     <!--[if lt IE 9]>
     <script type="text/javascript" src="../../jscript/html5.js"></script>
     <script type="text/javascript" src="../../jscript/respond.min.js"></script>
@@ -21,9 +22,9 @@
 </head>
 <body>
     <form id="form1" runat="server"></form>
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 合同管理 <span class="c-gray en">&gt;</span> 广告位租赁合同 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:2px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 合同管理 <span class="c-gray en">&gt;</span> 广告位租赁合同 <a class="btn btn-success radius r mr-20" style="line-height: 1.6em; margin-top: 2px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div id="list" class="pt-5 pr-20 pb-5 pl-20">
-	    <div class="cl pd-3 bg-1 bk-gray mt-2"> 
+        <div class="cl pd-3 bg-1 bk-gray mt-2">
             <span class="l">
                 <%--<a href="javascript:;" onclick="insert()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
                 <a href="javascript:;" onclick="update()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe60c;</i> 修改</a> 
@@ -35,35 +36,45 @@
                 <a href="javascript:;" onclick="invalid()" class="btn btn-warning radius"><i class="Hui-iconfont">&#xe60b;</i> 作废</a> --%>
                 <%=Buttons %>
                 <input type="hidden" id="selectKey" />
-            </span> 
-	    </div>
-	    <div class="cl pd-10  bk-gray mt-2"> 
-		    合同编号&nbsp;<input type="text" class="input-text size-MINI" placeholder="合同编号" id="ContractNoS" style="width:110px">            
-            手工合同编号&nbsp;<input type="text" class="input-text size-MINI" placeholder="手工合同编号" id="ContractNoManualS" style="width:110px">
+            </span>
+        </div>
+        <div class="cl pd-10  bk-gray mt-2">
+            合同编号&nbsp;<input type="text" class="input-text size-MINI" placeholder="合同编号" id="ContractNoS" style="width: 110px">
+            手工合同编号&nbsp;<input type="text" class="input-text size-MINI" placeholder="手工合同编号" id="ContractNoManualS" style="width: 110px">
             <%--合同类型&nbsp;<%=ContractTypeStrS %>--%>
             服务商&nbsp;<%=ContractSPNoStrS %>
-            客户&nbsp;<input type="text" class="input-text size-MINI" placeholder="" id="ContractCustNoS" style="width:110px">
-            合同状态&nbsp;<select class="input-text size-MINI" style="width:110px" id="ContractStatusS"><option value="" selected="selected">全部</option><option value="1">制单</option><option value="2">已审核</option><option value="3">已退租</option><option value="4">已作废</option></select>
-            退租状态&nbsp;<select class="input-text size-MINI" style="width:110px" id="OffLeaseStatusS"><option value="" selected="selected">全部</option><option value="1">未退租</option><option value="2">已申请</option><option value="3">已办理</option><option value="4">已结算</option></select>
+            客户&nbsp;<input type="text" class="input-text size-MINI" placeholder="" id="ContractCustNoS" style="width: 110px">
+            合同状态&nbsp;<select class="input-text size-MINI" style="width: 110px" id="ContractStatusS"><option value="" selected="selected">全部</option>
+                <option value="1">制单</option>
+                <option value="2">已审核</option>
+                <option value="3">已退租</option>
+                <option value="4">已作废</option>
+            </select>
+            退租状态&nbsp;<select class="input-text size-MINI" style="width: 110px" id="OffLeaseStatusS"><option value="" selected="selected">全部</option>
+                <option value="1">未退租</option>
+                <option value="2">已申请</option>
+                <option value="3">已办理</option>
+                <option value="4">已结算</option>
+            </select>
             <br />
-            合同签订日期 从&nbsp;<input type="text" class="input-text size-MINI" id="MinContractSignedDate" style="width:110px">
-            至&nbsp;<input type="text" class="input-text size-MINI" id="MaxContractSignedDate" style="width:110px">            
-            合同到期日期 从&nbsp;<input type="text" class="input-text size-MINI" id="MinContractEndDate" style="width:110px">
-            至&nbsp;<input type="text" class="input-text size-MINI" id="MaxContractEndDate" style="width:110px">
-            实际退租日期 从&nbsp;<input type="text" class="input-text size-MINI" id="MinOffLeaseActulDate" style="width:110px">
-            至&nbsp;<input type="text" class="input-text size-MINI" id="MaxOffLeaseActulDate" style="width:110px">
-		    <button type="submit" class="btn btn-success radius" onclick="select()"><i class="Hui-iconfont">&#xe665;</i> 检索</button>
-	    </div>
-	    <div class="mt-5" id="outerlist">
-	    <%=list %>
-	    </div>
+            合同签订日期 从&nbsp;<input type="text" class="input-text size-MINI" id="MinContractSignedDate" style="width: 110px">
+            至&nbsp;<input type="text" class="input-text size-MINI" id="MaxContractSignedDate" style="width: 110px">
+            合同到期日期 从&nbsp;<input type="text" class="input-text size-MINI" id="MinContractEndDate" style="width: 110px">
+            至&nbsp;<input type="text" class="input-text size-MINI" id="MaxContractEndDate" style="width: 110px">
+            实际退租日期 从&nbsp;<input type="text" class="input-text size-MINI" id="MinOffLeaseActulDate" style="width: 110px">
+            至&nbsp;<input type="text" class="input-text size-MINI" id="MaxOffLeaseActulDate" style="width: 110px">
+            <button type="submit" class="btn btn-success radius" onclick="select()"><i class="Hui-iconfont">&#xe665;</i> 检索</button>
+        </div>
+        <div class="mt-5" id="outerlist">
+            <%=list %>
+        </div>
     </div>
-    <div id="edit" class="editdiv" style="display:none;">        
+    <div id="edit" class="editdiv" style="display: none;">
         <div class="itab">
-  	        <ul> 
-                <li><a href="javascript:void(0)" onclick="show(1)" id="itemtab1" class="selected">基本信息</a></li> 
+            <ul>
+                <li><a href="javascript:void(0)" onclick="show(1)" id="itemtab1" class="selected">基本信息</a></li>
                 <li><a href="javascript:void(0)" onclick="show(4)" id="itemtab4">广告位信息</a></li>
-  	        </ul>
+            </ul>
         </div>
 
         <div id="topeditdiv">
@@ -84,166 +95,221 @@
                 </tr>
                 <tr>
                     <td class="tdl">合同编号</td>
-                    <td class="tdr"><input type="text" id="ContractNo" disabled="disabled" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ContractNo" disabled="disabled" class="input-text size-MINI" /></td>
                     <td class="tdl">手工合同编号</td>
-                    <td class="tdr"><input type="text" id="ContractNoManual" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ContractNoManual" class="input-text size-MINI" /></td>
                     <td class="tdl">经办人</td>
-                    <td class="tdr"><input type="text" id="ContractHandler" disabled="disabled" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ContractHandler" disabled="disabled" class="input-text size-MINI" /></td>
                     <td class="tdl">合同状态</td>
-                    <td class="tdr"><input type="text" id="ContractStatus" disabled="disabled" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ContractStatus" disabled="disabled" class="input-text size-MINI" /></td>
                 </tr>
                 <tr>
                     <td class="tdl">合同签订日期</td>
-                    <td class="tdr"><input type="text" id="ContractSignedDate" class="input-text size-MINI" onchange="datechange()" /></td>
-                    <td class="tdl">生效日期</td>
-                    <td class="tdr"><input type="text" id="ContractStartDate" class="input-text size-MINI" /></td>
-                    <td class="tdl">到期日期</td>
-                    <td class="tdr"><input type="text" id="ContractEndDate" class="input-text size-MINI" /></td>
-                    <td class="tdl"></td>
-                    <td class="tdr"></td>
-                </tr>
-                <tr style="display:none;">
+                    <td class="tdr">
+                        <input type="text" id="ContractSignedDate" class="input-text size-MINI" onchange="datechange()" /></td>
+
+                    <td class="tdl">合同生效日期</td>
+                    <td class="tdr">
+                        <input type="text" id="ContractStartDate" class="input-text size-MINI" /></td>
+                    <td class="tdl">合同到期日期</td>
+                    <td class="tdr">
+                        <input type="text" id="ContractEndDate" class="input-text size-MINI" /></td>
                     <td class="tdl">租金起收日期</td>
-                    <td class="tdr"><input type="text" id="FeeStartDate" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="FeeStartDate" class="input-text size-MINI" /></td>
+                    <%--    <td class="tdl"></td>
+                    <td class="tdr"></td>--%>
+                </tr>
+                <tr style="display: none;">
+                    <%--<td class="tdl">租金起收日期</td>
+                    <td class="tdr"><input type="text" id="FeeStartDate" class="input-text size-MINI" /></td>--%>
                     <td class="tdl">滞纳金占比</td>
-                    <td class="tdr"><input type="text" id="ContractLatefeeRate"class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ContractLatefeeRate" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl"></td>
                     <td class="tdr"></td>
                     <td class="tdl"></td>
                     <td class="tdr"></td>
                 </tr>
-                <tr style="display:none;">
+                <tr style="display: none;">
                     <td class="tdl">减免开始日期1</td>
-                    <td class="tdr"><input type="text" id="ReduceStartDate1" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ReduceStartDate1" class="input-text size-MINI" /></td>
                     <td class="tdl">减免截止日期1</td>
-                    <td class="tdr"><input type="text" id="ReduceEndDate1" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ReduceEndDate1" class="input-text size-MINI" /></td>
                     <td class="tdl">减免开始日期2</td>
-                    <td class="tdr"><input type="text" id="ReduceStartDate2" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ReduceStartDate2" class="input-text size-MINI" /></td>
                     <td class="tdl">减免截止日期2</td>
-                    <td class="tdr"><input type="text" id="ReduceEndDate2" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ReduceEndDate2" class="input-text size-MINI" /></td>
                 </tr>
-                <tr style="display:none;">
+                <tr style="display: none;">
                     <td class="tdl">减免开始日期3</td>
-                    <td class="tdr"><input type="text" id="ReduceStartDate3" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ReduceStartDate3" class="input-text size-MINI" /></td>
                     <td class="tdl">减免截止日期3</td>
-                    <td class="tdr"><input type="text" id="ReduceEndDate3" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ReduceEndDate3" class="input-text size-MINI" /></td>
                     <td class="tdl">减免开始日期4</td>
-                    <td class="tdr"><input type="text" id="ReduceStartDate4" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ReduceStartDate4" class="input-text size-MINI" /></td>
                     <td class="tdl">减免截止日期4</td>
-                    <td class="tdr"><input type="text" id="ReduceEndDate4" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ReduceEndDate4" class="input-text size-MINI" /></td>
                 </tr>
                 <tr>
                     <td class="tdl">广告位数量</td>
-                    <td class="tdr"><input type="text" id="BBQTY" class="input-text size-MINI" disabled="disabled" onchange="validInt(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="BBQTY" class="input-text size-MINI" disabled="disabled" onchange="validInt(this.id)" /></td>
                     <td class="tdl">广告位合同总金额</td>
-                    <td class="tdr"><input type="text" id="BBAmount" class="input-text size-MINI" disabled="disabled" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="BBAmount" class="input-text size-MINI" disabled="disabled" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl"></td>
                     <td class="tdr"></td>
                     <td class="tdl"></td>
                     <td class="tdr"></td>
                 </tr>
-                <tr style="display:none;">
+                <tr style="display: none;">
                     <td class="tdl">管理费起收日期</td>
-                    <td class="tdr"><input type="text" id="PropertyFeeStartDate" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="PropertyFeeStartDate" class="input-text size-MINI" /></td>
                     <td class="tdl">管理费减免开始日期</td>
-                    <td class="tdr"><input type="text" id="PropertyFeeReduceStartDate" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="PropertyFeeReduceStartDate" class="input-text size-MINI" /></td>
                     <td class="tdl">管理费减免结束日期</td>
-                    <td class="tdr"><input type="text" id="PropertyFeeReduceEndDate" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="PropertyFeeReduceEndDate" class="input-text size-MINI" /></td>
                     <td class="tdl">客户入场日期</td>
-                    <td class="tdr"><input type="text" id="EntryDate"class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="EntryDate" class="input-text size-MINI" /></td>
                 </tr>
-                <tr style="display:none;">
+                <tr style="display: none;">
                     <td class="tdl">水费单价</td>
-                    <td class="tdr"><input type="text" id="WaterUnitPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="WaterUnitPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">电费单价</td>
-                    <td class="tdr"><input type="text" id="ElecticityUintPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="ElecticityUintPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">空调费单价</td>
-                    <td class="tdr"><input type="text" id="AirconUnitPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="AirconUnitPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">管理费单价</td>
-                    <td class="tdr"><input type="text" id="PropertyUnitPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="PropertyUnitPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                 </tr>
-                <tr style="display:none;">
+                <tr style="display: none;">
                     <td class="tdl">公摊水费</td>
-                    <td class="tdr"><input type="text" id="SharedWaterFee" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="SharedWaterFee" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">公摊电费</td>
-                    <td class="tdr"><input type="text" id="SharedElectricyFee" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="SharedElectricyFee" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">房屋押金</td>
-                    <td class="tdr"><input type="text" id="RMRentalDeposit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="RMRentalDeposit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">房屋水电押金</td>
-                    <td class="tdr"><input type="text" id="RMUtilityDeposit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="RMUtilityDeposit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                 </tr>
-                <tr style="display:none;">
+                <tr style="display: none;">
                     <td class="tdl">工位押金</td>
-                    <td class="tdr"><input type="text" id="WPRentalDeposit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="WPRentalDeposit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">工位电费押金</td>
-                    <td class="tdr"><input type="text" id="WPUtilityDeposit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="WPUtilityDeposit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl"></td>
                     <td class="tdr"></td>
                     <td class="tdl"></td>
                     <td class="tdr"></td>
                 </tr>
-                <tr style="display:none;">
+                <tr style="display: none;">
                     <td class="tdl">工位数量</td>
-                    <td class="tdr"><input type="text" id="WPQTY" class="input-text size-MINI" onchange="validInt(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="WPQTY" class="input-text size-MINI" onchange="validInt(this.id)" /></td>
                     <td class="tdl">工位用电额度</td>
-                    <td class="tdr"><input type="text" id="WPElectricyLimit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="WPElectricyLimit" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">超额用电单价</td>
-                    <td class="tdr"><input type="text" id="WPOverElectricyPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="WPOverElectricyPrice" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl"></td>
                     <td class="tdr"></td>
                 </tr>
-                <tr style="display:none;">
+                <tr style="display: none;">
                     <td class="tdl">递增开始时间1</td>
-                    <td class="tdr"><input type="text" id="IncreaseStartDate1" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="IncreaseStartDate1" class="input-text size-MINI" /></td>
                     <td class="tdl">递增率1</td>
-                    <td class="tdr"><input type="text" id="IncreaseRate1" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="IncreaseRate1" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">递增开始时间2</td>
-                    <td class="tdr"><input type="text" id="IncreaseStartDate2" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="IncreaseStartDate2" class="input-text size-MINI" /></td>
                     <td class="tdl">递增率2</td>
-                    <td class="tdr"><input type="text" id="IncreaseRate2" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="IncreaseRate2" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                 </tr>
-                <tr style="display:none;">
+                <tr style="display: none;">
                     <td class="tdl">递增开始时间3</td>
-                    <td class="tdr"><input type="text" id="IncreaseStartDate3" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="IncreaseStartDate3" class="input-text size-MINI" /></td>
                     <td class="tdl">递增率3</td>
-                    <td class="tdr"><input type="text" id="IncreaseRate3" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="IncreaseRate3" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl">递增开始时间4</td>
-                    <td class="tdr"><input type="text" id="IncreaseStartDate4" class="input-text size-MINI" /></td>
+                    <td class="tdr">
+                        <input type="text" id="IncreaseStartDate4" class="input-text size-MINI" /></td>
                     <td class="tdl">递增率4</td>
-                    <td class="tdr"><input type="text" id="IncreaseRate4" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr">
+                        <input type="text" id="IncreaseRate4" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                 </tr>
                 <tr>
                     <td class="tdl">备注</td>
-                    <td class="tdr" colspan="7"><textarea cols="" rows="3" class="textarea required" id="Remark"></textarea></td>
+                    <td class="tdr" colspan="7">
+                        <textarea cols="" rows="3" class="textarea required" id="Remark"></textarea></td>
                 </tr>
                 <tr>
                     <td class="tdl">附件</td>
-                    <td class="tdr"><button type="button" class="btn btn-primary radius" id="uploadFiles" onclick="uploadFiles()" style="margin-left:20px;">上传附件</button></td>
-                    <td colspan="6"><div id="ContractAttachmentFiles"></div><input type="hidden" id="ContractAttachment" /></td>
+                    <td class="tdr">
+                        <button type="button" class="btn btn-primary radius" id="uploadFiles" onclick="uploadFiles()" style="margin-left: 20px;">上传附件</button></td>
+                    <td colspan="6">
+                        <div id="ContractAttachmentFiles"></div>
+                        <input type="hidden" id="ContractAttachment" /></td>
                 </tr>
             </table>
         </div>
 
-        <div id="bodyeditdiv3">        
+        <div id="bodyeditdiv3">
             <table class="tabedit">
                 <tr>
                     <td class="tdl1">广告位编号</td>
                     <td class="tdr1">
-                        <input type="text" class="input-text size-MINI" id="BBNo" disabled="disabled" style="width:150px;" />
+                        <input type="text" class="input-text size-MINI" id="BBNo" disabled="disabled" style="width: 150px;" />
                         <button type="button" class="btn btn-primary radius" id="chooseBBNo">选择</button>
                     </td>
                     <td class="tdl1">广告位名称</td>
-                    <td class="tdr1"><input type="text" id="BBName" disabled="disabled" class="input-text size-MINI" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="BBName" disabled="disabled" class="input-text size-MINI" /></td>
                     <td class="tdl1">所属服务项目</td>
                     <td class="tdr1"><%=SRVNo3Str %></td>
                 </tr>
                 <tr>
                     <td class="tdl1">开始投放日期</td>
-                    <td class="tdr1"><input type="text" id="BBStartDate" class="input-text size-MINI" onchange="BBDateChange()" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="BBStartDate" class="input-text size-MINI" onchange="BBDateChange()" /></td>
                     <td class="tdl1">截止投放日期</td>
-                    <td class="tdr1"><input type="text" id="BBEndDate" class="input-text size-MINI" onchange="BBDateChange()" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="BBEndDate" class="input-text size-MINI" onchange="BBDateChange()" /></td>
                     <td class="tdl1">尺寸大小</td>
-                    <td class="tdr1"><input type="text" id="BBSize" class="input-text size-MINI" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="BBSize" class="input-text size-MINI" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">租用类型</td>
@@ -256,19 +322,24 @@
                         </select>
                     </td>
                     <td class="tdl1">租用单位时长</td>
-                    <td class="tdr1"><input type="text" id="BBRentalMonths" class="input-text size-MINI" onchange="validInt(this.id)" disabled="disabled" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="BBRentalMonths" class="input-text size-MINI" onchange="validInt(this.id)" disabled="disabled" /></td>
                     <td class="tdl1">单价</td>
-                    <td class="tdr1"><input type="text" id="RentalUnitPrice3" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="RentalUnitPrice3" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">金额</td>
-                    <td class="tdr1"><input type="text" id="RentalAmount" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
+                    <td class="tdr1">
+                        <input type="text" id="RentalAmount" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
                     <td class="tdl1">地址</td>
-                    <td colspan="3"><input type="text" id="BBAddr" class="input-text size-MINI" /></td>
+                    <td colspan="3">
+                        <input type="text" id="BBAddr" class="input-text size-MINI" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">备注</td>
-                    <td colspan="5"><input type="text" id="Remark3" class="input-text size-MINI" /></td>
+                    <td colspan="5">
+                        <input type="text" id="Remark3" class="input-text size-MINI" /></td>
                 </tr>
                 <tr>
                     <td colspan="6">
@@ -277,26 +348,26 @@
                     </td>
                 </tr>
             </table>
-            <div style="width:100%;height:5px;"></div>
-            <div id="itemlist3"style="width:1058px; height:320px; overflow:auto; margin:0px; padding:0px;"></div>
-        </div>        
-        
-        <div style="margin-top:10px;">
+            <div style="width: 100%; height: 5px;"></div>
+            <div id="itemlist3" style="width: 1058px; height: 320px; overflow: auto; margin: 0px; padding: 0px;"></div>
+        </div>
+
+        <div style="margin-top: 10px;">
             <input class="btn btn-primary radius" type="button" id="submit" onclick="submit()" value="保存退出" />
             <input class="btn btn-primary radius" type="button" id="submit1" onclick="submit1()" value="保存继续" />
-	        <input class="btn btn-default radius" type="button" id="cancel" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
+            <input class="btn btn-default radius" type="button" id="cancel" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
         </div>
         <br />
         <br />
-    </div>    
-    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script> 
+    </div>
+    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="../../jscript/script_ajax.js"></script>
     <script type="text/javascript" src="../../jscript/script_common.js"></script>
     <script type="text/javascript" src="../../jscript/JsInputDate.js"></script>
     <script type="text/javascript" src="../../jscript/json2.js"></script>
-    <script type="text/javascript" src="../../jscript/H-ui.js"></script> 
-    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script> 
-    <script type="text/javascript" src="../../lib/layer/layer.js"></script> 
+    <script type="text/javascript" src="../../jscript/H-ui.js"></script>
+    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script>
+    <script type="text/javascript" src="../../lib/layer/layer.js"></script>
     <script type="text/javascript">
         function BandResuleData(temp) {
             var vjson = JSON.parse(temp);
@@ -770,7 +841,7 @@
                 }
                 return;
             }
-            
+
 
             if (vjson.type == "itemsave3") {
                 if (vjson.flag == "1") {
@@ -926,6 +997,11 @@
                 $("#ContractSignedDate").focus();
                 return;
             }
+            if ($("#FeeStartDate").val() == "") {
+                layer.msg("请选择租金起收日期！", { icon: 7, time: 1000 });
+                $("#FeeStartDate").focus();
+                return;
+            }
             if ($("#ContractStartDate").val() == "") {
                 layer.msg("请选择合同生效日期！", { icon: 7, time: 1000 });
                 $("#ContractStartDate").focus();
@@ -934,6 +1010,24 @@
             if ($("#ContractEndDate").val() == "") {
                 layer.msg("请选择合同到期日期！", { icon: 7, time: 1000 });
                 $("#ContractEndDate").focus();
+                return;
+            }
+            if (new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/')) ||
+                new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) > new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/')) ||
+                new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) > new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/'))) {
+                layer.msg("请选择有效的合同签订日期！", { icon: 7, time: 1000 });
+                $("#ContractSignedDate").focus();
+                return;
+            }
+            if (new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/'))) {
+                layer.msg("请选择有效的合同生效日期！", { icon: 7, time: 1000 });
+                $("#ContractStartDate").focus();
+                return;
+            }
+            if (new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/'))||
+                new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) > new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/'))) {
+                layer.msg("请选择有效的租金起收日期！", { icon: 7, time: 1000 });
+                $("#FeeStartDate").focus();
                 return;
             }
             var submitData = new Object();
@@ -1030,6 +1124,12 @@
                 $("#ContractSignedDate").focus();
                 return;
             }
+
+            if ($("#FeeStartDate").val() == "") {
+                layer.msg("请选择租金起收日期！", { icon: 7, time: 1000 });
+                $("#FeeStartDate").focus();
+                return;
+            }
             if ($("#ContractStartDate").val() == "") {
                 layer.msg("请选择合同生效日期！", { icon: 7, time: 1000 });
                 $("#ContractStartDate").focus();
@@ -1038,6 +1138,24 @@
             if ($("#ContractEndDate").val() == "") {
                 layer.msg("请选择合同到期日期！", { icon: 7, time: 1000 });
                 $("#ContractEndDate").focus();
+                return;
+            }
+            if (new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/')) ||
+                new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) > new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/')) ||
+                new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) > new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/'))) {
+                layer.msg("请选择有效的合同签订日期！", { icon: 7, time: 1000 });
+                $("#ContractSignedDate").focus();
+                return;
+            }
+            if (new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/'))) {
+                layer.msg("请选择有效的合同生效日期！", { icon: 7, time: 1000 });
+                $("#ContractStartDate").focus();
+                return;
+            }
+            if (new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/')) ||
+                new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) > new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/'))) {
+                layer.msg("请选择有效的租金起收日期！", { icon: 7, time: 1000 });
+                $("#FeeStartDate").focus();
                 return;
             }
             var submitData = new Object();
@@ -1486,9 +1604,10 @@
             EntryDate.setDisabled(false);
             EntryDate.setWidth("130px");
 
-            //var FeeStartDate = new JsInputDate("FeeStartDate");
-            //FeeStartDate.setDisabled(false);
-            //FeeStartDate.setWidth("130px");
+            var FeeStartDate = new JsInputDate("FeeStartDate");
+            FeeStartDate.setDisabled(false);
+            FeeStartDate.setWidth("130px");
+
             //var ReduceStartDate = new JsInputDate("ReduceStartDate");
             //ReduceStartDate.setDisabled(false);
             //ReduceStartDate.setWidth("130px");
@@ -1561,6 +1680,6 @@
         var copyid = "";
         var trid = "";
         reflist();
-</script>
+    </script>
 </body>
 </html>

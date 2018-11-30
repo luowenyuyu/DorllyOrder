@@ -1,6 +1,7 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Base.Meter,project"  %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="project.Presentation.Base.Meter,project" %>
+
 <!DOCTYPE>
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head id="head1" runat="server">
     <title>表记资料</title>
     <!--[if lt IE 9]>
@@ -11,6 +12,16 @@
     <link href="../../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="../../lib/iconfont/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../../css/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        .printck {
+            display: none;
+        }
+
+            .printck input {
+                height: 15px;
+                width: 15px;
+            }
+    </style>
     <script type="text/javascript">
         function transmitData(submitData) {
             var data = submitData;
@@ -19,220 +30,235 @@
     </script>
 </head>
 <body>
-   <form id="form1" runat="server"></form>
-   <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 表计管理 <span class="c-gray en">&gt;</span>表记资料 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:2px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
-   <div id="list" class="pt-5 pr-20 pb-5 pl-20">
-	    <div class="cl pd-5 bg-1 bk-gray mt-2"> 
+    <form id="form1" runat="server"></form>
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页 
+        <span class="c-gray en">&gt;</span> 表计管理 
+        <span class="c-gray en">&gt;</span>表记资料 
+       <a class="btn btn-success radius r mr-20" style="line-height: 1.6em; margin-top: 2px" href="javascript:location.replace(location.href);" title="刷新">
+           <i class="Hui-iconfont">&#xe68f;</i>
+       </a>
+    </nav>
+    <div id="list" class="pt-5 pr-20 pb-5 pl-20">
+        <div class="cl pd-5 bg-1 bk-gray mt-2">
+            <div class="normalbtn"><%=Buttons %></div>
+            <div class="printbtn" style="display: none;">
+                <a href="javascript:;" onclick="printchoice()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 打印(选择)</a>
+                <a href="javascript:;" onclick="printall()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 打印(全部)</a>
+                <a href="javascript:;" onclick="printcancel()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 取消打印</a>
+            </div>
             <span class="l">
                 <%--<a href="javascript:;" onclick="insert()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
                 <a href="javascript:;" onclick="update()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe60c;</i> 修改</a> 
                 <a href="javascript:;" onclick="del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 删除</a>
                 <a href="javascript:;" onclick="valid()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe615;</i> 启用/停用</a>--%>
-                <%=Buttons %>
                 <input type="hidden" id="selectKey" />
-            </span> 
-	    </div>
-	    <div class="cl pd-10  bk-gray mt-2"> 
+            </span>
+        </div>
+        <div class="cl pd-10  bk-gray mt-2">
             园区&nbsp;<%=MeterLOCNo1StrS %>&nbsp;
-            建设期&nbsp;<select class="input-text required size-MINI" id="MeterLOCNo2S" style="width:120px"><option value="">全部</option></select>&nbsp;
-            楼栋&nbsp;<select class="input-text required size-MINI" id="MeterLOCNo3S" style="width:120px"><option value="">全部</option></select>&nbsp;
-            楼层&nbsp;<select class="input-text required size-MINI" id="MeterLOCNo4S" style="width:120px"><option value="">全部</option></select>&nbsp;
-		    状态&nbsp;<select class="input-text size-MINI ml-5 mr-10" style="width:100px" id="MeterStatusS">
+            建设期&nbsp;<select class="input-text required size-MINI" id="MeterLOCNo2S" style="width: 120px"><option value="">全部</option>
+            </select>&nbsp;
+            楼栋&nbsp;<select class="input-text required size-MINI" id="MeterLOCNo3S" style="width: 120px"><option value="">全部</option>
+            </select>&nbsp;
+            楼层&nbsp;<select class="input-text required size-MINI" id="MeterLOCNo4S" style="width: 120px"><option value="">全部</option>
+            </select>&nbsp;
+		    状态&nbsp;<select class="input-text size-MINI ml-5 mr-10" style="width: 100px" id="MeterStatusS">
                 <option value="" selected>全部</option>
                 <option value="open">正常</option>
                 <option value="close">停用</option>
-		      </select>
+            </select>
             <br />
-		    表记编号&nbsp;<input type="text" class="input-text size-MINI ml-5 mr-10" style="width:120px" placeholder="表记编号" id="MeterNoS" />&nbsp;
-		    表记类别&nbsp;<select class="input-text size-MINI ml-5 mr-10" style="width:100px" id="MeterTypeS">
+            表记编号&nbsp;<input type="text" class="input-text size-MINI ml-5 mr-10" style="width: 120px" placeholder="表记编号" id="MeterNoS" />&nbsp;
+		    表记类别&nbsp;<select class="input-text size-MINI ml-5 mr-10" style="width: 100px" id="MeterTypeS">
                 <option value="" selected>全部</option>
                 <option value="wm">水表</option>
                 <option value="am">电表</option>
-		      </select>
-		    使用类别&nbsp;<select class="input-text size-MINI ml-5 mr-10" style="width:100px" id="MeterUsageTypeS">
+            </select>
+            使用类别&nbsp;<select class="input-text size-MINI ml-5 mr-10" style="width: 100px" id="MeterUsageTypeS">
                 <option value="" selected>全部</option>
                 <option value="0">公共</option>
                 <option value="1">家用</option>
                 <option value="2">商用</option>
                 <option value="3">其他</option>
 
-		      </select>
-		    大小类别&nbsp;<select class="input-text size-MINI ml-5 mr-10" style="width:100px" id="MeterSizeS">
+            </select>
+            大小类别&nbsp;<select class="input-text size-MINI ml-5 mr-10" style="width: 100px" id="MeterSizeS">
                 <option value="" selected>全部</option>
                 <option value="1">大表</option>
                 <option value="2">小表</option>
-		      </select>
-		    房间号&nbsp;<input type="text" class="input-text size-MINI ml-5 mr-10" style="width:120px" placeholder="位置" id="MeterRMIDS" />&nbsp;
+            </select>
+            房间号&nbsp;<input type="text" class="input-text size-MINI ml-5 mr-10" style="width: 120px" placeholder="位置" id="MeterRMIDS" />&nbsp;
 		    <button type="button" class="btn btn-success radius" onclick="select()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
-	    </div>
-	    <div class="mt-5" id="outerlist">
-	        <%=list %>
-	    </div>
+        </div>
+        <div class="mt-5" id="outerlist">
+            <%=list %>
+        </div>
     </div>
-    <div id="edit" class="pt-5 pr-20 pb-5 pl-20 " style="display:none;">
-      <div class="form form-horizontal bk-gray mt-15 pb-10" id="editlist">
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>表记编号：</label>
-          <div class="formControls col-4">
-            <input type="text" class="input-text w-200 required" placeholder="表记编号" id="MeterNo" data-valid="isNonEmpty||between:1-30" data-error="表记编号不能为空||表记编号长度为1-30位" />
-          </div>
-            <div class="col-3"></div>
+    <div id="edit" class="pt-5 pr-20 pb-5 pl-20 " style="display: none;">
+        <div class="form form-horizontal bk-gray mt-15 pb-10" id="editlist">
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>表记编号：</label>
+                <div class="formControls col-4">
+                    <input type="text" class="input-text w-200 required" placeholder="表记编号" id="MeterNo" data-valid="isNonEmpty||between:1-30" data-error="表记编号不能为空||表记编号长度为1-30位" />
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>表记名称：</label>
+                <div class="formControls col-4">
+                    <input type="text" class="input-text w-200 required" placeholder="表记名称" id="MeterName" data-valid="isNonEmpty||between:2-50" data-error="表记名称不能为空||表记名称长度为2-50位" />
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>表记类别：</label>
+                <div class="formControls col-4">
+                    <select class="input-text w-200 required" id="MeterType" data-valid="isNonEmpty" data-error="表记类别不能为空">
+                        <option value="">请选择表记类别</option>
+                        <option value="wm">水表</option>
+                        <option value="am">电表</option>
+                    </select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>表记倍率：</label>
+                <div class="formControls col-4">
+                    <input type="text" class="input-text w-200 required" placeholder="表记倍率" id="MeterRate" data-valid="isNonEmpty||onlyNum" data-error="表记倍率不能为空||须为数字" />
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>表记位数：</label>
+                <div class="formControls col-4">
+                    <select class="input-text w-200 required" id="MeterDigit" data-valid="isNonEmpty" data-error="请选择表记位数">
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                    </select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>使用类别：</label>
+                <div class="formControls col-4">
+                    <select class="input-text w-200 required" id="MeterUsageType" data-valid="isNonEmpty" data-error="使用类别不能为空">
+                        <option value="">请选择使用类别</option>
+                        <option value="0">公共</option>
+                        <option value="1">家用</option>
+                        <option value="2">商用</option>
+                        <option value="3">其他</option>
+                    </select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>性质类别：</label>
+                <div class="formControls col-4">
+                    <select class="input-text w-200 required" id="MeterNatureType" data-valid="isNonEmpty" data-error="性质类别不能为空">
+                        <option value="">请选择性质类别</option>
+                        <option value="1">居民用电</option>
+                        <option value="2">工业用电</option>
+                        <option value="3">商业用电</option>
+                        <option value="4">其它用电</option>
+                    </select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>园区：</label>
+                <div class="formControls col-4">
+                    <%=MeterLOCNo1Str %>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>建设期：</label>
+                <div class="formControls col-4">
+                    <select class="input-text required" id="MeterLOCNo2" data-valid="isNonEmpty" data-error="建设期不能为空"></select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>楼栋：</label>
+                <div class="formControls col-4">
+                    <select class="input-text required" id="MeterLOCNo3" data-valid="isNonEmpty" data-error="楼栋不能为空"></select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>楼层：</label>
+                <div class="formControls col-4">
+                    <select class="input-text required" id="MeterLOCNo4" data-valid="isNonEmpty" data-error="楼层不能为空"></select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2">房间编号：</label>
+                <div class="formControls col-4">
+                    <input type="text" class="input-text required" placeholder="房间编号" id="MeterRMID" style="width: 240px;" disabled="disabled" data-valid="between:0-30" data-error="" />
+                    <button type="button" class="btn btn-primary radius" id="chooseRMID">选择</button>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2">位置：</label>
+                <div class="formControls col-4">
+                    <input type="text" class="input-text w-200 required" placeholder="位置" id="Addr" data-valid="between:0-200" data-error="位置长度为0-200位" />
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-2"><span class="c-red">*</span>大小类别：</label>
+                <div class="formControls col-4">
+                    <select class="input-text w-200 required" id="MeterSize" data-valid="isNonEmpty" data-error="大小类别不能为空">
+                        <option value="">请选择大小类别</option>
+                        <option value="1">大表</option>
+                        <option value="2">小表</option>
+                    </select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl" style="display: none;">
+                <label class="form-label col-2">关联表记编号：</label>
+                <div class="formControls col-4">
+                    <input type="text" class="input-text w-200 required" placeholder="关联表记编号" id="MeterRelatedMeterNo" data-valid="between:0-200" data-error="房间编号长度为0-200位" />
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="row cl">
+                <div class="col-9 col-offset-4">
+                    <input class="btn btn-primary radius" type="button" onclick="submit()" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+                    <input class="btn btn-default radius" type="button" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>表记名称：</label>
-          <div class="formControls col-4">
-            <input type="text" class="input-text w-200 required" placeholder="表记名称" id="MeterName" data-valid="isNonEmpty||between:2-50" data-error="表记名称不能为空||表记名称长度为2-50位"/>
-          </div>
-          <div class="col-3"></div>
-        </div>
-
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>表记类别：</label>
-          <div class="formControls col-4">
-            <select class="input-text w-200 required" id="MeterType" data-valid="isNonEmpty" data-error="表记类别不能为空">
-                <option value="">请选择表记类别</option>
-                <option value="wm">水表</option>
-                <option value="am">电表</option>
-            </select>
-          </div>
-          <div class="col-3"></div>
-        </div>
-
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>表记倍率：</label>
-          <div class="formControls col-4">
-            <input type="text" class="input-text w-200 required" placeholder="表记倍率" id="MeterRate" data-valid="isNonEmpty||onlyNum" data-error="表记倍率不能为空||须为数字"/>
-          </div>
-          <div class="col-3"></div>
-        </div>
-
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>表记位数：</label>
-          <div class="formControls col-4">
-            <select class="input-text w-200 required" id="MeterDigit" data-valid="isNonEmpty" data-error="请选择表记位数">
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-            </select>
-          </div>
-          <div class="col-3"></div>
-        </div>
-
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>使用类别：</label>
-          <div class="formControls col-4">
-            <select class="input-text w-200 required" id="MeterUsageType" data-valid="isNonEmpty" data-error="使用类别不能为空">
-                <option value="">请选择使用类别</option>
-                <option value="0">公共</option>
-                <option value="1">家用</option>
-                <option value="2">商用</option>
-                <option value="3">其他</option>
-            </select>
-          </div>
-          <div class="col-3"></div>
-        </div>
-
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>性质类别：</label>
-          <div class="formControls col-4">
-            <select class="input-text w-200 required" id="MeterNatureType" data-valid="isNonEmpty" data-error="性质类别不能为空">
-                <option value="">请选择性质类别</option>
-                <option value="1">居民用电</option>
-                <option value="2">工业用电</option>
-                <option value="3">商业用电</option>
-                <option value="4">其它用电</option>
-            </select>
-          </div>
-          <div class="col-3"></div>
-        </div>
-
-        <div class="row cl">         
-          <label class="form-label col-2"><span class="c-red">*</span>园区：</label>
-          <div class="formControls col-4">
-            <%=MeterLOCNo1Str %>
-          </div>
-          <div class="col-3"></div>
-        </div>
-             
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>建设期：</label>
-          <div class="formControls col-4">
-            <select class="input-text required" id="MeterLOCNo2" data-valid="isNonEmpty" data-error="建设期不能为空" ></select>
-          </div>
-          <div class="col-3"></div>
-        </div> 
-        
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>楼栋：</label>
-          <div class="formControls col-4">
-            <select class="input-text required" id="MeterLOCNo3" data-valid="isNonEmpty" data-error="楼栋不能为空" ></select>
-          </div>
-          <div class="col-3"></div>
-        </div> 
-        
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>楼层：</label>
-          <div class="formControls col-4">
-            <select class="input-text required" id="MeterLOCNo4" data-valid="isNonEmpty" data-error="楼层不能为空" ></select>
-          </div>
-          <div class="col-3"></div>
-        </div>
-
-        <div class="row cl">
-          <label class="form-label col-2">房间编号：</label>
-          <div class="formControls col-4">
-            <input type="text" class="input-text required" placeholder="房间编号" id="MeterRMID" style="width:240px;" disabled="disabled"  data-valid="between:0-30" data-error="" />
-            <button type="button" class="btn btn-primary radius" id="chooseRMID">选择</button>
-          </div>
-          <div class="col-3"></div>
-        </div>      
-
-        <div class="row cl">
-          <label class="form-label col-2">位置：</label>
-          <div class="formControls col-4">
-            <input type="text" class="input-text w-200 required" placeholder="位置" id="Addr"  data-valid="between:0-200" data-error="位置长度为0-200位"/>
-          </div>
-          <div class="col-3"></div>
-        </div>        
-
-        <div class="row cl">
-          <label class="form-label col-2"><span class="c-red">*</span>大小类别：</label>
-          <div class="formControls col-4">
-            <select class="input-text w-200 required" id="MeterSize"  data-valid="isNonEmpty" data-error="大小类别不能为空">
-                <option value="">请选择大小类别</option>
-                <option value="1">大表</option>
-                <option value="2">小表</option>
-            </select>
-          </div>
-          <div class="col-3"></div>
-        </div>
-
-        <div class="row cl" style="display:none;">
-          <label class="form-label col-2">关联表记编号：</label>
-          <div class="formControls col-4">
-            <input type="text" class="input-text w-200 required" placeholder="关联表记编号" id="MeterRelatedMeterNo"  data-valid="between:0-200" data-error="房间编号长度为0-200位"/>
-          </div>
-          <div class="col-3"></div>
-        </div>
-
-        <div class="row cl">
-          <div class="col-9 col-offset-4">
-            <input class="btn btn-primary radius" type="button" onclick="submit()" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
-			<input class="btn btn-default radius" type="button" onclick="cancel()" value="&nbsp;&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;" />
-          </div>
-        </div>
-      </div>
-    </div>    
-
-    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script> 
+    <script type="text/javascript" src="../../jscript/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="../../jscript/script_common.js"></script>
     <script type="text/javascript" src="../../jscript/json2.js"></script>
-    <script type="text/javascript" src="../../jscript/H-ui.js"></script> 
-    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script> 
-    <script type="text/javascript" src="../../lib/layer/layer.js"></script> 
+    <script type="text/javascript" src="../../jscript/H-ui.js"></script>
+    <script type="text/javascript" src="../../jscript/H-ui.admin.js"></script>
+    <script type="text/javascript" src="../../lib/layer/layer.js"></script>
     <script type="text/javascript" src="../../lib/validate/jquery.validate.js"></script>
     <script type="text/javascript">
         function BandResuleData(temp) {
@@ -241,6 +267,11 @@
                 if (vjson.flag == "1") {
                     $("#outerlist").html(vjson.liststr);
                     $("#selectKey").val("");
+                    if (printFlag == 1) {
+                        $(".printck").show();
+                    } else {
+                        $(".printck").hide();
+                    }
                     page = 1;
                     reflist();
                 }
@@ -249,6 +280,11 @@
                 if (vjson.flag == "1") {
                     $("#outerlist").html(vjson.liststr);
                     $("#selectKey").val("");
+                    if (printFlag == 1) {
+                        $(".printck").show();
+                    } else {
+                        $(".printck").hide();
+                    }
                     reflist();
                 }
             }
@@ -318,7 +354,7 @@
                     $("#MeterLOCNo2").val(vjson.MeterLOCNo2);
                     $("#MeterLOCNo3").val(vjson.MeterLOCNo3);
                     $("#MeterLOCNo4").val(vjson.MeterLOCNo4);
-                    
+
                     $("#MeterNo").attr("disabled", true);
                     $("#list").css("display", "none");
                     $("#edit").css("display", "");
@@ -377,6 +413,13 @@
                     }
                 }
                 return;
+            }
+            if (vjson.type == "label") {
+                if (vjson.flag == "0") {
+                    layer.alert("打印失败！");
+                } else {
+                    layer.alert("成功发送打印！请查看打印机打印结果！");
+                }
             }
         }
 
@@ -448,7 +491,7 @@
                 submitData.MeterSize = $("#MeterSize").val();
                 submitData.MeterRelatedMeterNo = $("#MeterRelatedMeterNo").val();
                 submitData.Addr = $("#Addr").val();
-                
+
                 submitData.tp = type;
                 submitData.MeterNoS = $("#MeterNoS").val();
                 submitData.MeterTypeS = $("#MeterTypeS").val();
@@ -540,6 +583,55 @@
             $("#list").css("display", "");
             $("#edit").css("display", "none");
             return;
+        }
+
+        var printFlag = 0;
+        function print() {
+            $(".normalbtn").hide();
+            $(".printbtn").show();
+            $(".printck").show();
+            printFlag = 1;
+        }
+        function printchoice() {
+            var printIndex = 0;
+            var printStr = "";
+            $("input[name='meterno']").each(function () {
+                if ($(this).is(":checked")) {
+                    printIndex++;
+                    printStr += "'" + $(this).val() + "',";
+                }
+            });
+            
+            //layer.alert(printStr);
+            if (printIndex <= 0) {
+                layer.msg("请勾选要打印的数据！");
+                return;
+            }
+            printStr = printStr.substr(0, printStr.lastIndexOf(","));
+            var submitData = new Object();
+            submitData.Type = "label";
+            submitData.Meter = printStr;
+            transmitData(datatostr(submitData));
+        }
+        function printall() {
+            var submitData = new Object();
+            submitData.Type = "label";
+            submitData.Meter = "";
+            transmitData(datatostr(submitData));
+        }
+        function printcancel() {
+            $(".normalbtn").show();
+            $(".printbtn").hide();
+            $(".printck").hide();
+            $("input[name='meterno']").prop("checked", false);
+            printFlag = 0;
+        }
+        function getall() {
+            if ($("#checkall").is(":checked")) {
+                $("input[name='meterno']").prop("checked", true);
+            } else {
+                $("input[name='meterno']").prop("checked", false);
+            }
         }
         var page = 1;
         function jump(pageindex) {
@@ -665,9 +757,9 @@
         },
         tiptype = "1");
 
-        
+
         var trid = "";
         reflist();
-</script>
+    </script>
 </body>
 </html>

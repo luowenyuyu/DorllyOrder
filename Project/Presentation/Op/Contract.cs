@@ -32,9 +32,9 @@ namespace project.Presentation.Op
 
                     if (!Page.IsCallback)
                     {
-                        list = createList(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 
+                        list = createList(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
                                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 1);
-                        
+
                         date = GetDate().ToString("yyyy-MM-dd");
 
                         ContractTypeStr = "<select class=\"input-text required\" id=\"ContractType\">";
@@ -105,7 +105,7 @@ namespace project.Presentation.Op
         protected string SRVNo1Str = "";
         protected string SRVNo2Str = "";
         protected string SRVNo3Str = "";
-        
+
         private string createList(string ContractNo, string ContractNoManual, string ContractType, string ContractSPNo, string ContractCustNo,
             string MinContractSignedDate, string MaxContractSignedDate, string MinContractEndDate, string MaxContractEndDate, string OffLeaseStatus,
             string MinOffLeaseActulDate, string MaxOffLeaseActulDate, int page)
@@ -129,18 +129,18 @@ namespace project.Presentation.Op
             sb.Append("<th width='8%'>实际退租日期</th>");
             sb.Append("<th width='10%'>退租原因</th>");
             sb.Append("</tr>");
-            sb.Append("</thead>");								
+            sb.Append("</thead>");
 
-            DateTime MinContractSignedDateS=default(DateTime);
-            DateTime MaxContractSignedDateS=default(DateTime);
+            DateTime MinContractSignedDateS = default(DateTime);
+            DateTime MaxContractSignedDateS = default(DateTime);
             if (MinContractSignedDate != "") MinContractSignedDateS = ParseDateForString(MinContractSignedDate);
             if (MaxContractSignedDate != "") MaxContractSignedDateS = ParseDateForString(MaxContractSignedDate);
-            
+
             DateTime MinContractEndDateS = default(DateTime);
             DateTime MaxContractEndDateS = default(DateTime);
             if (MinContractEndDate != "") MinContractEndDateS = ParseDateForString(MinContractEndDate);
             if (MaxContractEndDate != "") MaxContractEndDateS = ParseDateForString(MaxContractEndDate);
-            
+
             DateTime MinOffLeaseActulDateS = default(DateTime);
             DateTime MaxOffLeaseActulDateS = default(DateTime);
             if (MinOffLeaseActulDate != "") MinOffLeaseActulDateS = ParseDateForString(MinOffLeaseActulDate);
@@ -177,7 +177,7 @@ namespace project.Presentation.Op
             }
             sb.Append("</tbody>");
             sb.Append("</table>");
-            
+
             sb.Append(Paginat(bc.GetListCount(ContractNo, ContractNoManual, ContractType, ContractSPNo, ContractCustNo,
                             MinContractSignedDateS, MaxContractSignedDateS, MinContractEndDateS, MaxContractEndDateS, string.Empty, OffLeaseStatus,
                             MinOffLeaseActulDateS, MaxOffLeaseActulDateS), pageSize, page, 7));
@@ -342,7 +342,7 @@ namespace project.Presentation.Op
             string result = "";
             JsonArrayParse jp = new JsonArrayParse(this._clientArgument);
             if (jp.getValue("Type") == "insert")
-                result = insertaction(jp); 
+                result = insertaction(jp);
             else if (jp.getValue("Type") == "delete")
                 result = deleteaction(jp);
             else if (jp.getValue("Type") == "update")
@@ -398,7 +398,7 @@ namespace project.Presentation.Op
                 result = getTimeUnitaction(jp);
             return result;
         }
-        
+
         private string checkaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
@@ -988,7 +988,7 @@ namespace project.Presentation.Op
                             KSQL = "insert into Op_ContractBBRentalDetail(RowPointer,RefRP,SRVNo,BBNo,BBName,BBSize,BBAddr,BBStartDate,BBEndDate,TimeUnit,BBRentalMonths," +
                                 "RentalUnitPrice,RentalAmount,Remark,Creator,CreateDate,LastReviser,LastReviseDate)" +
                                 "select NEWID(),'" + id + "',SRVNo,BBNo,BBName,BBSize,BBAddr,BBStartDate,BBEndDate,TimeUnit,BBRentalMonths," +
-                                "RentalUnitPrice,RentalAmount,Remark,"+
+                                "RentalUnitPrice,RentalAmount,Remark," +
                                 "'" + user.Entity.UserName + "',GetDate(),'" + user.Entity.UserName + "',GetDate() " +
                                 "from Op_ContractBBRentalDetail where RefRP='" + jp.getValue("copyid") + "' order by CreateDate";
                             obj.ExecuteNonQuery(KSQL);
@@ -1013,7 +1013,7 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
                 jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
                 jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
-                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page"))))); 
+                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
         private string approveaction(JsonArrayParse jp)
@@ -1037,13 +1037,13 @@ namespace project.Presentation.Op
                         if (InfoBar != "")
                         {
                             flag = "5";
-                            collection.Add(new JsonStringValue("InfoBar", InfoBar));       
+                            collection.Add(new JsonStringValue("InfoBar", InfoBar));
                         }
-                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));                        
+                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
                     }
                     else
                     {
-                        if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer+ "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
+                        if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer + "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
                         {
                             flag = "4";
                         }
@@ -1118,7 +1118,7 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
                 jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
                 jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
-                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page"))))); 
+                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
         private string jumpaction(JsonArrayParse jp)
@@ -1131,7 +1131,7 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
                 jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
                 jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
-                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page"))))); 
+                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
 
@@ -1398,7 +1398,7 @@ namespace project.Presentation.Op
                 bc.Entity.RentalUnitPrice = ParseDecimalForString(jp.getValue("RentalUnitPrice"));
                 bc.Entity.RentalAmount = ParseDecimalForString(jp.getValue("RentalUnitPrice")) * ParseIntForString(jp.getValue("BBRentalMonths"));
                 bc.Entity.Remark = jp.getValue("Remark");
-                
+
                 int r = bc.Save();
                 if (r <= 0)
                     flag = "2";
@@ -1450,7 +1450,7 @@ namespace project.Presentation.Op
                 collection.Add(new JsonStringValue("RentalUnitPrice", bc.Entity.RentalUnitPrice.ToString("0.####")));
                 collection.Add(new JsonStringValue("RentalAmount", bc.Entity.RentalAmount.ToString("0.####")));
                 collection.Add(new JsonStringValue("Remark", bc.Entity.Remark));
-                
+
                 collection.Add(new JsonStringValue("ItemId", jp.getValue("itemid")));
             }
             catch
@@ -1534,8 +1534,8 @@ namespace project.Presentation.Op
             {
                 Business.Base.BusinessBillboard bc = new Business.Base.BusinessBillboard();
                 bc.load(jp.getValue("bbid"));
-                if(jp.getValue("TimeUnit") == "Day")
-                collection.Add(new JsonStringValue("BBINPrice", bc.Entity.BBINPriceDay.ToString("0.####")));
+                if (jp.getValue("TimeUnit") == "Day")
+                    collection.Add(new JsonStringValue("BBINPrice", bc.Entity.BBINPriceDay.ToString("0.####")));
             }
             catch
             { flag = "2"; }

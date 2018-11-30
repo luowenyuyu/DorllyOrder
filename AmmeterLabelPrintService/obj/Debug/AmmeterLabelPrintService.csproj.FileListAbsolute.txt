@@ -1,0 +1,15 @@
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.exe.config
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.exe
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.pdb
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.LabelPrintService.resources
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.csproj.GenerateResource.Cache
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.exe
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.pdb
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\Newtonsoft.Json.dll
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\Newtonsoft.Json.xml
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\log4net.dll
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\log4net.xml
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.ProjectInstaller.resources
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\log4net.config
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\Interop.MSXML2.dll
+E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.csproj.ResolveComReference.cache

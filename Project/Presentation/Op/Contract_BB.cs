@@ -919,33 +919,42 @@ namespace project.Presentation.Op
                         {
                             #region 同步到资源系统
 
-                            ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                            string Items = "";
-
-                            Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
-                            cust.load(bc.Entity.ContractCustNo);
-                            DataTable dt = obj.PopulateDataSet("SELECT BBNo FROM Op_ContractBBRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY BBNo").Tables[0];
-                            foreach (DataRow dr in dt.Rows)
+                            string syncResult = string.Empty;
+                            try
                             {
-                                SycnResourceStatus rs = new SycnResourceStatus();
-                                rs.SysID = 1; //1.订单
-                                rs.ResourceID = dr["BBNo"].ToString();
-                                rs.BusinessID = bc.Entity.RowPointer;
-                                rs.BusinessNo = bc.Entity.ContractNo;
-                                rs.BusinessType = 1;//1租赁，2物业
-                                rs.RentBeginTime = bc.Entity.FeeStartDate;
-                                rs.RentEndTime = bc.Entity.ContractEndDate;
-                                rs.CustLongName = bc.Entity.ContractCustName;
-                                rs.CustShortName = cust.Entity.CustShortName;
-                                rs.CustTel = cust.Entity.CustTel;
-                                rs.Status = 1;
-                                rs.RentType = 1;
-                                rs.UpdateTime = GetDate();
-                                rs.UpdateUser = user.Entity.UserName;
+                                ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                                srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                                string Items = "";
 
-                                Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
+                                Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
+                                cust.load(bc.Entity.ContractCustNo);
+                                DataTable dt = obj.PopulateDataSet("SELECT BBNo FROM Op_ContractBBRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY BBNo").Tables[0];
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    SycnResourceStatus rs = new SycnResourceStatus();
+                                    rs.SysID = 1; //1.订单
+                                    rs.ResourceID = dr["BBNo"].ToString();
+                                    rs.BusinessID = bc.Entity.RowPointer;
+                                    rs.BusinessNo = bc.Entity.ContractNo;
+                                    rs.BusinessType = 1;//1租赁，2物业
+                                    rs.RentBeginTime = bc.Entity.FeeStartDate;
+                                    rs.RentEndTime = bc.Entity.ContractEndDate;
+                                    rs.CustLongName = bc.Entity.ContractCustName;
+                                    rs.CustShortName = cust.Entity.CustShortName;
+                                    rs.CustTel = cust.Entity.CustTel;
+                                    rs.Status = 1;
+                                    rs.RentType = 1;
+                                    rs.UpdateTime = GetDate();
+                                    rs.UpdateUser = user.Entity.UserName;
+
+                                    Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
+                                }
+                                syncResult = srv.LeaseIn("[" + Items + "]");
                             }
-                            string syncResult = srv.LeaseIn("[" + Items + "]");
+                            catch (Exception ex)
+                            {
+                                syncResult = ex.ToString();
+                            }
                             collection.Add(new JsonStringValue("sync", syncResult));
 
                             #endregion
@@ -968,35 +977,44 @@ namespace project.Presentation.Op
 
                             #region 同步到资源系统
 
-                            ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                            string Items = "";
-
-                            Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
-                            cust.load(bc.Entity.ContractCustNo);
-                            DataTable dt = obj.PopulateDataSet("SELECT BBNo FROM Op_ContractBBRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY BBNo").Tables[0];
-                            foreach (DataRow dr in dt.Rows)
+                            string syncResult = string.Empty;
+                            try
                             {
-                                SycnResourceStatus rs = new SycnResourceStatus();
-                                rs.SysID = 1; //1.订单
-                                rs.ResourceID = dr["BBNo"].ToString();
-                                rs.BusinessID = bc.Entity.RowPointer;
-                                rs.BusinessNo = bc.Entity.ContractNo;
-                                rs.BusinessType = 1;//1租赁，2物业
-                                rs.RentBeginTime = bc.Entity.FeeStartDate;
-                                rs.RentEndTime = bc.Entity.ContractEndDate;
-                                rs.CustLongName = bc.Entity.ContractCustName;
-                                rs.CustShortName = cust.Entity.CustShortName;
-                                rs.CustTel = cust.Entity.CustTel;
-                                rs.Status = 2;
-                                rs.RentType = 1;
-                                rs.UpdateTime = GetDate();
-                                rs.UpdateUser = user.Entity.UserName;
+                                ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                                srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                                string Items = "";
 
-                                Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
+                                Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
+                                cust.load(bc.Entity.ContractCustNo);
+                                DataTable dt = obj.PopulateDataSet("SELECT BBNo FROM Op_ContractBBRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY BBNo").Tables[0];
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    SycnResourceStatus rs = new SycnResourceStatus();
+                                    rs.SysID = 1; //1.订单
+                                    rs.ResourceID = dr["BBNo"].ToString();
+                                    rs.BusinessID = bc.Entity.RowPointer;
+                                    rs.BusinessNo = bc.Entity.ContractNo;
+                                    rs.BusinessType = 1;//1租赁，2物业
+                                    rs.RentBeginTime = bc.Entity.FeeStartDate;
+                                    rs.RentEndTime = bc.Entity.ContractEndDate;
+                                    rs.CustLongName = bc.Entity.ContractCustName;
+                                    rs.CustShortName = cust.Entity.CustShortName;
+                                    rs.CustTel = cust.Entity.CustTel;
+                                    rs.Status = 2;
+                                    rs.RentType = 1;
+                                    rs.UpdateTime = GetDate();
+                                    rs.UpdateUser = user.Entity.UserName;
+
+                                    Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
+                                }
+                                syncResult = srv.LeaseDel("[" + Items + "]");
                             }
-                            string syncResult = srv.LeaseDel("[" + Items + "]");
+                            catch (Exception ex)
+                            {
+                                syncResult = ex.ToString();
+                            }
                             collection.Add(new JsonStringValue("sync", syncResult));
-                            
+
                             #endregion
                         }
                     }

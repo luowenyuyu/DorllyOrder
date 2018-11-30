@@ -289,13 +289,24 @@ namespace project.Presentation.Base
                         flag = "2";
                     else
                     {
-                        //同步到资源系统
-                        ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        string syncResult = srv.DeleteResource(bc.Entity.WPNo);
+                        #region 同步到资源系统
+
+                        string syncResult = string.Empty;
+                        try
+                        {
+                            ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                            srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                            syncResult = srv.DeleteResource(bc.Entity.WPNo);
+                        }
+                        catch (Exception ex)
+                        {
+                            syncResult = ex.ToString();
+                        }
                         collection.Add(new JsonStringValue("sync", syncResult));
+
+                        #endregion
                     }
                 }
-                //}
             }
             catch { flag = "2"; }
 
@@ -333,10 +344,22 @@ namespace project.Presentation.Base
                         flag = "2";
                     else
                     {
-                        //同步到资源系统
-                        ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        string syncResult = srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                        #region 同步到资源系统
+
+                        string syncResult = string.Empty;
+                        try
+                        {
+                            ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                            srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                            syncResult = srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                        }
+                        catch (Exception ex)
+                        {
+                            syncResult = ex.ToString();
+                        }
                         collection.Add(new JsonStringValue("sync", syncResult));
+
+                        #endregion
                     }
                 }
                 else
@@ -367,10 +390,22 @@ namespace project.Presentation.Base
                             flag = "2";
                         else
                         {
-                            //同步到资源系统
-                            ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                            string syncResult = srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                            #region 同步到资源系统
+
+                            string syncResult = string.Empty;
+                            try
+                            {
+                                ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                                srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                                syncResult = srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                            }
+                            catch (Exception ex)
+                            {
+                                syncResult = ex.ToString();
+                            }
                             collection.Add(new JsonStringValue("sync", syncResult));
+
+                            #endregion
                         }
                     }
                 }
@@ -423,10 +458,22 @@ namespace project.Presentation.Base
                 if (r <= 0) flag = "2";
                 else
                 {
-                    //同步到资源系统
-                    ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                    string syncResult = srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                    #region 同步到资源系统
+
+                    string syncResult = string.Empty;
+                    try
+                    {
+                        ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                        srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                        syncResult = srv.AddOrUpdateWorkPlace(JsonConvert.SerializeObject(bc.Entity));
+                    }
+                    catch (Exception ex)
+                    {
+                        syncResult = ex.ToString();
+                    }
                     collection.Add(new JsonStringValue("sync", syncResult));
+
+                    #endregion
                 }
                 if (bc.Entity.WPISEnable)
                     collection.Add(new JsonStringValue("stat", "<span class=\"label radius\">禁用</span>"));

@@ -81,3 +81,6 @@ E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.GenerateResourc
 E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\project.dll
 E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\project.pdb
 E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\Project.csprojResolveAssemblyReference.cache
+E:\MineDev\Projects\DorllyOrder\DOWeb\Bin\project.dll.config
+E:\MineDev\Projects\DorllyOrder\DOWeb\Bin\project.dll
+E:\MineDev\Projects\DorllyOrder\DOWeb\Bin\project.pdb

@@ -47,6 +47,8 @@ namespace project.Presentation.Base
                                     Buttons += "<a href=\"javascript:;\" onclick=\"del()\" class=\"btn btn-danger radius\"><i class=\"Hui-iconfont\">&#xe6e2;</i> 删除</a>&nbsp;&nbsp;";
                                 if (rightCode.IndexOf("vilad") >= 0)
                                     Buttons += "<a href=\"javascript:;\" onclick=\"valid()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 启用/停用</a>&nbsp;&nbsp;";
+                                if (rightCode.IndexOf("vilad") >= 0)
+                                    Buttons += "<a href=\"javascript:;\" onclick=\"print()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 标签打印</a>&nbsp;&nbsp;";
                             }
                         }
                         else
@@ -55,6 +57,7 @@ namespace project.Presentation.Base
                             Buttons += "<a href=\"javascript:;\" onclick=\"update()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe60c;</i> 修改</a>&nbsp;&nbsp;";
                             Buttons += "<a href=\"javascript:;\" onclick=\"del()\" class=\"btn btn-danger radius\"><i class=\"Hui-iconfont\">&#xe6e2;</i> 删除</a>&nbsp;&nbsp;";
                             Buttons += "<a href=\"javascript:;\" onclick=\"valid()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 启用/停用</a>&nbsp;&nbsp;";
+                            Buttons += "<a href=\"javascript:;\" onclick=\"print()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 标签打印</a>&nbsp;&nbsp;";
                         }
 
                         list = createList(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 1);
@@ -98,6 +101,7 @@ namespace project.Presentation.Base
             sb.Append("<table class=\"table table-border table-bordered table-hover table-bg table-sort\" id=\"tablelist\">");
             sb.Append("<thead>");
             sb.Append("<tr class=\"text-c\">");
+            sb.Append("<td width='4%' class=\"printck\"><input type=\"checkbox\" class=\"input-text size-MINI\" id=\"checkall\" onclick=\"getall()\" /></td>");
             sb.Append("<th width=\"5%\">序号</th>");
             sb.Append("<th width='13%'>房间编号</th>");
             sb.Append("<th width='10%'>表记编号</th>");
@@ -118,6 +122,7 @@ namespace project.Presentation.Base
             foreach (Entity.Base.EntityMeter it in bc.GetListQuery(MeterLOCNo1, MeterLOCNo2, MeterLOCNo3, MeterLOCNo4, MeterNo, MeterType, MeterUsageType, MeterRMID,"", MeterSize, MeterStatus, page, pageSize))
             {
                 sb.Append("<tr class=\"text-c\" id=\"" + it.MeterNo + "\">");
+                sb.Append("<td class=\"printck\"><input type=\"checkbox\" class=\"input-text size-MINI\" value=\"" + it.MeterNo + "\" name=\"meterno\" />");
                 sb.Append("<td>" + r.ToString() + "</td>");
                 sb.Append("<td>" + it.MeterRMID + "</td>");
                 sb.Append("<td>" + it.MeterNo + "</td>");
@@ -167,7 +172,41 @@ namespace project.Presentation.Base
                 result = validaction(jp);
             else if (jp.getValue("Type") == "getvalue")
                 result = getvalueaction(jp);
+            else if (jp.getValue("Type") == "label")
+                result = labelaction(jp);
             return result;
+        }
+
+        private string labelaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+            SqlConnection con = null;
+            SqlCommand cmd = null;
+            try
+            {
+                
+                con = Data.Conn();
+                cmd = new SqlCommand("PrintMeterLabel", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@MeterNo", SqlDbType.NVarChar, 3000).Value = jp.getValue("Meter");
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch 
+            {
+                flag = "0";
+            }
+            finally
+            {
+                if (cmd != null)
+                    cmd.Dispose();
+                if (con != null)
+                    con.Dispose();
+            }
+            collection.Add(new JsonStringValue("type", "label"));
+            collection.Add(new JsonStringValue("flag", flag));
+            return collection.ToString();
         }
         private string updateaction(JsonArrayParse jp)
         {

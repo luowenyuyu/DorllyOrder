@@ -347,33 +347,18 @@ namespace project.Presentation.Op
             {
                 Business.Op.BusinessContract bc = new Business.Op.BusinessContract();
                 bc.load(jp.getValue("id"));
-                if (bc.Entity.ContractStatus != "2")
+                if (bc.Entity.ContractStartDate >= Convert.ToDateTime(jp.getValue("RefundDate")))
+                {
+                    flag = "2";
+                }
+                else if (bc.Entity.ContractStatus != "2")
                 {
                     flag = "3";
                 }
                 else
                 {
-                    //string sqlcmd = "UPDATE Op_Contract SET ContractStatus='3',OffLeaseStatus='3',OffLeaseActulDate=GETDATE() "+
-                    //            "WHERE RowPointer='"+jp.getValue("id")+"'";
-                    //int r = obj.ExecuteNonQuery(sqlcmd);
-                    //if (r <= 0)
-                    //{
-                    //    flag = "2";
-                    //}
-                    //else
-                    //{
-                    //    obj.ExecuteNonQuery("UPDATE Mstr_Room SET RMCurrentCustNo='',RMStatus='free' WHERE RMID IN(SELECT RMID FROM Op_ContractRMRentalDetail WHERE RefRP='" + jp.getValue("id") + "') ");
-                    //    obj.ExecuteNonQuery("UPDATE Mstr_Customer SET CustStatus = '2' "+
-                    //        "WHERE CustNo='" + bc.Entity.ContractCustNo + "' AND (SELECT COUNT(1) FROM Op_Contract WHERE ContractCustNo='" + bc.Entity.ContractCustNo + "' AND ContractStatus='2' AND ContractType='01')=0 ");
-
-
-                    //    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
-                    //            jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
-                    //            jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
-                    //            jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
-                    //}
-
-                    string InfoBar = refund(jp.getValue("id"), jp.getValue("RefundDate"), user.Entity.UserName);
+                    //string InfoBar = refund(jp.getValue("id"), jp.getValue("RefundDate"), user.Entity.UserName);
+                    string InfoBar = bc.ConfirmLeaveWithNoFee(jp.getValue("id"));
                     if (InfoBar != "")
                     {
                         collection.Add(new JsonStringValue("InfoBar", InfoBar));
@@ -390,6 +375,7 @@ namespace project.Presentation.Op
                         #region 同步到资源系统
 
                         ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                        srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
                         string Items = "";
 
                         Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
@@ -420,7 +406,7 @@ namespace project.Presentation.Op
                     }
                 }
             }
-            catch { }
+            catch { flag = "99"; }
 
             collection.Add(new JsonStringValue("type", "refundsubmit"));
             collection.Add(new JsonStringValue("flag", flag));

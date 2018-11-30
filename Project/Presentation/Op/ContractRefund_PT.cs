@@ -194,7 +194,7 @@ namespace project.Presentation.Op
             }
             sb.Append("</tbody>");
             sb.Append("</table>");
-
+             
             sb.Append(Paginat(bc.GetRefundListCount(ContractNo, ContractNoManual, ContractType, ContractSPNo, ContractCustNo,
                             ParseSearchDateForString(MinContractSignedDate), ParseSearchDateForString(MaxContractSignedDate),
                             ParseSearchDateForString(MinContractEndDate), ParseSearchDateForString(MaxContractEndDate), OffLeaseStatus,
@@ -366,6 +366,7 @@ namespace project.Presentation.Op
             {
                 Business.Op.BusinessContract bc = new Business.Op.BusinessContract();
                 bc.load(jp.getValue("id"));
+
                 if (bc.Entity.OffLeaseStatus != "2")
                 {
                     flag = "3";
@@ -435,7 +436,11 @@ namespace project.Presentation.Op
             {
                 Business.Op.BusinessContract bc = new Business.Op.BusinessContract();
                 bc.load(jp.getValue("id"));
-                if (bc.Entity.ContractStatus != "2")
+                if (bc.Entity.ContractStartDate >= Convert.ToDateTime(jp.getValue("RefundDate")))
+                {
+                    flag = "2";
+                }
+                else if (bc.Entity.ContractStatus != "2")
                 {
                     flag = "3";
                 }
@@ -444,8 +449,8 @@ namespace project.Presentation.Op
                     string InfoBar = refund(jp.getValue("id"),jp.getValue("RefundDate"),user.Entity.UserName);
                     if (InfoBar != "")
                     {
-                        collection.Add(new JsonStringValue("InfoBar", InfoBar));
                         flag = "4";
+                        collection.Add(new JsonStringValue("InfoBar", InfoBar));
                     }
                     else 
                     {
@@ -486,7 +491,7 @@ namespace project.Presentation.Op
                     }
                 }
             }
-            catch { }
+            catch { flag = "99"; }
 
             collection.Add(new JsonStringValue("type", "refundsubmit"));
             collection.Add(new JsonStringValue("flag", flag));

@@ -57,9 +57,9 @@ namespace project.Presentation.Base
                             Buttons += "<a href=\"javascript:;\" onclick=\"del()\" class=\"btn btn-danger radius\"><i class=\"Hui-iconfont\">&#xe6e2;</i> 删除</a>&nbsp;&nbsp;";
                             Buttons += "<a href=\"javascript:;\" onclick=\"valid()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 启用/停用</a>&nbsp;&nbsp;";
                         }
-                        
+
                         list = createList(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 1);
-                        
+
                         Business.Base.BusinessLocation loc = new Business.Base.BusinessLocation();
                         BBLOCNoStr += "<select id=\"BBLOCNo\" class=\"input-text required\" data-valid=\"isNonEmpty\" data-error=\"园区不能为空\">";
                         BBLOCNoStrS += "<select id=\"BBLOCNoS\" class=\"input-text required size-MINI\" style=\"width:120px\">";
@@ -142,7 +142,7 @@ namespace project.Presentation.Base
             sb.Append("<th width='7%'>是否禁用</th>");
             sb.Append("</tr>");
             sb.Append("</thead>");
-            
+
             int r = 1;
             sb.Append("<tbody>");
             Business.Base.BusinessBillboard bc = new project.Business.Base.BusinessBillboard();
@@ -259,10 +259,22 @@ namespace project.Presentation.Base
                             flag = "2";
                         else
                         {
-                            //同步到资源系统
-                            ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                            string syncResult = srv.DeleteResource(bc.Entity.BBNo);
+                            #region 同步到资源系统
+
+                            string syncResult = string.Empty;
+                            try
+                            {
+                                ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                                srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                                syncResult = srv.DeleteResource(bc.Entity.BBNo);
+                            }
+                            catch (Exception ex)
+                            {
+                                syncResult = ex.ToString();
+                            }
                             collection.Add(new JsonStringValue("sync", syncResult));
+
+                            #endregion
                         }
                     }
                 }
@@ -302,17 +314,29 @@ namespace project.Presentation.Base
                     bc.Entity.BBDeposit = ParseDecimalForString(jp.getValue("BBDeposit"));
                     bc.Entity.BBImage = jp.getValue("BBImage");
                     bc.Entity.IsStatistics = bool.Parse(jp.getValue("IsStatistics"));
-             
+
                     int r = bc.Save("update");
 
                     if (r <= 0)
                         flag = "2";
                     else
                     {
-                        //同步到资源系统
-                        ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        string syncResult = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                        #region 同步到资源系统
+
+                        string syncResult = string.Empty;
+                        try
+                        {
+                            ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                            srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                            syncResult = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                        }
+                        catch (Exception ex)
+                        {
+                            syncResult = ex.ToString();
+                        }
                         collection.Add(new JsonStringValue("sync", syncResult));
+
+                        #endregion
                     }
                 }
                 else
@@ -344,16 +368,28 @@ namespace project.Presentation.Base
 
                         bc.Entity.BBCreator = user.Entity.UserName;
                         bc.Entity.BBCreateDate = GetDate();
-                        
+
                         int r = bc.Save("insert");
                         if (r <= 0)
                             flag = "2";
                         else
                         {
-                            //同步到资源系统
-                            ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                            string syncResult = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                            #region 同步到资源系统
+
+                            string syncResult = string.Empty;
+                            try
+                            {
+                                ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                                srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                                syncResult = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                            }
+                            catch (Exception ex)
+                            {
+                                syncResult = ex.ToString();
+                            }
                             collection.Add(new JsonStringValue("sync", syncResult));
+
+                            #endregion
                         }
                     }
                 }
@@ -375,7 +411,7 @@ namespace project.Presentation.Base
             collection.Add(new JsonStringValue("type", "select"));
             collection.Add(new JsonStringValue("flag", flag));
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("BBNoS"), jp.getValue("BBNameS"), jp.getValue("BBAddrS"), jp.getValue("BBStatusS"),
-                 jp.getValue("BBTypeS"), jp.getValue("BBSPNoS"), ParseIntForString(jp.getValue("page"))))); 
+                 jp.getValue("BBTypeS"), jp.getValue("BBSPNoS"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
         private string jumpaction(JsonArrayParse jp)
@@ -386,7 +422,7 @@ namespace project.Presentation.Base
             collection.Add(new JsonStringValue("type", "jump"));
             collection.Add(new JsonStringValue("flag", flag));
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("BBNoS"), jp.getValue("BBNameS"), jp.getValue("BBAddrS"), jp.getValue("BBStatusS"),
-                 jp.getValue("BBTypeS"), jp.getValue("BBSPNoS"), ParseIntForString(jp.getValue("page"))))); 
+                 jp.getValue("BBTypeS"), jp.getValue("BBSPNoS"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
         private string validaction(JsonArrayParse jp)
@@ -403,10 +439,22 @@ namespace project.Presentation.Base
                 if (r <= 0) flag = "2";
                 else
                 {
-                    //同步到资源系统
-                    ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                    string syncResult = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                    #region 同步到资源系统
+
+                    string syncResult = string.Empty;
+                    try
+                    {
+                        ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                        srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                        syncResult = srv.AddOrUpdateBillboard(JsonConvert.SerializeObject(bc.Entity));
+                    }
+                    catch (Exception ex)
+                    {
+                        syncResult = ex.ToString();
+                    }
                     collection.Add(new JsonStringValue("sync", syncResult));
+
+                    #endregion
                 }
                 if (bc.Entity.BBISEnable)
                     collection.Add(new JsonStringValue("stat", "<span class=\"label radius\">禁用</span>"));

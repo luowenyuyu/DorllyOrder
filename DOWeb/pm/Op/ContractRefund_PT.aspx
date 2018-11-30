@@ -387,6 +387,8 @@
                 }
                 else if (vjson.flag == "3") {
                     layer.alert("当前状态不允许退租！");
+                } else if (vjson.flag == "4") {
+                    layer.alert("退租时间有误！");
                 }
                 else {
                     layer.alert("提取数据出错！");
@@ -402,6 +404,9 @@
                     layer.closeAll();
                     layer.alert("退租成功！");
                     //console.log(vjson.sync);
+                }
+                else if (vjson.flag == "2") {
+                    layer.alert("退租时间有误！");
                 }
                 else if (vjson.flag == "3") {
                     layer.alert("当前状态不允许退租！");
@@ -634,7 +639,7 @@
                 return;
             }
             var submitData = new Object();
-            submitData.Type = "refund";
+            submitData.Type = "refundsubmit";
             submitData.id = $("#selectKey").val();
             submitData.RefundDate = $("#RefundDate1").val();
 

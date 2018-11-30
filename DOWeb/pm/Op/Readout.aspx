@@ -19,6 +19,7 @@
             var data = submitData;
             <%=ClientScript.GetCallbackEventReference(this, "data", "BandResuleData", null) %>
         }
+
     </script>
 </head>
 <body>
@@ -165,8 +166,8 @@
                     <div class="formControls col-4">
                         <form action="ReadouImg.ashx" method="post" id="upload" enctype="multipart/form-data">
                             <div id="showimg" style="height: 120px; width: 120px; float: left; position: relative; margin-right: 15px; display: none;">
-                                <img src="#" id="showbtn" style="height: 100%; width: 100%;" />
-                                <i class="Hui-iconfont Hui-iconfont-close" style="position: absolute; right: 1px; top: 1px; padding: 0px 2px; color: red; background-color: #d6e1e3; cursor: pointer;" onclick="delimg()"></i>
+                                <img src="#" id="showbtn" style="height: 100%; width: 100%; cursor: pointer;" />
+                                <i class="Hui-iconfont Hui-iconfont-close" style="position: absolute; right: 0px; top: 0px; padding: 0px 2px; color: red; background-color: #d6e1e3; cursor: pointer;" onclick="delimg()"></i>
                             </div>
                             <div id="addimg" style="height: 120px; width: 120px; float: left; border: 1px dashed #171515; position: relative;">
                                 <input id="addbtn" type="file" name="imgfile" style="height: 70px; width: 70px; position: absolute; left: 25px; top: 25px; overflow: hidden; opacity: 0; cursor: pointer;" onchange="addimg()" />
@@ -221,9 +222,37 @@
     <script type="text/javascript" src="../../lib/layer/layer.js"></script>
     <script type="text/javascript" src="../../lib/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="../../jscript/JsInputDate.js"></script>
-
+    <%--<script type="text/javascript" src="../../jscript/e-smart-zoom-jquery.min.js"></script>--%>
     <script type="text/javascript" src="../../lib/zTree/js/jquery.ztree.all-3.5.min.js"></script>
     <script type="text/javascript">
+        $(function () {
+            $("#showimg img").click(function () {
+                showImg();
+            });
+        });
+        function showImg() {
+            layer.open({
+                type: 1,
+                content: $("#showimg"),
+                area: [$(window).height() * 0.9 + 'px', $(window).height() * 0.9 + 'px'],
+                title: false,
+                closeBtn: 2,
+                success: function () {
+                    $("#showimg img").unbind("click");
+                    $("#showimg").css({ "width": "100%", "height": "100%" });
+                    $("#showimg i").hide();
+                    //$("#showimg img").smartZoom();
+                },
+                end: function () {
+                    //$("#showimg img").smartZoom('destroy');
+                    $("#showimg").css({ "width": "120px", "height": "120px" });
+                    $("#showimg").show();
+                    $("#showimg i").show();
+                    $("#showimg img").bind("click", function () { showImg(); });
+
+                }
+            });
+        }
         function BandResuleData(temp) {
             var vjson = JSON.parse(temp);
             if (vjson.type == "select") {

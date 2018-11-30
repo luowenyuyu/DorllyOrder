@@ -125,7 +125,7 @@ namespace project.Presentation.Op
         protected string ContractSPNoStr = "";
         protected string ContractSPNoStrS = "";
         protected string SRVNo2Str = "";
-        
+
         private string createList(string ContractNo, string ContractNoManual, string ContractType, string ContractSPNo, string ContractCustNo,
             string MinContractSignedDate, string MaxContractSignedDate, string MinContractEndDate, string MaxContractEndDate, string OffLeaseStatus,
             string MinOffLeaseActulDate, string MaxOffLeaseActulDate, int page)
@@ -149,8 +149,8 @@ namespace project.Presentation.Op
             sb.Append("<th width='8%'>实际退租日期</th>");
             sb.Append("<th width='10%'>退租原因</th>");
             sb.Append("</tr>");
-            sb.Append("</thead>");								
-            
+            sb.Append("</thead>");
+
             int r = 1;
             sb.Append("<tbody>");
             Business.Op.BusinessContract bc = new project.Business.Op.BusinessContract();
@@ -252,9 +252,9 @@ namespace project.Presentation.Op
         {
             string result = "";
             JsonArrayParse jp = new JsonArrayParse(this._clientArgument);
-            if (jp.getValue("Type") == "cancelrefund") //确认退租
+            if (jp.getValue("Type") == "cancelrefund")//取消预约退租
                 result = cancelrefundaction(jp);
-            else if (jp.getValue("Type") == "applyrefundsubmit")
+            else if (jp.getValue("Type") == "applyrefundsubmit")//预约退租
                 result = applyrefundsubmitaction(jp);
             else if (jp.getValue("Type") == "refundsubmit") //确认退租
                 result = refundsubmitaction(jp);
@@ -273,7 +273,7 @@ namespace project.Presentation.Op
                 result = itemupdate2action(jp);
             return result;
         }
-        
+
         private string cancelrefundaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
@@ -342,23 +342,25 @@ namespace project.Presentation.Op
         {
             JsonObjectCollection collection = new JsonObjectCollection();
             string flag = "1";
-
             try
             {
                 Business.Op.BusinessContract bc = new Business.Op.BusinessContract();
                 bc.load(jp.getValue("id"));
-                if (bc.Entity.ContractStatus != "2")
+                if (bc.Entity.ContractStartDate >= Convert.ToDateTime(jp.getValue("RefundDate")))
+                {
+                    flag = "2";
+                }
+                else if (bc.Entity.ContractStatus != "2")
                 {
                     flag = "3";
                 }
                 else
                 {
-                    string sqlcmd = "UPDATE Op_Contract SET ContractStatus='3',OffLeaseStatus='3',OffLeaseActulDate=GETDATE()" +
-                                "WHERE RowPointer='" + jp.getValue("id") + "'";
-                    int r = obj.ExecuteNonQuery(sqlcmd);
-                    if (r <= 0)
+                    string infoMsg = bc.ConfirmLeaveWithNoFee(jp.getValue("RefundDate"));
+                    if (infoMsg != "")
                     {
-                        flag = "2";
+                        collection.Add(new JsonStringValue("InfoBar", infoMsg));
+                        flag = "4";
                     }
                     else
                     {
@@ -370,6 +372,7 @@ namespace project.Presentation.Op
                         #region 同步到资源系统
 
                         ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                        srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
                         string Items = "";
                         Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
                         cust.load(bc.Entity.ContractCustNo);
@@ -393,10 +396,56 @@ namespace project.Presentation.Op
                         }
                         string syncResult = srv.LeaseOut("[" + Items + "]");
                         collection.Add(new JsonStringValue("sync", syncResult));
-                        
+
                         #endregion
                     }
+                    
                 }
+                #region old
+                //string sqlcmd = string.Format("UPDATE Op_Contract SET ContractStatus='3',OffLeaseStatus='3',OffLeaseActulDate='{0}' WHERE RowPointer='{1}'", actuallyLeaveDate, contractID);
+                //int r = obj.ExecuteNonQuery(sqlcmd);
+                //if (r <= 0)
+                //{
+                //    flag = "4";
+                //}
+                //else
+                //{
+                //    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
+                //            jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
+                //            jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
+                //            jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
+
+                //    #region 同步到资源系统
+
+                //    ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                //    srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                //    string Items = "";
+                //    Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
+                //    cust.load(bc.Entity.ContractCustNo);
+                //    DataTable dt = obj.PopulateDataSet("SELECT WPNo FROM Op_ContractWPRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY WPNo").Tables[0];
+                //    foreach (DataRow dr in dt.Rows)
+                //    {
+                //        SycnResourceStatus rs = new SycnResourceStatus();
+                //        rs.SysID = 1; //1.订单
+                //        rs.ResourceID = dr["WPNo"].ToString();
+                //        rs.BusinessID = bc.Entity.RowPointer;
+                //        rs.BusinessNo = bc.Entity.ContractNo;
+                //        rs.BusinessType = 1;//1租赁，2物业
+                //        rs.RentBeginTime = bc.Entity.FeeStartDate;
+                //        rs.RentEndTime = GetDate();
+                //        rs.Status = 2;
+                //        rs.RentType = 1;
+                //        rs.UpdateTime = GetDate();
+                //        rs.UpdateUser = user.Entity.UserName;
+
+                //        Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
+                //    }
+                //    string syncResult = srv.LeaseOut("[" + Items + "]");
+                //    collection.Add(new JsonStringValue("sync", syncResult));
+
+                //    #endregion
+                //} 
+                #endregion
             }
             catch { }
 
@@ -568,7 +617,7 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
                 jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
                 jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
-                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page"))))); 
+                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
         private string jumpaction(JsonArrayParse jp)
@@ -581,11 +630,11 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
                 jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
                 jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
-                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page"))))); 
+                jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
 
-        
+
         //工位信息
         private string itemupdate2action(JsonArrayParse jp)
         {

@@ -56,7 +56,7 @@ namespace project.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://120.76.154.6:8998/webapi/resourceservice.asmx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://zy.dorlly.com/webapi/resourceservice.asmx")]
         public string project_ResourceService_ResourceService {
             get {
                 return ((string)(this["project_ResourceService_ResourceService"]));

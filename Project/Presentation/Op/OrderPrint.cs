@@ -15,6 +15,9 @@ namespace project.Presentation.Op
         //public static string Path = "E:\\Project\\DorllyOrder\\DOWeb\\pdf\\缴费通知单";
         //public static string Path = "D:\\GitHub\\DorllyAsp2\\DorllyOrder\\DOWeb\\pdf\\缴费通知单";
         public static string Path = HttpRuntime.AppDomainAppPath + "pdf\\缴费通知单";
+        /// <summary>
+        /// HttpRuntime.AppDomainAppPath + "pdf\\未缴费通知单"
+        /// </summary>
         public static string UnpayPath = HttpRuntime.AppDomainAppPath + "pdf\\未缴费通知单";
         static BaseFont bf = BaseFont.CreateFont(@"c:\Windows\fonts\SURSONG.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
@@ -775,7 +778,7 @@ namespace project.Presentation.Op
                         "a.*,b.SRVName,c.SPName,c.SPBank,c.SPBankAccount,c.SPBankTitle,d.OrderTime,e.CustName,d.OrderType," +
 
                         "h.LastReadout as RLastReadout,h.Readout as RReadout,isnull(h.Readings,0)*isnull(h.MeteRate,0) as RODQTY," +
-                        "isnull(h.Readings,0)*isnull(h.MeteRate,0)*a.ODUnitPrice as RODARAmount,h.MeteRate as RMeteRate",
+                        "isnull(h.Readings,0)*isnull(h.MeteRate,0)*a.ODUnitPrice as RODARAmount,h.MeteRate as RMeteRate,ISNULL(a.ODARAmount,0)-ISNULL(a.ODPaidAmount,0) as ODUnpayAmount",
 
                         " and a.RefRP=" + "'" + OrderRP + "' and ISNULL(a.ODARAmount,0)!=ISNULL(a.ODPaidAmount,0)", i, 8, "a.ResourceNo,a.ODCreateDate");
 
@@ -868,7 +871,7 @@ namespace project.Presentation.Op
         {
             PdfPTable PT1 = new PdfPTable(5);
             PT1.DefaultCell.Padding = 3;
-            float[] hw1 = { 2, 14, 10, 10,10 };
+            float[] hw1 = { 2, 14, 10, 10, 10 };
             PT1.SetWidths(hw1);
             PT1.WidthPercentage = 100;
             PT1.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -924,7 +927,7 @@ namespace project.Presentation.Op
                 cell24.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
                 cell24.HorizontalAlignment = Element.ALIGN_CENTER;
 
-                PdfPCell cell25 = new PdfPCell(new Paragraph((decimal.Parse(dr["ODARAmount"].ToString()) - decimal.Parse(dr["ODPaidAmount"].ToString())).ToString("0.##"), font9));
+                PdfPCell cell25 = new PdfPCell(new Paragraph(decimal.Parse(dr["ODUnpayAmount"].ToString()).ToString("0.##"), font9));
                 cell25.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
                 cell25.HorizontalAlignment = Element.ALIGN_CENTER;
 
@@ -991,7 +994,7 @@ namespace project.Presentation.Op
         {
             PdfPTable PT1 = new PdfPTable(5);
             PT1.DefaultCell.Padding = 3;
-            float[] hw1 = { 2, 14, 10, 10,10 };
+            float[] hw1 = { 2, 14, 10, 10, 10 };
             PT1.SetWidths(hw1);
             PT1.WidthPercentage = 100;
             PT1.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -1053,7 +1056,7 @@ namespace project.Presentation.Op
                         ODARAmount = decimal.Parse(dr["RODARAmount"].ToString()).ToString("0.##");
                         UnpayAmount = (decimal.Parse(dr["RODARAmount"].ToString()) - decimal.Parse(dr["ODPaidAmount"].ToString())).ToString("0.##");
                     }
-                        
+
                 }
 
                 PdfPCell cell24 = new PdfPCell(new Paragraph(ODARAmount, font9));

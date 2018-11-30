@@ -233,18 +233,18 @@
                 <tr>
                     <td class="tdl1">数量</td>
                     <td class="tdr1">
-                        <input type="text" id="ODQTY" class="input-text size-MINI" onchange="CaluAmount(this.id)" /></td>
+                        <input type="text" id="ODQTY" class="input-text size-MINI" onchange="CalcAmount()" /></td>
                     <td class="tdl1">单价</td>
                     <td class="tdr1">
-                        <input type="text" id="ODUnitPrice" class="input-text size-MINI" onchange="CaluAmount(this.id)" /></td>
+                        <input type="text" id="ODUnitPrice" class="input-text size-MINI" onchange="CalcAmount()" /></td>
                     <td class="tdl1">应收金额</td>
                     <td class="tdr1">
-                        <input type="text" id="ODARAmount" class="input-text size-MINI" onchange="CaluTaxAmount(this.id)" /></td>
+                        <input type="text" id="ODARAmount" class="input-text size-MINI" onchange="CalcTax()" /></td>
                 </tr>
                 <tr>
                     <td class="tdl1">税率</td>
                     <td class="tdr1">
-                        <input type="text" id="ODTaxRate" class="input-text size-MINI" onchange="CaluTaxAmount(this.id)" /></td>
+                        <input type="text" id="ODTaxRate" class="input-text size-MINI" onchange="CalcTax()" /></td>
                     <td class="tdl1">税额</td>
                     <td class="tdr1">
                         <input type="text" id="ODTaxAmount" class="input-text size-MINI" onchange="validDecimal(this.id)" /></td>
@@ -841,38 +841,36 @@
             }
             if (vjson.type == "ODSRVNoChange") {
                 if (vjson.flag == "1") {
-                    $("#ODSRVCalType").val(vjson.SRVCalType);
-                    $("#ODContractSPNo").val(vjson.SRVSPNo);
-                    $("#ODTaxRate").val(vjson.SRVTaxRate);
-                    $("#SRVRoundType").val(vjson.SRVRoundType);
-                    $("#ODARAmount").val(vjson.amount);
-                    $("#ODTaxAmount").val(vjson.taxAmount);
+                    $("#ODTaxRate").val(vjson.SRVTaxRate).change();
+                    //$("#ODSRVCalType").val(vjson.SRVCalType);
+                    //$("#ODContractSPNo").val(vjson.SRVSPNo);                    
+                    //$("#SRVRoundType").val(vjson.SRVRoundType);
+                    //$("#ODARAmount").val(vjson.amount);
+                    //$("#ODTaxAmount").val(vjson.taxAmount);
                 }
                 else {
                     layer.alert("获取数据出错！");
                 }
                 return;
             }
-            if (vjson.type == "CaluAmount") {
+            if (vjson.type == "CalcAmount") {
                 if (vjson.flag == "1") {
-                    $("#ODARAmount").val(vjson.amount);
-                    $("#ODTaxAmount").val(vjson.taxAmount);
+                    $("#ODARAmount").val(vjson.amount).change();
                 }
                 else {
                     layer.alert("获取数据出错！");
                 }
                 return;
             }
-            if (vjson.type == "CaluTaxAmount") {
+            if (vjson.type == "CalcTax") {
                 if (vjson.flag == "1") {
-                    $("#ODTaxAmount").val(vjson.amount);
+                    $("#ODTaxAmount").val(vjson.tax);
                 }
                 else {
                     layer.alert("获取数据出错！");
                 }
                 return;
             }
-
             if (vjson.type == "gettype") {
                 if (vjson.flag == "1") {
                     $("#ODSRVTypeNo2").empty();
@@ -1582,77 +1580,41 @@
             var submitData = new Object();
             submitData.Type = "ODSRVNoChange";
             submitData.ODSRVNo = $("#ODSRVNo").val();
-            submitData.ODQTY = $("#ODQTY").val();
-            submitData.ODUnitPrice = $("#ODUnitPrice").val();
-            submitData.ODTaxRate = $("#ODTaxRate").val();
+
+                     
+            //submitData.ODQTY = $("#ODQTY").val();
+            //submitData.ODUnitPrice = $("#ODUnitPrice").val();
+            //submitData.ODTaxRate = $("#ODTaxRate").val();
             transmitData(datatostr(submitData));
             return;
         });
 
-        function CaluAmount(id) {
+        function CalcAmount() {
             validDecimal("ODQTY");
             validDecimal("ODUnitPrice");
             if ($("#ODQTY").val() != "" && $("#ODUnitPrice").val() != "" && $("#ODSRVNo").val() != "") {
                 if (parseFloat($("#ODQTY").val()) > 0 && parseFloat($("#ODUnitPrice").val()) > 0) {
-                    var type = $("#SRVRoundType").val();
-                    var amount= parseFloat($("#ODQTY").val()) * parseFloat($("#ODUnitPrice").val());
-                    if (type.toUpperCase == "FLOOR") {
-                        $("#ODARAmount").val(Math.floor(amount)).change();
-                    } else if (type.toUpperCase == "CEILING") {
-                        $("#ODARAmount").val(Math.ceil(amount)).change();
-                    } else {
-                        $("#ODARAmount").val(Math.round(amount)).change();
-                    }
-                    return;
-                }
-            }
-            $("#ODARAmount").val("");
-            $("#ODTaxAmount").val("");
-            return;
-            //田工代码
-            validDecimal(id);
-            if ($("#ODQTY").val() != "" && $("#ODUnitPrice").val() != "" && $("#ODSRVNo").val() != "") {
-                if (parseFloat($("#ODQTY").val()) > 0 && parseFloat($("#ODUnitPrice").val()) > 0) {
                     var submitData = new Object();
-                    submitData.Type = "CaluAmount";
+                    submitData.Type = "CalcAmount";
                     submitData.ODSRVNo = $("#ODSRVNo").val();
                     submitData.ODQTY = $("#ODQTY").val();
                     submitData.ODUnitPrice = $("#ODUnitPrice").val();
-                    submitData.ODTaxRate = $("#ODTaxRate").val();
                     transmitData(datatostr(submitData));
+                    return;
                     return;
                 }
             }
             $("#ODARAmount").val("");
             $("#ODTaxAmount").val("");
-            return;
         }
 
-        function CaluTaxAmount(id) {
+        function CalcTax() {
             validDecimal("ODARAmount");
             validDecimal("ODTaxRate");
             if ($("#ODARAmount").val() != "" && $("#ODTaxRate").val() != "" && $("#ODSRVNo").val() != "") {
                 if (parseFloat($("#ODARAmount").val()) > 0 && parseFloat($("#ODTaxRate").val()) > 0) {
-                    var type = $("#SRVRoundType").val();
-                    var taxamount = parseFloat($("#ODARAmount").val()) - parseFloat($("#ODARAmount").val()) / (1 + parseFloat($("#ODTaxRate").val()));
-                    if (type.toUpperCase == "FLOOR") {
-                        $("#ODTaxAmount").val(Math.floor(taxamount));
-                    } else if (type.toUpperCase == "CEILING") {
-                        $("#ODTaxAmount").val(Math.ceil(taxamount));
-                    } else {
-                        $("#ODTaxAmount").val(Math.round(taxamount));
-                    }
-                    return;
-                }
-            }
-            $("#ODTaxAmount").val("")
-            return;
-            //田工代码
-            validDecimal(id);
-            if ($("#ODARAmount").val() != "" && $("#ODTaxRate").val() != "" && $("#ODSRVNo").val() != "") {
-                if (parseFloat($("#ODARAmount").val()) > 0 && parseFloat($("#ODTaxRate").val()) > 0) {
                     var submitData = new Object();
-                    submitData.Type = "CaluTaxAmount";
+                    submitData.Type = "CalcTax";
                     submitData.ODSRVNo = $("#ODSRVNo").val();
                     submitData.ODARAmount = $("#ODARAmount").val();
                     submitData.ODTaxRate = $("#ODTaxRate").val();

@@ -454,6 +454,53 @@ namespace project.Business.Op
                 "where RowPointer='" + Entity.RowPointer + "'");
         }
 
+        public string ConfirmLeaveWithNoFee(string leaveDate)
+        {
+            string info = string.Empty;
+            string businessType = string.Empty;
+            switch (Entity.ContractType)
+            {
+                case "01":
+                    businessType = "rm";
+                    break;
+                case "02":
+                case "12":
+                    businessType = "wp";
+                    break;
+                case "03":
+                    businessType = "ad";
+                    break;
+            }
+            SqlConnection con = null;
+            SqlCommand command = null;
+            try
+            {
+                con = Data.Conn();
+                command = new SqlCommand("Contract_ConfirmLeaveWithNoFee", con);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@BusinessType", SqlDbType.NVarChar, 50).Value = businessType;
+                command.Parameters.Add("@ContractID", SqlDbType.NVarChar, 50).Value = Entity.RowPointer;
+                command.Parameters.Add("@LeaveDate", SqlDbType.NVarChar, 50).Value = leaveDate;
+                command.Parameters.Add("@InfoMsg", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+                con.Open();
+                command.ExecuteNonQuery();
+                info = command.Parameters["@InfoMsg"].Value.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                info = ex.ToString();
+            }
+            finally
+            {
+                if (command != null)
+                    command.Dispose();
+                if (con != null)
+                    con.Dispose();
+            }
+            return info;
+        }
+
         /// </summary>
         /// refund方法 
         /// </summary>

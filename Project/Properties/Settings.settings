@@ -12,7 +12,7 @@
       <Value Profile="(Default)">http://localhost/WOWeb/api/WebService.asmx</Value>
     </Setting>
     <Setting Name="project_ResourceService_ResourceService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://120.76.154.6:8998/webapi/resourceservice.asmx</Value>
+      <Value Profile="(Default)">http://zy.dorlly.com/webapi/resourceservice.asmx</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -956,6 +956,7 @@ namespace project.Presentation.Op
                             #region 同步到资源系统
                             /*
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                            srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
                             string Items = "";
 
                             Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
@@ -1005,6 +1006,7 @@ namespace project.Presentation.Op
                             #region 同步到资源系统
                             /*
                             ResourceService.ResourceService srv = new ResourceService.ResourceService();
+                            srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
                             string Items = "";
                             Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
                             cust.load(bc.Entity.ContractCustNo);
