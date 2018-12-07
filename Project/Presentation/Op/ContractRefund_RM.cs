@@ -345,9 +345,10 @@ namespace project.Presentation.Op
 
             try
             {
+                DateTime leaveDate = Convert.ToDateTime(jp.getValue("RefundDate"));
                 Business.Op.BusinessContract bc = new Business.Op.BusinessContract();
                 bc.load(jp.getValue("id"));
-                if (bc.Entity.ContractStartDate >= Convert.ToDateTime(jp.getValue("RefundDate")))
+                if (bc.Entity.ContractStartDate >= leaveDate)
                 {
                     flag = "2";
                 }
@@ -358,7 +359,7 @@ namespace project.Presentation.Op
                 else
                 {
                     //string InfoBar = refund(jp.getValue("id"), jp.getValue("RefundDate"), user.Entity.UserName);
-                    string InfoBar = bc.ConfirmLeaveWithNoFee(jp.getValue("id"));
+                    string InfoBar = bc.ConfirmLeaveWithNoFee(leaveDate);
                     if (InfoBar != "")
                     {
                         collection.Add(new JsonStringValue("InfoBar", InfoBar));

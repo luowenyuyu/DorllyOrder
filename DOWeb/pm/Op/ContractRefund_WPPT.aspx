@@ -560,28 +560,6 @@
                 layer.msg("请先选择一条记录", { icon: 3, time: 1000 });
                 return;
             }
-            //layer.confirm('确认要退租吗？', function (index) {
-            //    var submitData = new Object();
-            //    submitData.Type = "refundsubmit";
-            //    submitData.id = $("#selectKey").val();
-
-            //    submitData.ContractNoS = $("#ContractNoS").val();
-            //    submitData.ContractNoManualS = $("#ContractNoManualS").val();
-            //    submitData.ContractTypeS = "12";
-            //    submitData.ContractSPNoS = $("#ContractSPNoS").val();
-            //    submitData.ContractCustNoS = $("#ContractCustNoS").val();
-            //    submitData.MinContractSignedDate = $("#MinContractSignedDate").val();
-            //    submitData.MaxContractSignedDate = $("#MaxContractSignedDate").val();
-            //    submitData.MinContractEndDate = $("#MinContractEndDate").val();
-            //    submitData.MaxContractEndDate = $("#MaxContractEndDate").val();
-            //    submitData.OffLeaseStatusS = $("#OffLeaseStatusS").val();
-            //    submitData.MinOffLeaseActulDate = $("#MinOffLeaseActulDate").val();
-            //    submitData.MaxOffLeaseActulDate = $("#MaxOffLeaseActulDate").val();
-            //    submitData.page = page;
-            //    transmitData(datatostr(submitData));
-            //    layer.close(index);
-            //});
-            //return;
             $("#ActuallyLeaveDate").val("");
             layer.open({
                 type: 1,
@@ -604,6 +582,20 @@
             submitData.Type = "refundsubmit";
             submitData.id = $("#selectKey").val();
             submitData.RefundDate = $("#ActuallyLeaveDate").val();
+            //检索条件数据
+            submitData.ContractNoS = $("#ContractNoS").val();
+            submitData.ContractNoManualS = $("#ContractNoManualS").val();
+            submitData.ContractTypeS = "12";
+            submitData.ContractSPNoS = $("#ContractSPNoS").val();
+            submitData.ContractCustNoS = $("#ContractCustNoS").val();
+            submitData.MinContractSignedDate = $("#MinContractSignedDate").val();
+            submitData.MaxContractSignedDate = $("#MaxContractSignedDate").val();
+            submitData.MinContractEndDate = $("#MinContractEndDate").val();
+            submitData.MaxContractEndDate = $("#MaxContractEndDate").val();
+            submitData.OffLeaseStatusS = $("#OffLeaseStatusS").val();
+            submitData.MinOffLeaseActulDate = $("#MinOffLeaseActulDate").val();
+            submitData.MaxOffLeaseActulDate = $("#MaxOffLeaseActulDate").val();
+            submitData.page = page;
             transmitData(datatostr(submitData));
             return;
         }

@@ -454,7 +454,7 @@ namespace project.Business.Op
                 "where RowPointer='" + Entity.RowPointer + "'");
         }
 
-        public string ConfirmLeaveWithNoFee(string leaveDate)
+        public string ConfirmLeaveWithNoFee(DateTime leaveDate)
         {
             string info = string.Empty;
             string businessType = string.Empty;
@@ -480,7 +480,7 @@ namespace project.Business.Op
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Add("@BusinessType", SqlDbType.NVarChar, 50).Value = businessType;
                 command.Parameters.Add("@ContractID", SqlDbType.NVarChar, 50).Value = Entity.RowPointer;
-                command.Parameters.Add("@LeaveDate", SqlDbType.NVarChar, 50).Value = leaveDate;
+                command.Parameters.Add("@LeaveDate", SqlDbType.DateTime).Value = leaveDate;
                 command.Parameters.Add("@InfoMsg", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
                 con.Open();
                 command.ExecuteNonQuery();

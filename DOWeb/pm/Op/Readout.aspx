@@ -844,15 +844,15 @@
                     $("#Readings").val(parseFloat($("#Readout").val()) - parseFloat($("#LastReadout").val()) - parseFloat($("#JoinReadings").val()))
                 else {
                     if (parseInt($("#MeterDigit").val()) == 4)
-                        $("#Readings").val(parseFloat($("#Readout").val()) + (9999 - parseFloat($("#LastReadout").val())) - parseFloat($("#JoinReadings").val()));
+                        $("#Readings").val(parseFloat($("#Readout").val()) + (9999 - parseFloat($("#LastReadout").val())+1) - parseFloat($("#JoinReadings").val()));
                     else if (parseInt($("#MeterDigit").val()) == 5)
-                        $("#Readings").val(parseFloat($("#Readout").val()) + (99999 - parseFloat($("#LastReadout").val())) - parseFloat($("#JoinReadings").val()));
+                        $("#Readings").val(parseFloat($("#Readout").val()) + (99999 - parseFloat($("#LastReadout").val()) + 1) - parseFloat($("#JoinReadings").val()));
                     else if (parseInt($("#MeterDigit").val()) == 6)
-                        $("#Readings").val(parseFloat($("#Readout").val()) + (999999 - parseFloat($("#LastReadout").val())) - parseFloat($("#JoinReadings").val()));
+                        $("#Readings").val(parseFloat($("#Readout").val()) + (999999 - parseFloat($("#LastReadout").val()) + 1) - parseFloat($("#JoinReadings").val()));
                     else if (parseInt($("#MeterDigit").val()) == 7)
-                        $("#Readings").val(parseFloat($("#Readout").val()) + (9999999 - parseFloat($("#LastReadout").val())) - parseFloat($("#JoinReadings").val()));
+                        $("#Readings").val(parseFloat($("#Readout").val()) + (9999999 - parseFloat($("#LastReadout").val()) + 1) - parseFloat($("#JoinReadings").val()));
                     else
-                        $("#Readings").val(parseFloat($("#Readout").val()) + (99999999 - parseFloat($("#LastReadout").val())) - parseFloat($("#JoinReadings").val()));
+                        $("#Readings").val(parseFloat($("#Readout").val()) + (99999999 - parseFloat($("#LastReadout").val()) + 1) - parseFloat($("#JoinReadings").val()));
                 }
             }
             else {

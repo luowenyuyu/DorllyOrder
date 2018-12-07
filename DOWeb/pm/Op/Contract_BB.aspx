@@ -1025,7 +1025,7 @@
                 return;
             }
             if (new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/'))||
-                new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) > new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/'))) {
+                new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) < new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/'))) {
                 layer.msg("请选择有效的租金起收日期！", { icon: 7, time: 1000 });
                 $("#FeeStartDate").focus();
                 return;

@@ -1011,9 +1011,9 @@ namespace project.Presentation.Op
                         else if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-003")
                             picName = "fzd.png";
                     }
-                    Console.WriteLine(OrderPrint.Path);
-                    Console.WriteLine(OrderPrint.Path + pathName);
-                    Console.WriteLine(OrderPrint.Path.Replace("缴费通知单", "") + picName);
+                    //Console.WriteLine(OrderPrint.Path);
+                    //Console.WriteLine(OrderPrint.Path + pathName);
+                    //Console.WriteLine(OrderPrint.Path.Replace("缴费通知单", "") + picName);
                     OrderPrint.PDFWatermark(OrderPrint.Path + newName, OrderPrint.Path + pathName, OrderPrint.Path.Replace("缴费通知单", "") + picName, 369, 111);
                 }
             }

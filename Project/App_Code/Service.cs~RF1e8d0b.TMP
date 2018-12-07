@@ -1,14 +1,15 @@
-﻿using iTextSharp.text;
-using iTextSharp.text.pdf;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using System.Data.SqlClient;
+using System.Xml;
+using System.Collections;
+using System.Net.Json;
+using System.IO;
+using Newtonsoft.Json;
 
 /// <summary>
 /// ImportService 的摘要说明
@@ -337,8 +338,8 @@ public class Service : System.Web.Services.WebService
 
         return InfoMsg;
     }
-    [WebMethod]
-    public string GetRentListInfo(string custno, string month)
+
+    public string GetOrderHeader(string custNo, string month)
     {
         #region 查询sql语句
 
@@ -399,99 +400,24 @@ public class Service : System.Web.Services.WebService
                             left join Mstr_ServiceProvider e on a.ODContractSPNo=e.SPNo
                             where b.OrderStatus='1'
                             and b.CustNo='{0}'
-                            and CONVERT(char(7),b.OrderTime,121)='{1}'", custno, month);
+                            and CONVERT(char(7),b.OrderTime,121)='{1}'", custNo, month);
             var dt = obj.PopulateDataSet(sql).Tables[0];
             if (dt.Rows.Count > 0)
             {
-                var order = dt.AsEnumerable().GroupBy(a => new
-                {
-                    OrderID = a.Field<string>("OrderID"),
-                    OrderNo = a.Field<string>("OrderNo"),
-                    OrderType = a.Field<string>("OrderType"),
-                    TotalAmount = a.Field<decimal>("TotalAmount"),
-                    ProviderName = a.Field<string>("ProviderName"),
-                    Bank = a.Field<string>("Bank"),
-                    Account = a.Field<string>("Account"),
-                    Tel = a.Field<string>("Tel")
-                }).Select(a => new
-                {
-                    a.Key.OrderID,
-                    a.Key.OrderNo,
-                    a.Key.OrderType,
-                    a.Key.TotalAmount,
-                    a.Key.ProviderName,
-                    a.Key.Bank,
-                    a.Key.Account,
-                    a.Key.Tel,
-                    Detail = dt.AsEnumerable().Where(b => b.Field<string>("OrderID") == a.Key.OrderID).Select(b => new
-                    {
-                        FeeNo = b.Field<string>("FeeNo"),
-                        FeeName = b.Field<string>("FeeName"),
-                        Quantity = b.Field<decimal>("Quantity"),
-                        UnitPrice = b.Field<decimal>("UnitPrice"),
-                        FeeAmount = b.Field<decimal>("FeeAmount")
-                    })
-                });
-                result = JsonConvert.SerializeObject(new { flag = 1, data = order });
+                var order = dt.AsEnumerable().GroupBy(a => a.Field<string>("OrderID") && a.Field<string>("OrderNo"), a.Field<string>("OrderNo"));
             }
             else
             {
-                result = JsonConvert.SerializeObject(new { flag = 2, data = new List<object>(), info = "无相关数据！" });
+                result = JsonConvert.SerializeObject(new { flag = 1, data = new List<object>() });
             }
         }
         catch (Exception ex)
         {
-            result = JsonConvert.SerializeObject(new { flag = 3, data = new List<object>(), info = ex.ToString() });
+            result = JsonConvert.SerializeObject(new { flag = 2, data = new List<object>(), ex = ex.ToString() });
         }
-        return result;
+        return "";
     }
-    /// <summary>
-    /// 账单
-    /// </summary>
-    /// <param name="orderid"></param>
-    /// <returns></returns>
-    [WebMethod]
-    public string GetRentListFile(string orderid)
-    {
-        string result = string.Empty;
-        try
-        {
-            string sql = string.Format("select a.ODContractSPNo as Provider,b.OrderNo from Op_OrderDetail a left join Op_OrderHeader b on a.RefRP=b.RowPointer where a.RefRP='{0}'", orderid);
-            var dt = obj.PopulateDataSet(sql).Tables[0];
-            if (dt.Rows.Count > 0)
-            {
-                string rootPath = HttpRuntime.AppDomainAppPath;
-                string rootUrl = HttpContext.Current.Request.Url.Authority;
-                string pic = string.Empty;
-                if (dt.Rows[0]["Provider"].ToString() == "FWC-001") pic = rootPath + "pdf\\dl.png";
-                else if (dt.Rows[0]["Provider"].ToString() == "FWC-002") pic = rootPath + "pdf\\mh.png";
-                else if (dt.Rows[0]["Provider"].ToString() == "FWC-003") pic = rootPath + "pdf\\fzd.png";
-                else pic = rootPath + "pdf\\a.png";
-                string file = dt.Rows[0]["OrderNo"].ToString() + ".pdf";
-                string input = rootPath + "pdf\\" + Guid.NewGuid().ToString() + ".pdf";
-                string output = rootPath + "pdf\\" + file;
-                Document doc = new Document(PageSize.A5.Rotate(), 20, 20, 20, 10);
-                PdfWriter.GetInstance(doc, new FileStream(input, FileMode.Create));
-                doc.Open();
-                doc.NewPage();
-                project.Presentation.Op.OrderPrint.Print(doc, orderid);
-                try { doc.Close(); } catch { }
-                project.Presentation.Op.OrderPrint.PDFWatermark(input, output, pic, 369, 111);
-                if (File.Exists(input)) File.Delete(input);
-                result = JsonConvert.SerializeObject(new { flag = 1, url = rootUrl + "/pdf/" + file, info = "文件生成成功！" });
-            }
-            else
-            {
-                result = JsonConvert.SerializeObject(new { flag = 2, url = "", info = "无相关数据！" });
-            }
 
-        }
-        catch (Exception ex)
-        {
-            result = JsonConvert.SerializeObject(new { flag = 3, url = "", info = ex.ToString() });
-        }
-        return result;
-    }
     //工单
     [WebMethod]
     public string GetMeterInfo(string MeterNo, string KEY, out string meterRMID, out decimal readout, out int digit)

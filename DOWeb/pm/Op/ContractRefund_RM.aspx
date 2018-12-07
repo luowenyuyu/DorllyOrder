@@ -325,7 +325,7 @@
             <tr>
                 <td style="width: 100px; text-align: center; padding: 10px;">退租日期</td>
                 <td style="width: 220px;">
-                    <input type="text" id="RefundDate1" class="input-text size-MINI" /></td>
+                    <input type="text" id="ActuallyLeaveDate" class="input-text size-MINI" /></td>
             </tr>
         </table>
         <div style="margin: 15px 100px;">
@@ -639,7 +639,7 @@
             //    layer.close(index);
             //});
 
-            $("#RefundDate1").val("")
+            $("#ActuallyLeaveDate").val("")
             layer.open({
                 type: 1,
                 area: ["400px", "200px"],
@@ -653,16 +653,16 @@
             return;
         }
         function refunddatesubmit() {
-            if ($("#RefundDate1").val() == "") {
+            if ($("#ActuallyLeaveDate").val() == "") {
                 layer.msg("请选择退租日期", 7, 1000);
-                $("#RefundDate1").focus();
+                $("#ActuallyLeaveDate").focus();
                 return;
             }
             var submitData = new Object();
             submitData.Type = "refundsubmit";
             submitData.id = $("#selectKey").val();
-            submitData.RefundDate = $("#RefundDate1").val();
-            /*
+            submitData.RefundDate = $("#ActuallyLeaveDate").val();
+            //检索条件数据
             submitData.ContractNoS = $("#ContractNoS").val();
             submitData.ContractNoManualS = $("#ContractNoManualS").val();
             submitData.ContractTypeS = "01";
@@ -675,8 +675,7 @@
             submitData.OffLeaseStatusS = $("#OffLeaseStatusS").val();
             submitData.MinOffLeaseActulDate = $("#MinOffLeaseActulDate").val();
             submitData.MaxOffLeaseActulDate = $("#MaxOffLeaseActulDate").val();
-            submitData.page = page;
-            */
+            submitData.page = page;            
             transmitData(datatostr(submitData));
             return;
         }
@@ -875,7 +874,9 @@
             OffLeaseScheduleDate.setDisabled(false);
             OffLeaseScheduleDate.setWidth("120px");
 
-            var RefundDate1 = new JsInputDate("RefundDate1");
+            var ActuallyLeaveDate = new JsInputDate("ActuallyLeaveDate");
+            ActuallyLeaveDate.setDisabled(false);
+            ActuallyLeaveDate.setWidth("150px");
         });
 
         var id = "";

@@ -565,7 +565,7 @@
 
                 submitData.ContractNoS = $("#ContractNoS").val();
                 submitData.ContractNoManualS = $("#ContractNoManualS").val();
-                submitData.ContractTypeS = "01";
+                submitData.ContractTypeS = "02";
                 submitData.ContractSPNoS = $("#ContractSPNoS").val();
                 submitData.ContractCustNoS = $("#ContractCustNoS").val();
                 submitData.MinContractSignedDate = $("#MinContractSignedDate").val();
@@ -639,6 +639,20 @@
             submitData.Type = "refundsubmit";
             submitData.id = $("#selectKey").val();
             submitData.RefundDate = $("#ActuallyLeaveDate").val();
+            //检索条件数据
+            submitData.ContractNoS = $("#ContractNoS").val();
+            submitData.ContractNoManualS = $("#ContractNoManualS").val();
+            submitData.ContractTypeS = "01";
+            submitData.ContractSPNoS = $("#ContractSPNoS").val();
+            submitData.ContractCustNoS = $("#ContractCustNoS").val();
+            submitData.MinContractSignedDate = $("#MinContractSignedDate").val();
+            submitData.MaxContractSignedDate = $("#MaxContractSignedDate").val();
+            submitData.MinContractEndDate = $("#MinContractEndDate").val();
+            submitData.MaxContractEndDate = $("#MaxContractEndDate").val();
+            submitData.OffLeaseStatusS = $("#OffLeaseStatusS").val();
+            submitData.MinOffLeaseActulDate = $("#MinOffLeaseActulDate").val();
+            submitData.MaxOffLeaseActulDate = $("#MaxOffLeaseActulDate").val();
+            submitData.page = page;
             transmitData(datatostr(submitData));
             return;
         }

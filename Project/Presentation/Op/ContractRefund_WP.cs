@@ -344,9 +344,10 @@ namespace project.Presentation.Op
             string flag = "1";
             try
             {
+                DateTime leaveDate = Convert.ToDateTime(jp.getValue("RefundDate"));
                 Business.Op.BusinessContract bc = new Business.Op.BusinessContract();
                 bc.load(jp.getValue("id"));
-                if (bc.Entity.ContractStartDate >= Convert.ToDateTime(jp.getValue("RefundDate")))
+                if (bc.Entity.ContractStartDate >= leaveDate)
                 {
                     flag = "2";
                 }
@@ -356,7 +357,7 @@ namespace project.Presentation.Op
                 }
                 else
                 {
-                    string infoMsg = bc.ConfirmLeaveWithNoFee(jp.getValue("RefundDate"));
+                    string infoMsg = bc.ConfirmLeaveWithNoFee(leaveDate);
                     if (infoMsg != "")
                     {
                         collection.Add(new JsonStringValue("InfoBar", infoMsg));
@@ -399,7 +400,7 @@ namespace project.Presentation.Op
 
                         #endregion
                     }
-                    
+
                 }
                 #region old
                 //string sqlcmd = string.Format("UPDATE Op_Contract SET ContractStatus='3',OffLeaseStatus='3',OffLeaseActulDate='{0}' WHERE RowPointer='{1}'", actuallyLeaveDate, contractID);
