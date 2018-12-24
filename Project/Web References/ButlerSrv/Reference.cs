@@ -20,10 +20,11 @@ namespace project.ButlerSrv {
     using System.Web.Services.Protocols;
     using System.Xml.Serialization;
     using System.ComponentModel;
+    using System.Data;
     
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Web.Services.WebServiceBindingAttribute(Name="AppServiceSoap", Namespace="http://tempuri.org/")]
@@ -48,6 +49,16 @@ namespace project.ButlerSrv {
         private System.Threading.SendOrPostCallback SetCompRepairFeeOperationCompleted;
         
         private System.Threading.SendOrPostCallback SetCustomerOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback UpdateCustomerOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback GetStatisticsList_ResourseOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback GetStatisticsList_Resourse_ListOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback GetStatisticsList_Resourse_ChartsOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback GetConferenceRoomReserveList_ResourceOperationCompleted;
         
         private bool useDefaultCredentialsSetExplicitly;
         
@@ -116,6 +127,21 @@ namespace project.ButlerSrv {
         
         /// <remarks/>
         public event SetCustomerCompletedEventHandler SetCustomerCompleted;
+        
+        /// <remarks/>
+        public event UpdateCustomerCompletedEventHandler UpdateCustomerCompleted;
+        
+        /// <remarks/>
+        public event GetStatisticsList_ResourseCompletedEventHandler GetStatisticsList_ResourseCompleted;
+        
+        /// <remarks/>
+        public event GetStatisticsList_Resourse_ListCompletedEventHandler GetStatisticsList_Resourse_ListCompleted;
+        
+        /// <remarks/>
+        public event GetStatisticsList_Resourse_ChartsCompletedEventHandler GetStatisticsList_Resourse_ChartsCompleted;
+        
+        /// <remarks/>
+        public event GetConferenceRoomReserveList_ResourceCompletedEventHandler GetConferenceRoomReserveList_ResourceCompleted;
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetRefundList", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
@@ -554,6 +580,175 @@ namespace project.ButlerSrv {
         }
         
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/UpdateCustomer", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public string UpdateCustomer(string CustNo, string Status, string RefundDate) {
+            object[] results = this.Invoke("UpdateCustomer", new object[] {
+                        CustNo,
+                        Status,
+                        RefundDate});
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void UpdateCustomerAsync(string CustNo, string Status, string RefundDate) {
+            this.UpdateCustomerAsync(CustNo, Status, RefundDate, null);
+        }
+        
+        /// <remarks/>
+        public void UpdateCustomerAsync(string CustNo, string Status, string RefundDate, object userState) {
+            if ((this.UpdateCustomerOperationCompleted == null)) {
+                this.UpdateCustomerOperationCompleted = new System.Threading.SendOrPostCallback(this.OnUpdateCustomerOperationCompleted);
+            }
+            this.InvokeAsync("UpdateCustomer", new object[] {
+                        CustNo,
+                        Status,
+                        RefundDate}, this.UpdateCustomerOperationCompleted, userState);
+        }
+        
+        private void OnUpdateCustomerOperationCompleted(object arg) {
+            if ((this.UpdateCustomerCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.UpdateCustomerCompleted(this, new UpdateCustomerCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetStatisticsList_Resourse", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public System.Data.DataTable GetStatisticsList_Resourse(string ParkNo, string StartDate, string EndDate, string KEY) {
+            object[] results = this.Invoke("GetStatisticsList_Resourse", new object[] {
+                        ParkNo,
+                        StartDate,
+                        EndDate,
+                        KEY});
+            return ((System.Data.DataTable)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetStatisticsList_ResourseAsync(string ParkNo, string StartDate, string EndDate, string KEY) {
+            this.GetStatisticsList_ResourseAsync(ParkNo, StartDate, EndDate, KEY, null);
+        }
+        
+        /// <remarks/>
+        public void GetStatisticsList_ResourseAsync(string ParkNo, string StartDate, string EndDate, string KEY, object userState) {
+            if ((this.GetStatisticsList_ResourseOperationCompleted == null)) {
+                this.GetStatisticsList_ResourseOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetStatisticsList_ResourseOperationCompleted);
+            }
+            this.InvokeAsync("GetStatisticsList_Resourse", new object[] {
+                        ParkNo,
+                        StartDate,
+                        EndDate,
+                        KEY}, this.GetStatisticsList_ResourseOperationCompleted, userState);
+        }
+        
+        private void OnGetStatisticsList_ResourseOperationCompleted(object arg) {
+            if ((this.GetStatisticsList_ResourseCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetStatisticsList_ResourseCompleted(this, new GetStatisticsList_ResourseCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetStatisticsList_Resourse_List", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public System.Data.DataTable GetStatisticsList_Resourse_List(string ParkNo, string StartDate, string EndDate, string KEY) {
+            object[] results = this.Invoke("GetStatisticsList_Resourse_List", new object[] {
+                        ParkNo,
+                        StartDate,
+                        EndDate,
+                        KEY});
+            return ((System.Data.DataTable)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetStatisticsList_Resourse_ListAsync(string ParkNo, string StartDate, string EndDate, string KEY) {
+            this.GetStatisticsList_Resourse_ListAsync(ParkNo, StartDate, EndDate, KEY, null);
+        }
+        
+        /// <remarks/>
+        public void GetStatisticsList_Resourse_ListAsync(string ParkNo, string StartDate, string EndDate, string KEY, object userState) {
+            if ((this.GetStatisticsList_Resourse_ListOperationCompleted == null)) {
+                this.GetStatisticsList_Resourse_ListOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetStatisticsList_Resourse_ListOperationCompleted);
+            }
+            this.InvokeAsync("GetStatisticsList_Resourse_List", new object[] {
+                        ParkNo,
+                        StartDate,
+                        EndDate,
+                        KEY}, this.GetStatisticsList_Resourse_ListOperationCompleted, userState);
+        }
+        
+        private void OnGetStatisticsList_Resourse_ListOperationCompleted(object arg) {
+            if ((this.GetStatisticsList_Resourse_ListCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetStatisticsList_Resourse_ListCompleted(this, new GetStatisticsList_Resourse_ListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetStatisticsList_Resourse_Charts", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public System.Data.DataTable GetStatisticsList_Resourse_Charts(string ParkNo, string StartDate, string EndDate, string KEY) {
+            object[] results = this.Invoke("GetStatisticsList_Resourse_Charts", new object[] {
+                        ParkNo,
+                        StartDate,
+                        EndDate,
+                        KEY});
+            return ((System.Data.DataTable)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetStatisticsList_Resourse_ChartsAsync(string ParkNo, string StartDate, string EndDate, string KEY) {
+            this.GetStatisticsList_Resourse_ChartsAsync(ParkNo, StartDate, EndDate, KEY, null);
+        }
+        
+        /// <remarks/>
+        public void GetStatisticsList_Resourse_ChartsAsync(string ParkNo, string StartDate, string EndDate, string KEY, object userState) {
+            if ((this.GetStatisticsList_Resourse_ChartsOperationCompleted == null)) {
+                this.GetStatisticsList_Resourse_ChartsOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetStatisticsList_Resourse_ChartsOperationCompleted);
+            }
+            this.InvokeAsync("GetStatisticsList_Resourse_Charts", new object[] {
+                        ParkNo,
+                        StartDate,
+                        EndDate,
+                        KEY}, this.GetStatisticsList_Resourse_ChartsOperationCompleted, userState);
+        }
+        
+        private void OnGetStatisticsList_Resourse_ChartsOperationCompleted(object arg) {
+            if ((this.GetStatisticsList_Resourse_ChartsCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetStatisticsList_Resourse_ChartsCompleted(this, new GetStatisticsList_Resourse_ChartsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetConferenceRoomReserveList_Resource", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public System.Data.DataSet GetConferenceRoomReserveList_Resource(string ParkNo, string Date) {
+            object[] results = this.Invoke("GetConferenceRoomReserveList_Resource", new object[] {
+                        ParkNo,
+                        Date});
+            return ((System.Data.DataSet)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetConferenceRoomReserveList_ResourceAsync(string ParkNo, string Date) {
+            this.GetConferenceRoomReserveList_ResourceAsync(ParkNo, Date, null);
+        }
+        
+        /// <remarks/>
+        public void GetConferenceRoomReserveList_ResourceAsync(string ParkNo, string Date, object userState) {
+            if ((this.GetConferenceRoomReserveList_ResourceOperationCompleted == null)) {
+                this.GetConferenceRoomReserveList_ResourceOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetConferenceRoomReserveList_ResourceOperationCompleted);
+            }
+            this.InvokeAsync("GetConferenceRoomReserveList_Resource", new object[] {
+                        ParkNo,
+                        Date}, this.GetConferenceRoomReserveList_ResourceOperationCompleted, userState);
+        }
+        
+        private void OnGetConferenceRoomReserveList_ResourceOperationCompleted(object arg) {
+            if ((this.GetConferenceRoomReserveList_ResourceCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetConferenceRoomReserveList_ResourceCompleted(this, new GetConferenceRoomReserveList_ResourceCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
         public new void CancelAsync(object userState) {
             base.CancelAsync(userState);
         }
@@ -573,11 +768,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void GetRefundListCompletedEventHandler(object sender, GetRefundListCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetRefundListCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -599,11 +794,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void GetRefundCountCompletedEventHandler(object sender, GetRefundCountCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetRefundCountCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -625,11 +820,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void RefundLoadCompletedEventHandler(object sender, RefundLoadCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class RefundLoadCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -651,11 +846,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void Refund_CRCompletedEventHandler(object sender, Refund_CRCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class Refund_CRCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -677,11 +872,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void GetCRDispositListCompletedEventHandler(object sender, GetCRDispositListCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetCRDispositListCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -703,11 +898,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void GetCRDispositCountCompletedEventHandler(object sender, GetCRDispositCountCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetCRDispositCountCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -729,11 +924,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void CRDispositLoadCompletedEventHandler(object sender, CRDispositLoadCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class CRDispositLoadCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -755,11 +950,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void Refund_DisposritCompletedEventHandler(object sender, Refund_DisposritCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class Refund_DisposritCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -781,11 +976,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void SetCompRepairFeeCompletedEventHandler(object sender, SetCompRepairFeeCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class SetCompRepairFeeCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -807,11 +1002,11 @@ namespace project.ButlerSrv {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     public delegate void SetCustomerCompletedEventHandler(object sender, SetCustomerCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1099.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class SetCustomerCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -828,6 +1023,136 @@ namespace project.ButlerSrv {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    public delegate void UpdateCustomerCompletedEventHandler(object sender, UpdateCustomerCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class UpdateCustomerCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal UpdateCustomerCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public string Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    public delegate void GetStatisticsList_ResourseCompletedEventHandler(object sender, GetStatisticsList_ResourseCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetStatisticsList_ResourseCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetStatisticsList_ResourseCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public System.Data.DataTable Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((System.Data.DataTable)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    public delegate void GetStatisticsList_Resourse_ListCompletedEventHandler(object sender, GetStatisticsList_Resourse_ListCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetStatisticsList_Resourse_ListCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetStatisticsList_Resourse_ListCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public System.Data.DataTable Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((System.Data.DataTable)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    public delegate void GetStatisticsList_Resourse_ChartsCompletedEventHandler(object sender, GetStatisticsList_Resourse_ChartsCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetStatisticsList_Resourse_ChartsCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetStatisticsList_Resourse_ChartsCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public System.Data.DataTable Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((System.Data.DataTable)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    public delegate void GetConferenceRoomReserveList_ResourceCompletedEventHandler(object sender, GetConferenceRoomReserveList_ResourceCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetConferenceRoomReserveList_ResourceCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetConferenceRoomReserveList_ResourceCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public System.Data.DataSet Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((System.Data.DataSet)(this.results[0]));
             }
         }
     }

@@ -399,7 +399,7 @@
                     layer.alert("退租成功！");
                     console.log(vjson.sync);
                 }
-                else if (vjson.flag = "2") {
+                else if (vjson.flag == "2") {
                     layer.alert("退租时间有误！");
                 }
                 else if (vjson.flag == "3") {

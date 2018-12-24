@@ -1,16 +1,11 @@
-﻿using System;
-using System.Data;
+﻿using Newtonsoft.Json;
+using System;
 using System.Configuration;
-using System.Collections;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
+using System.Data;
 using System.Data.SqlClient;
 using System.Net.Json;
-using Newtonsoft.Json;
+using System.Web;
+using System.Web.UI;
 
 namespace project.Presentation.Op
 {
@@ -369,38 +364,61 @@ namespace project.Presentation.Op
                     {
                         collection.Add(new JsonStringValue("liststr", createList(jp.getValue("ContractNoS"), jp.getValue("ContractNoManualS"), jp.getValue("ContractTypeS"),
                                 jp.getValue("ContractSPNoS"), jp.getValue("ContractCustNoS"), jp.getValue("MinContractSignedDate"), jp.getValue("MaxContractSignedDate"),
-                                jp.getValue("MinContractEndDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
+                                jp.getValue("MinContractEn dDate"), jp.getValue("MaxContractEndDate"), jp.getValue("OffLeaseStatusS"), jp.getValue("MinOffLeaseActulDate"),
                                 jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
 
+                        #region 同步到管家
+                        try
+                        {
+                            string status = string.Empty;
+                            string date = string.Empty;
+                            bc.CheckCustStatus(out status, out date);
+                            ButlerSrv.AppService appService = new ButlerSrv.AppService { Timeout = 5000 };
+                            appService.UpdateCustomer(bc.Entity.ContractCustNo, status, date);
+                        }
+                        catch (Exception ex)
+                        {
+                            collection.Add(new JsonStringValue("syncButlerException", ex.ToString()));
+                        }
+                        #endregion
 
                         #region 同步到资源系统
-
-                        ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                        srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
-                        string Items = "";
-
-                        Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
-                        cust.load(bc.Entity.ContractCustNo);
-                        DataTable dt = obj.PopulateDataSet("SELECT RMID FROM Op_ContractRMRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY RMID").Tables[0];
-                        foreach (DataRow dr in dt.Rows)
+                        string syncResult = string.Empty;
+                        try
                         {
-                            SycnResourceStatus rs = new SycnResourceStatus();
-                            rs.SysID = 1;
-                            rs.ResourceID = dr["RMID"].ToString();
-                            rs.BusinessID = bc.Entity.RowPointer;
-                            rs.BusinessNo = bc.Entity.ContractNo;
-                            rs.BusinessType = 1;
-                            rs.RentBeginTime = bc.Entity.FeeStartDate;
-                            rs.RentEndTime = ParseDateForString(jp.getValue("RefundDate"));
-                            rs.Status = 2;
-                            rs.RentType = 1;
-                            rs.UpdateTime = GetDate();
-                            rs.UpdateUser = user.Entity.UserName;
 
-                            Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
+                            ResourceService.ResourceService srv = new ResourceService.ResourceService
+                            {
+                                Timeout = 5000,
+                                Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString()
+                            };
+                            string Items = "";
+                            Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
+                            cust.load(bc.Entity.ContractCustNo);
+                            var dt = obj.PopulateDataSet("SELECT RMID FROM Op_ContractRMRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY RMID").Tables[0];
+                            foreach (DataRow dr in dt.Rows)
+                            {
+                                SycnResourceStatus rs = new SycnResourceStatus();
+                                rs.SysID = 1;
+                                rs.ResourceID = dr["RMID"].ToString();
+                                rs.BusinessID = bc.Entity.RowPointer;
+                                rs.BusinessNo = bc.Entity.ContractNo;
+                                rs.BusinessType = 1;
+                                rs.RentBeginTime = bc.Entity.FeeStartDate;
+                                rs.RentEndTime = leaveDate;
+                                rs.Status = 2;
+                                rs.RentType = 1;
+                                rs.UpdateTime = GetDate();
+                                rs.UpdateUser = user.Entity.UserName;
+
+                                Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
+                            }
+                            syncResult = srv.LeaseOut("[" + Items + "]");
                         }
-
-                        string syncResult = srv.LeaseOut("[" + Items + "]");
+                        catch (Exception ex)
+                        {
+                            syncResult = ex.ToString();
+                        }
                         collection.Add(new JsonStringValue("sync", syncResult));
 
                         #endregion

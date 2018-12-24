@@ -41,9 +41,9 @@ namespace project.Business.Op
         /// </summary>
         public void load(string id)
         {
-            DataRow dr = objdata.PopulateDataSet("select a.*,b.ContractTypeName,c.CustName,d.SPName "+
-                "from Op_Contract a "+
-                "left join Mstr_ContractType b on b.ContractTypeNo=a.ContractType "+
+            DataRow dr = objdata.PopulateDataSet("select a.*,b.ContractTypeName,c.CustName,d.SPName " +
+                "from Op_Contract a " +
+                "left join Mstr_ContractType b on b.ContractTypeNo=a.ContractType " +
                 "left join Mstr_Customer c on c.CustNo=a.ContractCustNo " +
                 "left join Mstr_ServiceProvider d on d.SPNo=a.ContractSPNo " +
                 "where a.RowPointer='" + id + "'").Tables[0].Rows[0];
@@ -125,7 +125,7 @@ namespace project.Business.Op
             string sqlstr = "";
             if (type == "insert")
                 sqlstr = "insert into Op_Contract(RowPointer,ContractNo,ContractType,ContractSPNo,ContractCustNo,ContractNoManual,ContractHandler," +
-                        "ContractSignedDate,ContractStartDate,ContractEndDate,EntryDate,FeeStartDate,"+
+                        "ContractSignedDate,ContractStartDate,ContractEndDate,EntryDate,FeeStartDate," +
                         "ReduceStartDate1,ReduceEndDate1,ReduceStartDate2,ReduceEndDate2,ReduceStartDate3,ReduceEndDate3,ReduceStartDate4,ReduceEndDate4," +
                         "ContractLatefeeRate,RMRentalDeposit,RMUtilityDeposit,PropertyFeeStartDate,PropertyFeeReduceStartDate,PropertyFeeReduceEndDate," +
                         "WaterUnitPrice,ElecticityUintPrice,AirconUnitPrice,PropertyUnitPrice,SharedWaterFee,SharedElectricyFee,WPRentalDeposit," +
@@ -134,7 +134,7 @@ namespace project.Business.Op
                         "IncreaseRate3,IncreaseStartDate4,IncreaseRate4,OffLeaseStatus,OffLeaseApplyDate,OffLeaseScheduleDate,OffLeaseActulDate," +
                         "OffLeaseReason,ContractCreator,ContractCreateDate,ContractLastReviser,ContractLastReviseDate,ContractAttachment," +
                         "ContractStatus,ContractAuditor,ContractAuditDate,ContractFinanceAuditor,ContractFinanceAuditDate)" +
-                    "values('"+Entity.RowPointer+"'," + "'" + Entity.ContractNo + "'" + "," + "'" + Entity.ContractType + "'" + "," + "'" + Entity.ContractSPNo + "'" + "," +
+                    "values('" + Entity.RowPointer + "'," + "'" + Entity.ContractNo + "'" + "," + "'" + Entity.ContractType + "'" + "," + "'" + Entity.ContractSPNo + "'" + "," +
                     "'" + Entity.ContractCustNo + "'" + "," + "'" + Entity.ContractNoManual + "'" + "," + "'" + Entity.ContractHandler + "'" + "," +
 
                     "'" + Entity.ContractSignedDate.ToString("yyyy-MM-dd") + "'" + "," + "'" + Entity.ContractStartDate.ToString("yyyy-MM-dd") + "'" + "," +
@@ -143,8 +143,8 @@ namespace project.Business.Op
                     "'" + Entity.ReduceStartDate1.ToString("yyyy-MM-dd") + "'" + "," + "'" + Entity.ReduceEndDate1.ToString("yyyy-MM-dd") + "'" + "," +
                     "'" + Entity.ReduceStartDate2.ToString("yyyy-MM-dd") + "'" + "," + "'" + Entity.ReduceEndDate2.ToString("yyyy-MM-dd") + "'" + "," +
                     "'" + Entity.ReduceStartDate3.ToString("yyyy-MM-dd") + "'" + "," + "'" + Entity.ReduceEndDate3.ToString("yyyy-MM-dd") + "'" + "," +
-                    "'" + Entity.ReduceStartDate4.ToString("yyyy-MM-dd") + "'" + "," + "'" + Entity.ReduceEndDate4.ToString("yyyy-MM-dd") + "'" + "," + 
-                    
+                    "'" + Entity.ReduceStartDate4.ToString("yyyy-MM-dd") + "'" + "," + "'" + Entity.ReduceEndDate4.ToString("yyyy-MM-dd") + "'" + "," +
+
                     Entity.ContractLatefeeRate + "," +
                     Entity.RMRentalDeposit + "," + Entity.RMUtilityDeposit + "," + "'" + Entity.PropertyFeeStartDate.ToString("yyyy-MM-dd") + "'" + "," +
                     "'" + Entity.PropertyFeeReduceStartDate.ToString("yyyy-MM-dd") + "'" + "," + "'" + Entity.PropertyFeeReduceEndDate.ToString("yyyy-MM-dd") + "'" + "," +
@@ -449,28 +449,19 @@ namespace project.Business.Op
         /// </summary>
         public int invalid()
         {
-            return objdata.ExecuteNonQuery("update Op_Contract set ContractStatus = '"+Entity.ContractStatus+"',"+
-                "ContractAuditor = '" + Entity.ContractAuditor + "',ContractAuditDate = '" + Entity.ContractAuditDate.ToString("yyyy-MM-dd HH:mm:ss") + "' "+
+            return objdata.ExecuteNonQuery("update Op_Contract set ContractStatus = '" + Entity.ContractStatus + "'," +
+                "ContractAuditor = '" + Entity.ContractAuditor + "',ContractAuditDate = '" + Entity.ContractAuditDate.ToString("yyyy-MM-dd HH:mm:ss") + "' " +
                 "where RowPointer='" + Entity.RowPointer + "'");
         }
 
+        /// <summary>
+        /// 没有涉及到费用计算的退租
+        /// </summary>
+        /// <param name="leaveDate"></param>
+        /// <returns></returns>
         public string ConfirmLeaveWithNoFee(DateTime leaveDate)
         {
             string info = string.Empty;
-            string businessType = string.Empty;
-            switch (Entity.ContractType)
-            {
-                case "01":
-                    businessType = "rm";
-                    break;
-                case "02":
-                case "12":
-                    businessType = "wp";
-                    break;
-                case "03":
-                    businessType = "ad";
-                    break;
-            }
             SqlConnection con = null;
             SqlCommand command = null;
             try
@@ -478,10 +469,9 @@ namespace project.Business.Op
                 con = Data.Conn();
                 command = new SqlCommand("Contract_ConfirmLeaveWithNoFee", con);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add("@BusinessType", SqlDbType.NVarChar, 50).Value = businessType;
                 command.Parameters.Add("@ContractID", SqlDbType.NVarChar, 50).Value = Entity.RowPointer;
                 command.Parameters.Add("@LeaveDate", SqlDbType.DateTime).Value = leaveDate;
-                command.Parameters.Add("@InfoMsg", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+                command.Parameters.Add("@InfoMsg", SqlDbType.NVarChar, 50).Direction = ParameterDirection.Output;
                 con.Open();
                 command.ExecuteNonQuery();
                 info = command.Parameters["@InfoMsg"].Value.ToString();
@@ -500,20 +490,98 @@ namespace project.Business.Op
             }
             return info;
         }
+        /// <summary>
+        /// 取消审核
+        /// </summary>
+        /// <param name="auditor"></param>
+        /// <returns></returns>
+        public string CancelAudit(string auditor)
+        {
+            string info = string.Empty;
+            SqlConnection con = null;
+            SqlCommand command = null;
+            try
+            {
+                con = Data.Conn();
+                command = new SqlCommand("Contract_CancleAudit", con);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@ContractID", SqlDbType.NVarChar, 50).Value = Entity.RowPointer;
+                command.Parameters.Add("@Auditor", SqlDbType.NVarChar, 50).Value = auditor;
+                command.Parameters.Add("@InfoMsg", SqlDbType.NVarChar, 50).Direction = ParameterDirection.Output;
+                con.Open();
+                command.ExecuteNonQuery();
+                info = command.Parameters["@InfoMsg"].Value.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                info = ex.ToString();
+            }
+            finally
+            {
+                if (command != null)
+                    command.Dispose();
+                if (con != null)
+                    con.Dispose();
+            }
+            return info;
+        }
+        
+        public void CheckCustStatus(out string status,out string date)
+        {
+            SqlConnection con = null;
+            SqlCommand command = null;
+            try
+            {
+                con = Data.Conn();
+                command = new SqlCommand("CheckCustStatus", con);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@CustNo", SqlDbType.NVarChar, 50).Value = Entity.ContractCustNo;
+                command.Parameters.Add("@Status", SqlDbType.Char, 1).Value = ParameterDirection.Output;
+                command.Parameters.Add("@Date", SqlDbType.Char, 100).Direction = ParameterDirection.Output;
+                con.Open();
+                command.ExecuteNonQuery();
+                status = command.Parameters["@Status"].Value.ToString();
+                date = command.Parameters["@Date"].Value.ToString();
+            }
+            catch (Exception)
+            {
+                status = "";
+                date = "";
+            }
+            finally
+            {
+                if (command != null)
+                    command.Dispose();
+                if (con != null)
+                    con.Dispose();
+            }
+        }
+        public void SyncCustForRefund()
+        {
+            var dt = objdata.PopulateDataSet(string.Format("select 1 from Op_Contract where ContractStatus='2' and ContractCustNo='{0}'", Entity.ContractCustNo)).Tables[0];
+            if (dt.Rows.Count <= 0)
+            {
+                var actuallyLeaveDate= objdata.PopulateDataSet(string.Format("select convert(char(10),MAX(OffLeaseActulDate),121) as date from Op_Contract where ContractStatus='3' and OffLeaseStatus='3' and ContractCustNo='{0}'", Entity.ContractCustNo)).Tables[0].Rows[0][0].ToString();
+                ButlerSrv.AppService appService = new ButlerSrv.AppService();
+                
+
+            }
+        }
 
         /// </summary>
         /// refund方法 
         /// </summary>
         public int refund()
         {
-            return objdata.ExecuteNonQuery("update Op_Contract "+
+            return objdata.ExecuteNonQuery("update Op_Contract " +
                 "set OffLeaseStatus = '" + Entity.OffLeaseStatus + "'," +
                 "OffLeaseApplyDate = '" + Entity.OffLeaseApplyDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + "," +
                 "OffLeaseScheduleDate = '" + Entity.OffLeaseScheduleDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + "," +
                 "OffLeaseReason = '" + Entity.OffLeaseReason + "'" +
                 " where RowPointer='" + Entity.RowPointer + "'");
         }
-        
+
         /// <summary>
         /// 按条件查询，支持分页
         /// </summary>
@@ -674,7 +742,7 @@ namespace project.Business.Op
         /// <returns></returns>
         private System.Collections.ICollection GetListHelper(string ContractNo, string ContractNoManual, string ContractType, string ContractSPNo, string ContractCustName,
             DateTime MinContractSignedDate, DateTime MaxContractSignedDate, DateTime MinContractEndDate, DateTime MaxContractEndDate, string ContractStatus, string OffLeaseStatus,
-            DateTime MinOffLeaseActulDate, DateTime MaxOffLeaseActulDate, 
+            DateTime MinOffLeaseActulDate, DateTime MaxOffLeaseActulDate,
             int startRow, int pageSize)
         {
             string wherestr = "";
@@ -734,7 +802,7 @@ namespace project.Business.Op
             System.Collections.IList entitys = null;
             if (startRow > START_ROW_INIT && pageSize > START_ROW_INIT)
             {
-                entitys = Query(objdata.ExecSelect("Op_Contract a left join Mstr_ContractType b on b.ContractTypeNo=a.ContractType "+
+                entitys = Query(objdata.ExecSelect("Op_Contract a left join Mstr_ContractType b on b.ContractTypeNo=a.ContractType " +
                     "left join Mstr_Customer c on c.CustNo=a.ContractCustNo " +
                     "left join Mstr_ServiceProvider d on d.SPNo=a.ContractSPNo",
                     "a.*,b.ContractTypeName,c.CustName,d.SPName", wherestr, startRow, pageSize, OrderField));
@@ -742,8 +810,8 @@ namespace project.Business.Op
             else
             {
                 entitys = Query(objdata.ExecSelect("Op_Contract a left join Mstr_ContractType b on b.ContractTypeNo=a.ContractType " +
-                    "left join Mstr_Customer c on c.CustNo=a.ContractCustNo "+
-                    "left join Mstr_ServiceProvider d on d.SPNo=a.ContractSPNo", 
+                    "left join Mstr_Customer c on c.CustNo=a.ContractCustNo " +
+                    "left join Mstr_ServiceProvider d on d.SPNo=a.ContractSPNo",
                     "a.*,b.ContractTypeName,c.CustName,d.SPName", wherestr, START_ROW_INIT, START_ROW_INIT, OrderField));
             }
             return entitys;

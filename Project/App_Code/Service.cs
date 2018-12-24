@@ -337,6 +337,12 @@ public class Service : System.Web.Services.WebService
 
         return InfoMsg;
     }
+    /// <summary>
+    /// 账单详情 
+    /// </summary>
+    /// <param name="custno"></param>
+    /// <param name="month"></param>
+    /// <returns></returns>
     [WebMethod]
     public string GetRentListInfo(string custno, string month)
     {
@@ -446,7 +452,7 @@ public class Service : System.Web.Services.WebService
         return result;
     }
     /// <summary>
-    /// 账单
+    /// 账单文件
     /// </summary>
     /// <param name="orderid"></param>
     /// <returns></returns>
@@ -461,7 +467,7 @@ public class Service : System.Web.Services.WebService
             if (dt.Rows.Count > 0)
             {
                 string rootPath = HttpRuntime.AppDomainAppPath;
-                string rootUrl = HttpContext.Current.Request.Url.Authority;
+                string rootUrl = "http://"+ HttpContext.Current.Request.Url.Authority;
                 string pic = string.Empty;
                 if (dt.Rows[0]["Provider"].ToString() == "FWC-001") pic = rootPath + "pdf\\dl.png";
                 else if (dt.Rows[0]["Provider"].ToString() == "FWC-002") pic = rootPath + "pdf\\mh.png";
@@ -492,6 +498,8 @@ public class Service : System.Web.Services.WebService
         }
         return result;
     }
+
+
     //工单
     [WebMethod]
     public string GetMeterInfo(string MeterNo, string KEY, out string meterRMID, out decimal readout, out int digit)

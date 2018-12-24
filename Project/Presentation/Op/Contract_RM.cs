@@ -1,16 +1,10 @@
-﻿using System;
-using System.Data;
+﻿using Newtonsoft.Json;
+using System;
 using System.Configuration;
-using System.Collections;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
-using System.Data.SqlClient;
+using System.Data;
 using System.Net.Json;
-using Newtonsoft.Json;
+using System.Web;
+using System.Web.UI;
 
 namespace project.Presentation.Op
 {
@@ -927,15 +921,29 @@ namespace project.Presentation.Op
                         }
                         else
                         {
-                            #region 同步到资源系统
+                            collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
+                            #region 同步到管家
+                            try
+                            {
+                                ButlerSrv.AppService appService = new ButlerSrv.AppService { Timeout = 5000 };
+                                appService.UpdateCustomer(bc.Entity.ContractCustNo, "1", "");
+                            }
+                            catch (Exception ex)
+                            {
+                                collection.Add(new JsonStringValue("syncButlerException", ex.ToString()));
+                            }
+                            #endregion
 
+                            #region 同步到资源系统
                             string syncResult = string.Empty;
                             try
                             {
-                                ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                                srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                                ResourceService.ResourceService srv = new ResourceService.ResourceService
+                                {
+                                    Timeout = 5000,
+                                    Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString()
+                                };
                                 string Items = "";
-
                                 Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
                                 cust.load(bc.Entity.ContractCustNo);
                                 DataTable dt = obj.PopulateDataSet("SELECT RMID,RMArea FROM Op_ContractRMRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY RMID,RMArea").Tables[0];
@@ -960,50 +968,54 @@ namespace project.Presentation.Op
 
                                     Items += (Items == "" ? "" : ",") + JsonConvert.SerializeObject(rs);
                                 }
-
                                 syncResult = srv.LeaseIn("[" + Items + "]");
-
                             }
                             catch (Exception ex)
                             {
                                 syncResult = ex.ToString();
                             }
                             collection.Add(new JsonStringValue("sync", syncResult));
-
                             #endregion
-
                         }
-                        collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
+
                     }
                     else
                     {
                         //取消审核
-                        if (int.Parse(obj.PopulateDataSet("select Count(1) as Cnt from Op_ContractRMRentList where RefRP='" + bc.Entity.RowPointer + "' and FeeStatus='1'").Tables[0].Rows[0]["Cnt"].ToString()) > 0)
+                        string InfoBar = bc.CancelAudit(user.Entity.UserName);
+                        if (InfoBar != "")
                         {
-                            flag = "4";
+                            flag = "5";
+                            collection.Add(new JsonStringValue("InfoBar", InfoBar));
                         }
                         else
                         {
-                            bc.Entity.ContractStatus = "1";
-                            bc.Entity.ContractAuditor = user.Entity.UserName;
-                            bc.Entity.ContractAuditDate = GetDate();
-                            bc.invalid();
-                            collection.Add(new JsonStringValue("status", bc.Entity.ContractStatus));
+                            collection.Add(new JsonStringValue("status", "1"));
+                            #region 同步到管家
                             try
                             {
-                                obj.ExecuteNonQuery("update Mstr_Room set RMCurrentCustNo='',RMStatus='free' where RMID in (select RMID from Op_ContractRMRentalDetail where RefRP='" + bc.Entity.RowPointer + "')");
-                                obj.ExecuteNonQuery("update Mstr_Customer set CustStatus='3' where CustNo='" + bc.Entity.ContractCustNo + "'");
+                                string status = string.Empty;
+                                string date = string.Empty;
+                                bc.CheckCustStatus(out status, out date);
+                                ButlerSrv.AppService appService = new ButlerSrv.AppService { Timeout = 5000 };
+                                appService.UpdateCustomer(bc.Entity.ContractCustNo, status, date);
                             }
-                            catch { }
+                            catch (Exception ex)
+                            {
+                                collection.Add(new JsonStringValue("syncButlerException", ex.ToString()));
+                            }
+                            #endregion
 
                             #region 同步到资源系统
                             string syncResult = string.Empty;
                             try
                             {
-                                ResourceService.ResourceService srv = new ResourceService.ResourceService();
-                                srv.Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString();
+                                ResourceService.ResourceService srv = new ResourceService.ResourceService
+                                {
+                                    Timeout = 5000,
+                                    Url = ConfigurationManager.AppSettings["ResourceServiceUrl"].ToString()
+                                };
                                 string Items = "";
-
                                 Business.Base.BusinessCustomer cust = new Business.Base.BusinessCustomer();
                                 cust.load(bc.Entity.ContractCustNo);
                                 DataTable dt = obj.PopulateDataSet("SELECT RMID,RMArea FROM Op_ContractRMRentalDetail WHERE RefRP='" + bc.Entity.RowPointer + "' GROUP BY RMID,RMArea").Tables[0];
@@ -1035,7 +1047,6 @@ namespace project.Presentation.Op
                                 syncResult = ex.ToString();
                             }
                             collection.Add(new JsonStringValue("sync", syncResult));
-
                             #endregion
                         }
                     }

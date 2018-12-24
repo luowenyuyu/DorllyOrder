@@ -186,6 +186,116 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="UpdateCustomer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Status" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RefundDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateCustomerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateCustomerResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatisticsList_Resourse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ParkNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="KEY" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatisticsList_ResourseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatisticsList_ResourseResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatisticsList_Resourse_List">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ParkNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="KEY" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatisticsList_Resourse_ListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatisticsList_Resourse_ListResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatisticsList_Resourse_Charts">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ParkNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="KEY" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatisticsList_Resourse_ChartsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatisticsList_Resourse_ChartsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetConferenceRoomReserveList_Resource">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ParkNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Date" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetConferenceRoomReserveList_ResourceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetConferenceRoomReserveList_ResourceResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="GetRefundListSoapIn">
@@ -248,6 +358,36 @@
   <wsdl:message name="SetCustomerSoapOut">
     <wsdl:part name="parameters" element="tns:SetCustomerResponse" />
   </wsdl:message>
+  <wsdl:message name="UpdateCustomerSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateCustomer" />
+  </wsdl:message>
+  <wsdl:message name="UpdateCustomerSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateCustomerResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatisticsList_ResourseSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatisticsList_Resourse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatisticsList_ResourseSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatisticsList_ResourseResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatisticsList_Resourse_ListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatisticsList_Resourse_List" />
+  </wsdl:message>
+  <wsdl:message name="GetStatisticsList_Resourse_ListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatisticsList_Resourse_ListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatisticsList_Resourse_ChartsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatisticsList_Resourse_Charts" />
+  </wsdl:message>
+  <wsdl:message name="GetStatisticsList_Resourse_ChartsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatisticsList_Resourse_ChartsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetConferenceRoomReserveList_ResourceSoapIn">
+    <wsdl:part name="parameters" element="tns:GetConferenceRoomReserveList_Resource" />
+  </wsdl:message>
+  <wsdl:message name="GetConferenceRoomReserveList_ResourceSoapOut">
+    <wsdl:part name="parameters" element="tns:GetConferenceRoomReserveList_ResourceResponse" />
+  </wsdl:message>
   <wsdl:portType name="AppServiceSoap">
     <wsdl:operation name="GetRefundList">
       <wsdl:input message="tns:GetRefundListSoapIn" />
@@ -288,6 +428,26 @@
     <wsdl:operation name="SetCustomer">
       <wsdl:input message="tns:SetCustomerSoapIn" />
       <wsdl:output message="tns:SetCustomerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCustomer">
+      <wsdl:input message="tns:UpdateCustomerSoapIn" />
+      <wsdl:output message="tns:UpdateCustomerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatisticsList_Resourse">
+      <wsdl:input message="tns:GetStatisticsList_ResourseSoapIn" />
+      <wsdl:output message="tns:GetStatisticsList_ResourseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatisticsList_Resourse_List">
+      <wsdl:input message="tns:GetStatisticsList_Resourse_ListSoapIn" />
+      <wsdl:output message="tns:GetStatisticsList_Resourse_ListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatisticsList_Resourse_Charts">
+      <wsdl:input message="tns:GetStatisticsList_Resourse_ChartsSoapIn" />
+      <wsdl:output message="tns:GetStatisticsList_Resourse_ChartsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetConferenceRoomReserveList_Resource">
+      <wsdl:input message="tns:GetConferenceRoomReserveList_ResourceSoapIn" />
+      <wsdl:output message="tns:GetConferenceRoomReserveList_ResourceSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="AppServiceSoap" type="tns:AppServiceSoap">
@@ -382,6 +542,51 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UpdateCustomer">
+      <soap:operation soapAction="http://tempuri.org/UpdateCustomer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatisticsList_Resourse">
+      <soap:operation soapAction="http://tempuri.org/GetStatisticsList_Resourse" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatisticsList_Resourse_List">
+      <soap:operation soapAction="http://tempuri.org/GetStatisticsList_Resourse_List" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatisticsList_Resourse_Charts">
+      <soap:operation soapAction="http://tempuri.org/GetStatisticsList_Resourse_Charts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetConferenceRoomReserveList_Resource">
+      <soap:operation soapAction="http://tempuri.org/GetConferenceRoomReserveList_Resource" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="AppServiceSoap12" type="tns:AppServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -468,6 +673,51 @@
     </wsdl:operation>
     <wsdl:operation name="SetCustomer">
       <soap12:operation soapAction="http://tempuri.org/SetCustomer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCustomer">
+      <soap12:operation soapAction="http://tempuri.org/UpdateCustomer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatisticsList_Resourse">
+      <soap12:operation soapAction="http://tempuri.org/GetStatisticsList_Resourse" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatisticsList_Resourse_List">
+      <soap12:operation soapAction="http://tempuri.org/GetStatisticsList_Resourse_List" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatisticsList_Resourse_Charts">
+      <soap12:operation soapAction="http://tempuri.org/GetStatisticsList_Resourse_Charts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetConferenceRoomReserveList_Resource">
+      <soap12:operation soapAction="http://tempuri.org/GetConferenceRoomReserveList_Resource" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
