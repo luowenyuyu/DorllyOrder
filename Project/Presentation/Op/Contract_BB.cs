@@ -212,9 +212,9 @@ namespace project.Presentation.Op
             sb.Append("<th style=\"width:9%\">规格</th>");
             sb.Append("<th style=\"width:10%\">开始投放日期</th>");
             sb.Append("<th style=\"width:10%\">结束投放日期</th>");
-            sb.Append("<th style=\"width:9%\">租赁时间(月)</th>");
-            sb.Append("<th style=\"width:10%\">单价(元/月)</th>");
-            sb.Append("<th style=\"width:9%\">金额(元)</th>");
+            sb.Append("<th style=\"width:9%\">租赁时间</th>");
+            sb.Append("<th style=\"width:10%\">单价</th>");
+            sb.Append("<th style=\"width:9%\">金额</th>");
             sb.Append("<th style=\"width:10%\">操作</th>");
             sb.Append("</tr>");
             sb.Append("</thead>");
@@ -1332,6 +1332,27 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("flag", flag));
             result = collection.ToString();
             return result;
+        }
+
+        private  string getUnitValue(string unitCode)
+        {
+            string value = string.Empty;
+            switch (unitCode)
+            {
+                case "Day":
+                    value = "天";
+                    break;
+                case "Month":
+                    value = "月";
+                    break;
+                case "Quarter":
+                    value = "季度";
+                    break;
+                case "Year":
+                    value = "年";
+                    break;
+            }
+            return value;
         }
         #endregion
     }

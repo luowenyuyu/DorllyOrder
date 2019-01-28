@@ -115,12 +115,12 @@
                     <td class="tdl">合同生效日期</td>
                     <td class="tdr">
                         <input type="text" id="ContractStartDate" class="input-text size-MINI" /></td>
-                    <td class="tdl">合同到期日期</td>
-                    <td class="tdr">
-                        <input type="text" id="ContractEndDate" class="input-text size-MINI" /></td>
                     <td class="tdl">租金起收日期</td>
                     <td class="tdr">
                         <input type="text" id="FeeStartDate" class="input-text size-MINI" /></td>
+                    <td class="tdl">合同到期日期</td>
+                    <td class="tdr">
+                        <input type="text" id="ContractEndDate" class="input-text size-MINI" /></td>
                     <%--    <td class="tdl"></td>
                     <td class="tdr"></td>--%>
                 </tr>
@@ -1012,20 +1012,29 @@
                 $("#ContractEndDate").focus();
                 return;
             }
-            if (new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/')) ||
-                new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) > new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/')) ||
-                new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) > new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/'))) {
+            if (new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/'))) {
                 layer.msg("请选择有效的合同签订日期！", { icon: 7, time: 1000 });
                 $("#ContractSignedDate").focus();
                 return;
             }
             if (new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/'))) {
                 layer.msg("请选择有效的合同生效日期！", { icon: 7, time: 1000 });
-                $("#ContractStartDate").focus();
+                $("#ContractSignedDate").focus();
                 return;
             }
-            if (new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/'))||
-                new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) < new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/'))) {
+            //if (new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/')) ||
+            //    new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) > new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/')) ||
+            //    new Date($("#ContractSignedDate").val().replace('-', '/').replace('-', '/')) > new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/'))) {
+            //    layer.msg("请选择有效的合同签订日期！", { icon: 7, time: 1000 });
+            //    $("#ContractSignedDate").focus();
+            //    return;
+            //}
+            //if (new Date($("#ContractStartDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/'))) {
+            //    layer.msg("请选择有效的合同生效日期！", { icon: 7, time: 1000 });
+            //    $("#ContractStartDate").focus();
+            //    return;
+            //}
+            if (new Date($("#FeeStartDate").val().replace('-', '/').replace('-', '/')) >= new Date($("#ContractEndDate").val().replace('-', '/').replace('-', '/'))) {
                 layer.msg("请选择有效的租金起收日期！", { icon: 7, time: 1000 });
                 $("#FeeStartDate").focus();
                 return;

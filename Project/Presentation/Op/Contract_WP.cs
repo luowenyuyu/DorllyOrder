@@ -1129,7 +1129,6 @@ namespace project.Presentation.Op
             return collection.ToString();
         }
 
-
         #region Item2 工位信息
         private string itemsave2action(JsonArrayParse jp)
         {

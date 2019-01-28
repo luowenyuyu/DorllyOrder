@@ -1,20 +1,12 @@
-﻿using System;
-using System.Data;
-using System.Configuration;
-using System.Collections;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
-using System.Data.SqlClient;
-using System.Net.Json;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using System.IO;
 using NPOI.HSSF.UserModel;
-using System.Linq;
+using System;
+using System.Data;
+using System.IO;
+using System.Net.Json;
+using System.Web;
+using System.Web.UI;
 namespace project.Presentation.Op
 {
     public partial class Order : AbstractPmPage, System.Web.UI.ICallbackEventHandler
@@ -1001,16 +993,17 @@ namespace project.Presentation.Op
                     //加水印
                     string picName = "a.png";
                     DataTable dt = obj.PopulateDataSet("select * from Op_OrderDetail where RefRP='" + bc.Entity.RowPointer + "'").Tables[0];
-                    if (dt.Rows.Count > 0)
-                    {
-                        //FWC-001
-                        if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-001")
-                            picName = "dl.png";
-                        else if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-002")
-                            picName = "mh.png";
-                        else if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-003")
-                            picName = "fzd.png";
-                    }
+                    if (dt.Rows.Count > 0) picName = dt.Rows[0]["ODContractSPNo"].ToString() + ".png";
+                    //if (dt.Rows.Count > 0)
+                    //{
+                    //    //FWC-001
+                    //    if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-001")
+                    //        picName = "dl.png";
+                    //    else if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-002")
+                    //        picName = "mh.png";
+                    //    else if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-003")
+                    //        picName = "fzd.png";
+                    //}
                     //Console.WriteLine(OrderPrint.Path);
                     //Console.WriteLine(OrderPrint.Path + pathName);
                     //Console.WriteLine(OrderPrint.Path.Replace("缴费通知单", "") + picName);

@@ -373,14 +373,9 @@ public class Service : System.Web.Services.WebService
             left join Mstr_ServiceProvider e on a.ODContractSPNo=e.SPNo
             where b.OrderStatus='1'
             and b.CustNo='00058'
-            and CONVERT(char(7),b.OrderTime,121)='2018-11'         
-         */
-
-        #endregion
-        string result = string.Empty;
-        try
-        {
-            string sql = string.Format(@"
+            and CONVERT(char(7),b.OrderTime,121)='2018-11'  
+            
+            /////////string sql = string.Format(@"
                             select
                             b.RowPointer as OrderID,		--订单主键
                             b.OrderNo,						--订单编号
@@ -388,6 +383,7 @@ public class Service : System.Web.Services.WebService
                             b.OrderType,					--订单类型编号
                             c.OrderTypeName,				--订单类型名称
                             b.ARAmount as TotalAmount,		--订单总额
+                            a.ResourceNo,                   --资源编号
                             a.ODSRVNo as FeeNo,				--费用编号
                             d.SRVName as FeeName,			--费用名称
                             a.ODARAmount as FeeAmount,		--费用总额
@@ -403,7 +399,74 @@ public class Service : System.Web.Services.WebService
                             left join Mstr_OrderType c on b.OrderType=c.OrderTypeNo
                             left join Mstr_Service d on a.ODSRVNo=d.SRVNo
                             left join Mstr_ServiceProvider e on a.ODContractSPNo=e.SPNo
-                            where b.OrderStatus='1'
+                            where b.OrderStatus>='1'
+                            and e.SPName not like '%福中达%'
+                            and b.CustNo='{0}'
+                            and CONVERT(char(7),b.OrderTime,121)='{1}'", custno, month);
+
+        /////////
+        /// string sql = string.Format(@"
+                            select
+                            a.RowPointer as OrderID,		--订单主键
+                            a.OrderNo,			            --订单编号
+                            a.OrderTime,			        --收租月份
+                            a.OrderStatus AS Status,		--订单状态
+                            a.OrderType,			        --订单类型编号
+                            c.OrderTypeName,			    --订单类型名称
+                            a.ARAmount as TotalAmount,		--订单总额
+                            b.ResourceNo, 			        --资源编号
+                            b.ODSRVNo as FeeNo,		        --费用编号
+                            d.SRVName as FeeName,		    --费用名称
+                            b.ODARAmount as FeeAmount,	    --费用总额
+                            b.ODQTY as Quantity,		    --费用数量
+                            b.ODUnitPrice as UnitPrice,		--费用单价
+                            b.ODContractSPNo as ProviderNo,	--服务商编号
+                            e.SPName as ProviderName,		--服务商名称
+                            e.SPBank as Bank,			    --服务商银行卡所属银行名称
+                            e.SPBankAccount as Account,		--服务商银行卡账号
+                            e.SPTel as Tel			        --服务商联系电话
+                            from Op_OrderHeader a 
+                            left join Op_OrderDetail b on a.RowPointer=b.RefRP
+                            left join Mstr_OrderType c on a.OrderType=c.OrderTypeNo
+                            left join Mstr_Service d on b.ODSRVNo=d.SRVNo
+                            left join Mstr_ServiceProvider e on b.ODContractSPNo=e.SPNo
+                            where a.OrderStatus>='1'
+                            and e.SPName not like '%福中达%'
+                            and a.CustNo='{0}'
+                            and CONVERT(char(7),a.OrderTime,121)='{1}'", custno, month);
+         */
+
+        #endregion
+        string result = string.Empty;
+        try
+        {
+            string sql = string.Format(@"
+                            select
+                            b.RowPointer as OrderID,		--订单主键
+                            b.OrderNo,						--订单编号
+                            b.OrderTime,					--收租月份
+                            b.OrderType,					--订单类型编号
+                            c.OrderTypeName,				--订单类型名称
+                            b.ARAmount as TotalAmount,		--订单总额
+                            b.OrderStatus AS Status,		--订单状态
+                            a.ResourceNo,                   --资源编号
+                            a.ODSRVNo as FeeNo,				--费用编号
+                            d.SRVName as FeeName,			--费用名称
+                            a.ODARAmount as FeeAmount,		--费用总额
+                            a.ODQTY as Quantity,			--费用数量
+                            a.ODUnitPrice as UnitPrice,		--费用单价
+                            a.ODContractSPNo as ProviderNo,	--服务商编号
+                            e.SPName as ProviderName,		--服务商名称
+                            e.SPBank as Bank,				--服务商银行卡所属银行名称
+                            e.SPBankAccount as Account,		--服务商银行卡账号
+                            e.SPTel as Tel					--服务商联系电话
+                            from Op_OrderDetail a 
+                            left join Op_OrderHeader b on a.RefRP=b.RowPointer
+                            left join Mstr_OrderType c on b.OrderType=c.OrderTypeNo
+                            left join Mstr_Service d on a.ODSRVNo=d.SRVNo
+                            left join Mstr_ServiceProvider e on a.ODContractSPNo=e.SPNo
+                            where b.OrderStatus>='1'
+                            and e.SPName not like '%福中达%'
                             and b.CustNo='{0}'
                             and CONVERT(char(7),b.OrderTime,121)='{1}'", custno, month);
             var dt = obj.PopulateDataSet(sql).Tables[0];
@@ -417,6 +480,7 @@ public class Service : System.Web.Services.WebService
                     TotalAmount = a.Field<decimal>("TotalAmount"),
                     ProviderName = a.Field<string>("ProviderName"),
                     Bank = a.Field<string>("Bank"),
+                    Status = a.Field<string>("Status"),
                     Account = a.Field<string>("Account"),
                     Tel = a.Field<string>("Tel")
                 }).Select(a => new
@@ -431,6 +495,7 @@ public class Service : System.Web.Services.WebService
                     a.Key.Tel,
                     Detail = dt.AsEnumerable().Where(b => b.Field<string>("OrderID") == a.Key.OrderID).Select(b => new
                     {
+                        ResourceNo = b.Field<string>("ResourceNo"),
                         FeeNo = b.Field<string>("FeeNo"),
                         FeeName = b.Field<string>("FeeName"),
                         Quantity = b.Field<decimal>("Quantity"),
