@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Data;
-using System.Configuration;
-using System.Collections;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
 using System.Data.SqlClient;
 using System.Net.Json;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Web.UI;
 
 namespace project.Presentation.Op
 {
@@ -234,7 +229,7 @@ namespace project.Presentation.Op
                     sb.Append("<td>" + it.ODUnitPrice.ToString("0.####") + "</td>");
                     sb.Append("<td>" + it.ODARAmount.ToString("0.####") + "</td>");
                     sb.Append("<td>" + it.ReduceAmount.ToString("0.####") + "</td>");
-                    sb.Append("<td>" + (it.ODARAmount -it.ReduceAmount).ToString("0.####") + "</td>");
+                    sb.Append("<td>" + (it.ODARAmount - it.ReduceAmount).ToString("0.####") + "</td>");
                     if (type != "view")
                         sb.Append("<td><input class=\"btn btn-primary radius size-S\" type=\"button\" onclick=\"itemupdate1('" + it.RowPointer + "')\" value=\"修改\" />&nbsp;<input class=\"btn btn-danger radius size-S\" type=\"button\" onclick=\"itemdel1('" + it.RowPointer + "')\" value=\"删除\" /></td>");
                     else
@@ -262,7 +257,7 @@ namespace project.Presentation.Op
         string System.Web.UI.ICallbackEventHandler.GetCallbackResult()
         {
             string result = "";
-            JsonArrayParse jp = new JsonArrayParse(this._clientArgument);            
+            JsonArrayParse jp = new JsonArrayParse(this._clientArgument);
             if (jp.getValue("Type") == "view")
                 result = viewaction(jp);
             else if (jp.getValue("Type") == "select")
@@ -397,7 +392,7 @@ namespace project.Presentation.Op
                 else
                 {
                     string SPName = "";
-                    DataTable dt = obj.PopulateDataSet("select top 1 b.SPName from Op_OrderDetail a left join Mstr_ServiceProvider b on a.ODContractSPNo=b.SPNo "+
+                    DataTable dt = obj.PopulateDataSet("select top 1 b.SPName from Op_OrderDetail a left join Mstr_ServiceProvider b on a.ODContractSPNo=b.SPNo " +
                         "where RefRP='" + bc.Entity.RowPointer + "'").Tables[0];
                     if (dt.Rows.Count > 0) SPName = dt.Rows[0]["SPName"].ToString();
 
@@ -435,7 +430,7 @@ namespace project.Presentation.Op
                         sb.Append("<td>" + it.ODSRVName + "<input type=\"checkbox\" class=\"input-text size-MINI\" value=\"" + it.RowPointer + "\" name=\"chk\" style=\"display:none;\" /></td>");
                         sb.Append("<td>" + it.ODARAmount.ToString("0.##") + "</td>");
                         sb.Append("<td>" + it.ReduceAmount.ToString("0.##") + "</td>");
-                        sb.Append("<td>" + (it.ODARAmount - it.ReduceAmount).ToString("0.##") + "</td>"); 
+                        sb.Append("<td>" + (it.ODARAmount - it.ReduceAmount).ToString("0.##") + "</td>");
                         sb.Append("<td><input class=\"input-text size-MINI\" id=\"amt" + it.RowPointer + "\" value=\"" + PayAmt.ToString("0.##") + "\" onblur=\"validDecimal2(this.id);\" onchange=\"caluamount('" + it.RowPointer + "');\" style=\"text-align:center;\" /></td>");
                         sb.Append("<td>" + PayAmt.ToString("0.##") + "</td>");
                         sb.Append("</tr>");
@@ -474,7 +469,7 @@ namespace project.Presentation.Op
             string flag = "1";
             try
             {
-                Business.Op.BusinessOrderHeader bo=new Business.Op.BusinessOrderHeader();
+                Business.Op.BusinessOrderHeader bo = new Business.Op.BusinessOrderHeader();
                 bo.load(jp.getValue("id"));
 
                 string BankNo = jp.getValue("ODPaidBank");
@@ -518,7 +513,7 @@ namespace project.Presentation.Op
                 //    flag = "2";
 
                 string InfoMsg = GenOrderPayment(jp.getValue("id"), frid, TmpName, jp.getValue("ODPaidDate"), jp.getValue("ODPaidType"), BankName, jp.getValue("ODFeeReceiveRemark"), user.Entity.UserName);
-                if(InfoMsg != "")
+                if (InfoMsg != "")
                 {
                     flag = "4";
                     collection.Add(new JsonStringValue("info", InfoMsg));
@@ -571,7 +566,8 @@ namespace project.Presentation.Op
                         if (SRVNo.IndexOf(it.ODSRVNo) < 0)
                         {
                             SRVNo += it.ODSRVNo;
-                            SRVName += it.ODSRVName.Replace("公摊", "") + "、";
+                            // SRVName += it.ODSRVName.Replace("公摊", "") + "、";
+                            SRVName += Regex.Replace(Regex.Replace(it.ODSRVName.Replace("公摊", ""), @"\(.*\)", ""), @"\（.*\）","") + "、";
                         }
                         if (cnt == 0 && it.ODARAmount > 0)
                         {
@@ -770,7 +766,7 @@ namespace project.Presentation.Op
             {
                 Business.Op.BusinessOrderFeeReceiver bc = new Business.Op.BusinessOrderFeeReceiver();
                 bc.load(jp.getValue("itemid"));
-                int row =bc.delete();
+                int row = bc.delete();
                 if (row <= 0)
                 {
                     flag = "2";
@@ -865,7 +861,7 @@ namespace project.Presentation.Op
                 command.Parameters.Add("@InfoMsg", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
                 con.Open();
                 command.ExecuteNonQuery();
-                InfoMsg = command.Parameters["@InfoMsg"].Value.ToString();                
+                InfoMsg = command.Parameters["@InfoMsg"].Value.ToString();
             }
             catch (Exception ex)
             {

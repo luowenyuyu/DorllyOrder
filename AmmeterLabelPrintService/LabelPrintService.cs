@@ -81,27 +81,20 @@ namespace AmmeterLabelPrintService
                             LabelFormatDocument labelFormat = printEngine.Documents.Open(AppDomain.CurrentDomain.BaseDirectory + item.PrintFormat);
                             labelFormat.PrintSetup.PrinterName = _machineName;
                             labelFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
+
                             //编号
-                            //if (labelFormat.SubStrings[0].Name == "meterNo")
                             labelFormat.SubStrings["meterNo"].Value = item.MeterNo;
-                            //名称
-                            //if (labelFormat.SubStrings[0].Name == "meterName")
-                            labelFormat.SubStrings["meterName"].Value = item.MeterName;
                             //费率
-                            //if (labelFormat.SubStrings[0].Name == "meterRate")
                             labelFormat.SubStrings["meterRate"].Value = item.MeterRate.ToString("0.####");
                             //位数
-                            //if (labelFormat.SubStrings[0].Name == "meterDigit")
                             labelFormat.SubStrings["meterDigit"].Value = item.MeterDigit.ToString();
-                            //备注
-                            //if (labelFormat.SubStrings[0].Name == "Remark")
-                            labelFormat.SubStrings["remark"].Value = item.Remark;
                             //二维码
-                            //if (labelFormat.SubStrings[0].Name == "meterCode")
                             labelFormat.SubStrings["meterCode"].Value = item.MeterNo;
+
                             labelFormat.Print();
                             labelFormat.Close(SaveOptions.DoNotSaveChanges);//不保存对打开模板的修改
                             printEngine.Stop();
+
 
                         }
                     }

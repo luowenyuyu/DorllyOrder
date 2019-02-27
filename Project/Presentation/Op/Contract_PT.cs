@@ -100,33 +100,33 @@ namespace project.Presentation.Op
                         PTRentSRVNo = setting.Entity.SRVNo;
                         PTRentFee = setting.Entity.DecimalValue.ToString("0.####");
 
-                        Business.Base.BusinessSetting setting1 = new Business.Base.BusinessSetting();
-                        setting1.load("AirConditionFee");
+                        //Business.Base.BusinessSetting setting1 = new Business.Base.BusinessSetting();
+                        //setting1.load("AirConditionFee");
 
-                        Business.Base.BusinessSetting setting2 = new Business.Base.BusinessSetting();
-                        setting2.load("WaterFee");
+                        //Business.Base.BusinessSetting setting2 = new Business.Base.BusinessSetting();
+                        //setting2.load("WaterFee");
 
-                        Business.Base.BusinessSetting setting3 = new Business.Base.BusinessSetting();
-                        setting3.load("ElectricFee");
+                        //Business.Base.BusinessSetting setting3 = new Business.Base.BusinessSetting();
+                        //setting3.load("ElectricFee");
 
-                        Business.Base.BusinessSetting setting4 = new Business.Base.BusinessSetting();
-                        setting4.load("SharedWaterFee");
+                        //Business.Base.BusinessSetting setting4 = new Business.Base.BusinessSetting();
+                        //setting4.load("SharedWaterFee");
 
-                        Business.Base.BusinessSetting setting5 = new Business.Base.BusinessSetting();
-                        setting5.load("SharedElectricFee");
+                        //Business.Base.BusinessSetting setting5 = new Business.Base.BusinessSetting();
+                        //setting5.load("SharedElectricFee");
 
-                        Business.Base.BusinessSetting setting6 = new Business.Base.BusinessSetting();
-                        setting6.load("ServiceCharge");
+                        //Business.Base.BusinessSetting setting6 = new Business.Base.BusinessSetting();
+                        //setting6.load("ServiceCharge");
 
-                        SRVNo4Str = "<select class=\"input-text size-MINI\" id=\"SRVNo4\">";
-                        SRVNo4Str += "<option value='" + setting.Entity.SRVNo + "'>" + setting.Entity.SRVName + "</option>";
-                        SRVNo4Str += "<option value='" + setting1.Entity.SRVNo + "'>" + setting1.Entity.SRVName + "</option>";
-                        SRVNo4Str += "<option value='" + setting2.Entity.SRVNo + "'>" + setting2.Entity.SRVName + "</option>";
-                        SRVNo4Str += "<option value='" + setting4.Entity.SRVNo + "'>" + setting4.Entity.SRVName + "</option>";
-                        SRVNo4Str += "<option value='" + setting3.Entity.SRVNo + "'>" + setting3.Entity.SRVName + "</option>";
-                        SRVNo4Str += "<option value='" + setting5.Entity.SRVNo + "'>" + setting5.Entity.SRVName + "</option>";
-                        SRVNo4Str += "<option value='" + setting6.Entity.SRVNo + "'>" + setting6.Entity.SRVName + "</option>";
-                        SRVNo4Str += "</select>";
+                        //SRVNo4Str = "<select class=\"input-text size-MINI\" id=\"SRVNo4\">";
+                        //SRVNo4Str += "<option value='" + setting.Entity.SRVNo + "'>" + setting.Entity.SRVName + "</option>";
+                        //SRVNo4Str += "<option value='" + setting1.Entity.SRVNo + "'>" + setting1.Entity.SRVName + "</option>";
+                        //SRVNo4Str += "<option value='" + setting2.Entity.SRVNo + "'>" + setting2.Entity.SRVName + "</option>";
+                        //SRVNo4Str += "<option value='" + setting4.Entity.SRVNo + "'>" + setting4.Entity.SRVName + "</option>";
+                        //SRVNo4Str += "<option value='" + setting3.Entity.SRVNo + "'>" + setting3.Entity.SRVName + "</option>";
+                        //SRVNo4Str += "<option value='" + setting5.Entity.SRVNo + "'>" + setting5.Entity.SRVName + "</option>";
+                        //SRVNo4Str += "<option value='" + setting6.Entity.SRVNo + "'>" + setting6.Entity.SRVName + "</option>";
+                        //SRVNo4Str += "</select>";
 
                         setting.load("PTSPNo");
                         PTSPNo = setting.Entity.StringValue;
@@ -307,7 +307,8 @@ namespace project.Presentation.Op
                 result = checkcustaction(jp);
             else if (jp.getValue("Type") == "check")
                 result = checkaction(jp);
-
+            else if (jp.getValue("Type") == "getfee")
+                result = getfeeaction(jp);
             else if (jp.getValue("Type") == "itemsave4")
                 result = itemsave4action(jp);
             else if (jp.getValue("Type") == "itemupdate4")
@@ -1051,7 +1052,33 @@ namespace project.Presentation.Op
                 jp.getValue("MaxOffLeaseActulDate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
-
+        private string getfeeaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string flag = "1";
+            string result = "";
+            collection.Add(new JsonStringValue("type", "getfee"));
+            string sql = string.Format("select srvno,srvname from Mstr_Service where SRVSPNo='{0}' and (SRVTypeNo1='FWLB-008' or SRVTypeNo2='FWLB-003-04')", jp.getValue("Provider"));
+            try
+            {
+                DataTable dt = obj.PopulateDataSet(sql).Tables[0];
+                if (dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        result += "<option value='" + dt.Rows[i][0].ToString() + "'>" + dt.Rows[i][1].ToString() + "</option>";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                collection.Add(new JsonStringValue("ex", e.ToString()));
+                flag = "2";
+            }
+            collection.Add(new JsonStringValue("flag", flag));
+            collection.Add(new JsonStringValue("feestr", result));
+            return collection.ToString();
+        }
 
         #region Item4 管理费、空调费
         private string itemsave4action(JsonArrayParse jp)
@@ -1171,7 +1198,7 @@ namespace project.Presentation.Op
             try
             {
                 decimal UnitPrice = 0;
-                DataTable dt = obj.PopulateDataSet("select top 1 DecimalValue from Sys_Setting where SRVNo='" + jp.getValue("SRVNo") + "'").Tables[0];
+                DataTable dt = obj.PopulateDataSet("select top 1 b.DecimalValue from Mstr_Service a left join Sys_Setting b on a.SRVTypeNo2=b.SRVTypeNo2 where a.SRVNo='" + jp.getValue("SRVNo") + "'").Tables[0];
                 if (dt.Rows.Count > 0)
                     UnitPrice = ParseDecimalForString(dt.Rows[0]["DecimalValue"].ToString());
 

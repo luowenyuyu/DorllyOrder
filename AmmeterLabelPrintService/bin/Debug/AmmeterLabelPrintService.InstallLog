@@ -11,3 +11,16 @@
    logtoconsole = 
    logfile = E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.InstallLog
    assemblypath = E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.exe
+正在安装程序集“D:\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = D:\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.InstallLog
+   assemblypath = D:\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.exe
+正在安装服务 AmmeterLabelPrintService...
+已成功安装服务 AmmeterLabelPrintService。
+正在日志 Application 中创建 EventLog 源 AmmeterLabelPrintService...
+正在提交程序集“D:\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = D:\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.InstallLog
+   assemblypath = D:\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.exe

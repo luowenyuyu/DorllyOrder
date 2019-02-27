@@ -5,6 +5,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Net.Json;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 namespace project.Presentation.Op
@@ -730,7 +731,9 @@ namespace project.Presentation.Op
                                 if (SRVNo.IndexOf(it.ODSRVNo) < 0)
                                 {
                                     SRVNo += it.ODSRVNo;
-                                    SRVName += it.ODSRVName.Replace("公摊", "") + "、";
+                                    //SRVName += it.ODSRVName.Replace("公摊", "") + "、"; 
+                                    //SRVName += Regex.Replace(it.ODSRVName.Replace("公摊", ""), @"\(.*\)", "") + "、";
+                                    SRVName += Regex.Replace(Regex.Replace(it.ODSRVName.Replace("公摊", ""), @"\(.*\)", ""), @"\（.*\）", "") + "、";
                                 }
                                 if (cnt == 0 && it.ODARAmount > 0)
                                 {
@@ -992,7 +995,7 @@ namespace project.Presentation.Op
 
                     //加水印
                     string picName = "a.png";
-                    DataTable dt = obj.PopulateDataSet("select * from Op_OrderDetail where RefRP='" + bc.Entity.RowPointer + "'").Tables[0];
+                    DataTable dt = obj.PopulateDataSet("select ODContractSPNo from Op_OrderDetail where RefRP='" + bc.Entity.RowPointer + "'").Tables[0];
                     if (dt.Rows.Count > 0) picName = dt.Rows[0]["ODContractSPNo"].ToString() + ".png";
                     //if (dt.Rows.Count > 0)
                     //{

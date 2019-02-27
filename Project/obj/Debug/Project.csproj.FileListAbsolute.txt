@@ -89,3 +89,16 @@ E:\MineDev\Projects\DorllyOrder\Project\bin\Debug\Newtonsoft.Json.xml
 E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.CoreCompileInputs.cache
 E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.CopyComplete
 E:\MineDev\Projects\DorllyOrder\Project\obj\Debug\Project.csprojAssemblyReference.cache
+D:\Projects\DorllyOrder\Project\bin\Debug\project.dll.config
+D:\Projects\DorllyOrder\Project\bin\Debug\project.dll
+D:\Projects\DorllyOrder\Project\bin\Debug\project.pdb
+D:\Projects\DorllyOrder\Project\bin\Debug\Newtonsoft.Json.dll
+D:\Projects\DorllyOrder\Project\bin\Debug\Newtonsoft.Json.pdb
+D:\Projects\DorllyOrder\Project\bin\Debug\Newtonsoft.Json.xml
+D:\Projects\DorllyOrder\Project\obj\Debug\Service.resources
+D:\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.GenerateResource.cache
+D:\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.CoreCompileInputs.cache
+D:\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.CopyComplete
+D:\Projects\DorllyOrder\Project\obj\Debug\project.dll
+D:\Projects\DorllyOrder\Project\obj\Debug\project.pdb
+D:\Projects\DorllyOrder\Project\obj\Debug\Project.csprojAssemblyReference.cache

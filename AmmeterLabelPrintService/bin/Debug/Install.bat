@@ -1,2 +1,2 @@
-%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\installutil.exe E:\MineDev\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.exe
+%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\installutil.exe D:\Projects\DorllyOrder\AmmeterLabelPrintService\bin\Debug\AmmeterLabelPrintService.exe
 pause
