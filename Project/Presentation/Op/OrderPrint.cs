@@ -625,7 +625,7 @@ namespace project.Presentation.Op
             cell21.VerticalAlignment = Element.ALIGN_MIDDLE;
             cell21.FixedHeight = 15;
             PT2.AddCell(cell21);
-            PdfPCell cell22 = new PdfPCell(new Paragraph(dr["SPName"].ToString(), font9));
+            PdfPCell cell22 = new PdfPCell(new Paragraph(dr["SPName"].ToString(), font9_Bold));
             cell22.Border = Rectangle.NO_BORDER;
             cell22.HorizontalAlignment = Element.ALIGN_LEFT;
             cell22.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -661,11 +661,12 @@ namespace project.Presentation.Op
             cell41.VerticalAlignment = Element.ALIGN_MIDDLE;
             cell41.FixedHeight = 15;
             PT4.AddCell(cell41);
-            PdfPCell cell42 = new PdfPCell(new Paragraph(dr["SPBankAccount"].ToString(), font9));
+            PdfPCell cell42 = new PdfPCell(new Paragraph(dr["SPBankAccount"].ToString(), font9_Bold));
             cell42.Border = Rectangle.NO_BORDER;
             cell42.HorizontalAlignment = Element.ALIGN_LEFT;
             cell42.VerticalAlignment = Element.ALIGN_MIDDLE;
             cell42.FixedHeight = 15;
+            
             PT4.AddCell(cell42);
 
             PdfPTable PT5 = new PdfPTable(2);

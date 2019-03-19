@@ -466,7 +466,8 @@ public class Service : System.Web.Services.WebService
                             left join Mstr_Service d on a.ODSRVNo=d.SRVNo
                             left join Mstr_ServiceProvider e on a.ODContractSPNo=e.SPNo
                             where b.OrderStatus>='1'
-                            and e.SPName not like '%福中达%'
+                            --and e.SPName not like '%福中达%'
+                            and e.SPNo='FWC-001'
                             and b.CustNo='{0}'
                             and CONVERT(char(7),b.OrderTime,121)='{1}'", custno, month);
             var dt = obj.PopulateDataSet(sql).Tables[0];
@@ -532,12 +533,10 @@ public class Service : System.Web.Services.WebService
             if (dt.Rows.Count > 0)
             {
                 string rootPath = HttpRuntime.AppDomainAppPath;
-                string rootUrl = "http://"+ HttpContext.Current.Request.Url.Authority;
-                string pic = string.Empty;
-                if (dt.Rows[0]["Provider"].ToString() == "FWC-001") pic = rootPath + "pdf\\dl.png";
-                else if (dt.Rows[0]["Provider"].ToString() == "FWC-002") pic = rootPath + "pdf\\mh.png";
-                else if (dt.Rows[0]["Provider"].ToString() == "FWC-003") pic = rootPath + "pdf\\fzd.png";
-                else pic = rootPath + "pdf\\a.png";
+                string rootUrl = "http://" + HttpContext.Current.Request.Url.Authority;
+                string pic = !string.IsNullOrEmpty(dt.Rows[0]["Provider"].ToString()) ?
+                    rootPath + "pdf\\" + dt.Rows[0]["Provider"].ToString() + ".png"
+                    : rootPath + "pdf\\a.png";
                 string file = dt.Rows[0]["OrderNo"].ToString() + ".pdf";
                 string input = rootPath + "pdf\\" + Guid.NewGuid().ToString() + ".pdf";
                 string output = rootPath + "pdf\\" + file;
@@ -550,6 +549,7 @@ public class Service : System.Web.Services.WebService
                 project.Presentation.Op.OrderPrint.PDFWatermark(input, output, pic, 369, 111);
                 if (File.Exists(input)) File.Delete(input);
                 result = JsonConvert.SerializeObject(new { flag = 1, url = rootUrl + "/pdf/" + file, info = "文件生成成功！" });
+
             }
             else
             {
