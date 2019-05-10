@@ -192,14 +192,14 @@ namespace project.Business.Op
         /// <param name="ReadoutType">抄表类型</param>
         /// <param name="AuditStatus">状态</param>
         /// <returns></returns>
-        public System.Collections.ICollection GetListQuery(string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType, DateTime MinRODate, DateTime MaxRODate, int startRow, int pageSize)
+        public System.Collections.ICollection GetListQuery(string Loc3, string Loc4, string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType, DateTime MinRODate, DateTime MaxRODate, int startRow, int pageSize)
         {
             if (startRow < 0 || pageSize <= 0)
             {
                 throw new Exception();
             }
 
-            return GetListHelper(MeterNo, RMID, ReadoutType, AuditStatus, MeterType, MinRODate, MaxRODate, startRow, pageSize);
+            return GetListHelper(Loc3, Loc4, MeterNo, RMID, ReadoutType, AuditStatus, MeterType, MinRODate, MaxRODate, startRow, pageSize);
         }
 
         /// <summary>
@@ -210,9 +210,9 @@ namespace project.Business.Op
         /// <param name="ReadoutType">抄表类型</param>
         /// <param name="AuditStatus">状态</param>
         /// <returns></returns>
-        public System.Collections.ICollection GetListQuery(string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType, DateTime MinRODate, DateTime MaxRODate)
+        public System.Collections.ICollection GetListQuery(string Loc3, string Loc4, string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType, DateTime MinRODate, DateTime MaxRODate)
         {
-            return GetListHelper(MeterNo, RMID, ReadoutType, AuditStatus, MeterType, MinRODate, MaxRODate, START_ROW_INIT, START_ROW_INIT);
+            return GetListHelper(Loc3, Loc4, MeterNo, RMID, ReadoutType, AuditStatus, MeterType, MinRODate, MaxRODate, START_ROW_INIT, START_ROW_INIT);
         }
 
         /// <summary>
@@ -267,9 +267,17 @@ namespace project.Business.Op
         /// <param name="ReadoutType">抄表类型</param>
         /// <param name="AuditStatus">状态</param>
         /// <returns></returns>
-        private System.Collections.ICollection GetListHelper(string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType, DateTime MinRODate, DateTime MaxRODate, int startRow, int pageSize)
+        private System.Collections.ICollection GetListHelper(string Loc3, string Loc4, string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType, DateTime MinRODate, DateTime MaxRODate, int startRow, int pageSize)
         {
             string wherestr = "";
+            if (Loc3 != string.Empty)
+            {
+                wherestr = wherestr + " and b.MeterLOCNo3 = '" + Loc3 + "'";
+            }
+            if (Loc4 != string.Empty)
+            {
+                wherestr = wherestr + " and b.MeterLOCNo4 = '" + Loc4 + "'";
+            }
             if (MeterNo != string.Empty)
             {
                 wherestr = wherestr + " and a.MeterNo like '%" + MeterNo + "%'";
@@ -345,6 +353,7 @@ namespace project.Business.Op
                 entity.ROCreateDate = ParseDateTimeForString(dr["ROCreateDate"].ToString());
                 entity.ROCreator = dr["ROCreator"].ToString();
                 entity.IsOrder = bool.Parse(dr["IsOrder"].ToString());
+                entity.Img = dr["Img"].ToString();
                 result.Add(entity);
             }
             return result;

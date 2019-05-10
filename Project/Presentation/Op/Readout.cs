@@ -12,12 +12,16 @@ using System.Data.SqlClient;
 using System.Net.Json;
 using NPOI.HSSF.UserModel;
 using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace project.Presentation.Op
 {
     public partial class Readout : AbstractPmPage, System.Web.UI.ICallbackEventHandler
     {
         protected string userid = "";
+        Data sqlExecute = new Data();
         Business.Sys.BusinessUserInfo user = new project.Business.Sys.BusinessUserInfo();
         protected override void Page_Load(object sender, EventArgs e)
         {
@@ -65,9 +69,9 @@ namespace project.Presentation.Op
                             Buttons += "<a href=\"javascript:;\" onclick=\"excel()\" class=\"btn btn-primary radius\"><i class=\"Hui-iconfont\">&#xe615;</i> 导出Excel</a>&nbsp;&nbsp;";
                         }
 
-                        list = createList(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "", "", 1);
+                        list = createList(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "", "", 1);
                         date = GetDate().ToString("yyyy-MM-dd");
-
+                        //抄表人数据组装
                         ROOperatorStr = "<select class=\"input-text required\" id=\"ROOperator\" data-valid=\"isNonEmpty\" data-error=\"抄表人不能为空\">";
                         ROOperatorStr += "<option value=\"\" selected></option>";
                         Business.Base.BusinessMeterReader bc1 = new project.Business.Base.BusinessMeterReader();
@@ -76,6 +80,19 @@ namespace project.Presentation.Op
                             ROOperatorStr += "<option value='" + it.ReaderNo + "'>" + it.ReaderName + "</option>";
                         }
                         ROOperatorStr += "</select>";
+                        //楼栋数据组装
+                        //loc3List = "<option value=''>全部</option>";
+                        Data objdata = new Data();
+                        DataTable loc3Dt = objdata.PopulateDataSet("select * from Mstr_Location where LOCLevel= 3").Tables[0];
+                        if (loc3Dt != null)
+                        {
+                            Business.Base.BusinessLocation location = new Business.Base.BusinessLocation();
+                            foreach (Entity.Base.EntityLocation item in location.Query(loc3Dt))
+                            {
+                                loc3List += string.Format("<option value='{0}'>{1}</option>", item.LOCNo, item.LOCName);
+                            }
+                        }
+
                     }
                 }
                 else
@@ -97,7 +114,8 @@ namespace project.Presentation.Op
         protected string date = "";
         protected string ROOperatorStr = "";
         protected string treelist = "";
-        private string createList(string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType, string MinRODate, string MaxRODate, int page)
+        protected string loc3List = string.Empty;
+        private string createList(string Loc3, string Loc4, string MeterNo, string RMID, string ReadoutType, string AuditStatus, string MeterType, string MinRODate, string MaxRODate, int page)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder("");
 
@@ -115,7 +133,8 @@ namespace project.Presentation.Op
             sb.Append("<th width='7%'>行度</th>");
             sb.Append("<th width='4%'>换表</th>");
             sb.Append("<th width='7%'>原表记行度</th>");
-            sb.Append("<th width='8%'>不通过原因</th>");
+            sb.Append("<th width='8%'>抄表图片</th>");
+            //sb.Append("<th width='8%'>不通过原因</th>");
             sb.Append("<th width='8%'>抄表日期</th>");
             sb.Append("<th width='6%'>状态</th>");
             sb.Append("<th width='6%'>订单引用</th>");
@@ -130,12 +149,13 @@ namespace project.Presentation.Op
             int r = 1;
             sb.Append("<tbody>");
             Business.Op.BusinessReadout bc = new project.Business.Op.BusinessReadout();
-            foreach (Entity.Op.EntityReadout it in bc.GetListQuery(MeterNo, RMID, ReadoutType, AuditStatus, MeterType, MinRODateS, MaxRODateS, page, pageSize))
+            foreach (Entity.Op.EntityReadout it in bc.GetListQuery(Loc3, Loc4, MeterNo, RMID, ReadoutType, AuditStatus, MeterType, MinRODateS, MaxRODateS, page, pageSize))
             {
+                string id = Guid.NewGuid().ToString();
                 sb.Append("<tr class=\"text-c\" id=\"" + it.RowPointer + "\">");
                 sb.Append("<td style=\"text-align:center;\">" + r.ToString() + "</td>");
                 sb.Append("<td>" + it.RMNo + "</td>");
-                sb.Append("<td>" + it.MeterNo + "</td>");
+                sb.Append("<td class='td-meterno'>" + it.MeterNo + "</td>");
                 sb.Append("<td>" + it.MeterTypeName + "</td>");
                 sb.Append("<td>" + it.ReadoutTypeName + "</td>");
                 sb.Append("<td>" + it.LastReadout.ToString("0.####") + "</td>");
@@ -144,7 +164,13 @@ namespace project.Presentation.Op
                 sb.Append("<td>" + it.Readings.ToString("0.####") + "</td>");
                 sb.Append("<td>" + (it.IsChange ? "是" : "否") + "</td>");
                 sb.Append("<td>" + it.OldMeterReadings.ToString("0.####") + "</td>");
-                sb.Append("<td>" + it.AuditReason + "</td>");
+                //sb.Append("<td>" + it.AuditReason + "</td>");
+                if (!string.IsNullOrEmpty(it.Img))
+                {
+                    sb.Append("<td><div id='" + id + "' class='readoutImg'><img src='../../upload/meter/" + it.Img + "'/></div></td>");
+                }
+                else sb.Append("<td></td>");
+
                 sb.Append("<td>" + ParseStringForDate(it.RODate) + "</td>");
                 sb.Append("<td class=\"td-status\"><span class=\"label " + (it.AuditStatus == "1" ? "label-success" : "") + " radius\">" + it.AuditStatusName + "</span></td>");
                 sb.Append("<td class=\"td-status\"><span class=\"label " + (it.IsOrder ? "label-success" : "") + " radius\">" + (it.IsOrder ? "已引用" : "未引用") + "</span></td>");
@@ -177,9 +203,9 @@ namespace project.Presentation.Op
             else if (jp.getValue("Type") == "update")
                 result = updateaction(jp);
             else if (jp.getValue("Type") == "submit")
-                result = submitaction(jp);
+                result = insertOrUpdateAction(jp);
             else if (jp.getValue("Type") == "submit1")
-                result = submit1action(jp);
+                result = insertOrUpdateAction(jp);
             else if (jp.getValue("Type") == "select")
                 result = selectaction(jp);
             else if (jp.getValue("Type") == "jump")
@@ -191,9 +217,11 @@ namespace project.Presentation.Op
             else if (jp.getValue("Type") == "unaudit")
                 result = unauditaction(jp);
             else if (jp.getValue("Type") == "gettreelist")
-                result = gettreelistaction(jp);
+                result = gettreeaction(jp);
             else if (jp.getValue("Type") == "getMeterInfo")
                 result = getMeterInfoaction(jp);
+            else if (jp.getValue("Type") == "getLoc4")
+                result = getLoc4action(jp);
             return result;
         }
         private string updateaction(JsonArrayParse jp)
@@ -268,7 +296,7 @@ namespace project.Presentation.Op
 
             collection.Add(new JsonStringValue("type", "delete"));
             collection.Add(new JsonStringValue("flag", flag));
-            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                 jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
@@ -319,7 +347,7 @@ namespace project.Presentation.Op
                         flag = "3";
                     }
                     collection.Add(new JsonStringValue("MeterNo", ""));
-                    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+                    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                         jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
                 }
                 else
@@ -394,7 +422,7 @@ namespace project.Presentation.Op
                         flag = "3";
                     }
                     collection.Add(new JsonStringValue("MeterNo", jp.getValue("MeterNo")));
-                    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("MeterNo"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+                    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNo"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                         jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
                 }
             }
@@ -450,8 +478,7 @@ namespace project.Presentation.Op
                     {
                         flag = "3";
                     }
-                    collection.Add(new JsonStringValue("MeterNo", ""));
-                    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+                    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                         jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
                 }
                 else
@@ -527,7 +554,7 @@ namespace project.Presentation.Op
                         flag = "3";
                     }
                     collection.Add(new JsonStringValue("MeterNo", jp.getValue("MeterNo")));
-                    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("MeterNo"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+                    collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNo"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                         jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
                 }
             }
@@ -536,6 +563,127 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("type", "submit1"));
             collection.Add(new JsonStringValue("flag", flag));
             return collection.ToString();
+        }
+        private string insertOrUpdateAction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            int flag = 0;//0表示失败
+            string msg = "数据保存成功！";
+            string oldImgName = string.Empty;
+            string newImgName = jp.getValue("Img");
+            string imgRootPath = HttpContext.Current.Request.MapPath("~/upload/meter/");
+            try
+            {
+                string type = string.IsNullOrEmpty(jp.getValue("id")) ? "insert" : "update";
+                Business.Op.BusinessReadout bc = new Business.Op.BusinessReadout();
+                //主键
+                if (type.Equals("insert")) bc.Entity.RowPointer = Guid.NewGuid().ToString();
+                else bc.load(jp.getValue("id"));
+                //表记数据
+                try
+                {
+                    Business.Base.BusinessMeter bm = new Business.Base.BusinessMeter();
+                    bm.load(jp.getValue("MeterNo"));
+                    bc.Entity.MeterNo = bm.Entity.MeterNo;
+                    bc.Entity.RMID = bm.Entity.MeterRMID;
+                    bc.Entity.MeterType = bm.Entity.MeterType;
+                    bc.Entity.MeteRate = bm.Entity.MeterRate;
+                }
+                catch
+                {
+                    msg = "保存失败,无当前表记资料！";
+                    throw;
+                }
+                //图片单独处理
+                oldImgName = bc.Entity.Img;
+                //表单数据
+                bc.Entity.ReadoutType = jp.getValue("ReadoutType");
+                bc.Entity.LastReadout = ParseDecimalForString(jp.getValue("LastReadout"));
+                bc.Entity.Readout = ParseDecimalForString(jp.getValue("Readout"));
+                bc.Entity.JoinReadings = ParseDecimalForString(jp.getValue("JoinReadings"));
+                bc.Entity.Readings = ParseDecimalForString(jp.getValue("Readings"));
+                bc.Entity.ROOperator = jp.getValue("ROOperator");
+                bc.Entity.RODate = ParseDateForString(jp.getValue("RODate"));
+                bc.Entity.Img = jp.getValue("Img");
+                //自动补充数据
+                bc.Entity.ROCreateDate = GetDate();
+                bc.Entity.ROCreator = user.Entity.UserName;
+                /*
+                 * 保存数据操作
+                 */
+                if (type.Equals("insert"))
+                {
+                    //换表导致的旧表读数（新记录执行此步骤）
+                    //备注：获取换表记录 [换表记录已审核，并没有被抄表引用]
+                    DataTable dt = obj.PopulateDataSet("select RowPointer,OldMeterReadings from Op_ChangeMeter " +
+                        "where AuditStatus='1' and NewMeterNo='" + bc.Entity.MeterNo + "' " +
+                        "and RowPointer not in (select ChangeID from Op_Readout_ChangeList)").Tables[0];
+                    if (dt.Rows.Count > 0)
+                    {
+                        bc.Entity.IsChange = true;
+                        decimal OldMeterReadings = 0;
+
+                        //考虑多次换表的情况
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            OldMeterReadings += ParseDecimalForString(dr["OldMeterReadings"].ToString());
+                        }
+                        bc.Entity.OldMeterReadings = OldMeterReadings;
+                    }
+                    else
+                    {
+                        bc.Entity.IsChange = false;
+                        bc.Entity.OldMeterReadings = 0;
+                    }
+                    //保存
+                    if (bc.Save("insert") > 0)
+                    {
+                        flag = 1;
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            obj.ExecuteNonQuery("insert into Op_Readout_ChangeList(RowPointer,RefRP,ChangeID) values(newid(),'" + bc.Entity.RowPointer + "','" + dr["RowPointer"].ToString() + "')");
+                        }
+                    }
+                    else msg = "保存失败";
+                }
+                else
+                {
+                    //更新
+                    if (bc.Save("update") > 0) flag = 1;
+                    else msg = "更新失败！";
+                }
+                /*
+                 * 图片操作
+                 */
+                if (flag == 0 && !string.IsNullOrEmpty(newImgName))
+                {
+                    //失败的情况下，有新图片，删除新图片
+                    if (File.Exists(imgRootPath + newImgName)) File.Delete(imgRootPath + newImgName);
+                }
+                else if ((flag == 1 && !string.IsNullOrEmpty(newImgName) && !string.IsNullOrEmpty(oldImgName) && !oldImgName.Equals(newImgName)) ||
+                    (flag == 1 && !string.IsNullOrEmpty(oldImgName) && string.IsNullOrEmpty(newImgName)))
+                {
+                    //成功的情况下，有新图片，有旧图片，并且两个图片不一样，删除旧图片
+                    //成功的情况下，没有新图片，有旧图片，删除旧图片
+                    if (File.Exists(imgRootPath + oldImgName)) File.Delete(imgRootPath + oldImgName);
+                }
+                //查询返回数据
+                collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNo"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+                        jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
+            }
+            catch (Exception ex)
+            {
+                //异常的情况下，有新图片，删除新图片
+                if (File.Exists(imgRootPath + newImgName)) File.Delete(imgRootPath + newImgName);
+                //异常提示
+                if (!msg.Contains("成功")) msg = "保存失败,数据异常!";
+                collection.Add(new JsonStringValue("ex", ex.Message));
+            }
+            collection.Add(new JsonStringValue("type", jp.getValue("Type")));
+            collection.Add(new JsonStringValue("flag", flag.ToString()));
+            collection.Add(new JsonStringValue("msg", msg));
+            return collection.ToString();
+
         }
         private string auditaction(JsonArrayParse jp)
         {
@@ -556,7 +704,7 @@ namespace project.Presentation.Op
 
             collection.Add(new JsonStringValue("type", "audit"));
             collection.Add(new JsonStringValue("flag", flag));
-            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                 jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
@@ -580,7 +728,7 @@ namespace project.Presentation.Op
 
             collection.Add(new JsonStringValue("type", "unaudit"));
             collection.Add(new JsonStringValue("flag", flag));
-            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                 jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
@@ -591,7 +739,7 @@ namespace project.Presentation.Op
 
             collection.Add(new JsonStringValue("type", "select"));
             collection.Add(new JsonStringValue("flag", flag));
-            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                 jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
@@ -602,7 +750,7 @@ namespace project.Presentation.Op
 
             collection.Add(new JsonStringValue("type", "jump"));
             collection.Add(new JsonStringValue("flag", flag));
-            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+            collection.Add(new JsonStringValue("liststr", createList(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                 jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), jp.getValue("MinRODate"), jp.getValue("MaxRODate"), ParseIntForString(jp.getValue("page")))));
             return collection.ToString();
         }
@@ -643,7 +791,7 @@ namespace project.Presentation.Op
 
                 int rowIndex = 1;
                 Business.Op.BusinessReadout bc = new project.Business.Op.BusinessReadout();
-                foreach (Entity.Op.EntityReadout it in bc.GetListQuery(jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
+                foreach (Entity.Op.EntityReadout it in bc.GetListQuery(jp.getValue("Loc3"), jp.getValue("Loc4"), jp.getValue("MeterNoS"), jp.getValue("RMIDS"), jp.getValue("ReadoutTypeS"),
                         jp.getValue("AuditStatusS"), jp.getValue("MeterTypeS"), MinRODateS, MaxRODateS))
                 {
                     Business.Base.BusinessMeter bm = new Business.Base.BusinessMeter();
@@ -736,7 +884,91 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("flag", flag));
             return collection.ToString();
         }
-
+        private string gettreeaction(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            int flag = 0;//0代表成功
+            string msg = string.Empty;//返回的消息
+            try
+            {
+                string sql = @"select
+                a.MeterNo as ID,
+                a.MeterRMID as RID,
+                b.RMNo as RName,
+                a.MeterLOCNo4 as L4ID,
+                c.LOCName as L4Name,
+                a.MeterLOCNo3 as L3ID,
+                d.LOCName as L3Name
+                from Mstr_Meter a
+                left
+                join Mstr_Room b on a.MeterRMID = b.RMID--房间
+                left join Mstr_Location c on a.MeterLOCNo4 = c.LOCNo--楼层
+                left join Mstr_Location d on a.MeterLOCNo3 = d.LOCNo--楼栋
+                where 1 = 1 ";
+                if (!string.IsNullOrEmpty(jp.getValue("Loc3"))) sql += string.Format("and a.MeterLOCNo3='{0}'", jp.getValue("Loc3"));
+                if (!string.IsNullOrEmpty(jp.getValue("Loc4"))) sql += string.Format("and a.MeterLOCNo4='{0}'", jp.getValue("Loc4"));
+                if (!string.IsNullOrEmpty(jp.getValue("RMIDS"))) sql += string.Format("and a.MeterRMID like '%{0}%'", jp.getValue("RMIDS"));
+                if (!string.IsNullOrEmpty(jp.getValue("MeterNoS"))) sql += string.Format("and a.MeterNo like'%{0}%'", jp.getValue("MeterNoS"));
+                if (!string.IsNullOrEmpty(jp.getValue("ReadoutTypeS"))) sql += string.Format("and a.ReadoutType='{0}'", jp.getValue("ReadoutTypeS"));
+                if (!string.IsNullOrEmpty(jp.getValue("MeterTypeS"))) sql += string.Format("and a.MeterType='{0}'", jp.getValue("MeterTypeS"));
+                if (!string.IsNullOrEmpty(jp.getValue("AuditStatusS"))) sql += string.Format("and a.AuditStatus='{0}'", jp.getValue("AuditStatusS"));
+                if (!string.IsNullOrEmpty(jp.getValue("MinRODate"))) sql += string.Format("and convert(nvarchar(10),a.RODate,121) >= '{0}'", jp.getValue("MinRODate").Trim());
+                if (!string.IsNullOrEmpty(jp.getValue("MaxRODate"))) sql += string.Format("and convert(nvarchar(10),a.RODate,121) <='{0}'", jp.getValue("MaxRODate").Trim());
+                DataTable treeTable = sqlExecute.PopulateDataSet(sql).Tables[0];
+                List<MeterTree> treeList = JsonConvert.DeserializeObject<List<MeterTree>>(JsonConvert.SerializeObject(treeTable));
+                List<MeterTreeObj> treeObjList = treeList.GroupBy(a => new { a.L3ID, a.L3Name }).OrderBy(a => a.Key.L3ID).Select(a => new MeterTreeObj
+                {
+                    //楼栋
+                    id = a.Key.L3ID,
+                    name = a.Key.L3Name,
+                    type = "building",
+                    children = treeList.Where(b => b.L3ID == a.Key.L3ID).GroupBy(b => new { b.L4ID, b.L4Name }).OrderBy(b => b.Key.L4ID).Select(b => new MeterTreeObj
+                    {
+                        //楼层
+                        id = b.Key.L4ID,
+                        name = b.Key.L4Name,
+                        type = "floor"
+                    }).ToList()
+                }).ToList();
+                foreach (var building in treeObjList)
+                {
+                    foreach (var floor in building.children)
+                    {
+                        floor.children = new List<MeterTreeObj>();
+                        //有房间编码的表记，挂载到房间
+                        floor.children.AddRange(treeList.Where(a => a.L4ID == floor.id && !string.IsNullOrEmpty(a.RID)).GroupBy(a => new { a.RID, a.RName }).OrderBy(a => a.Key.RID).Select(a => new MeterTreeObj
+                        {
+                            id = a.Key.RID,
+                            name = a.Key.RName,
+                            type = "room",
+                            children = treeList.Where(b => b.RID == a.Key.RID).OrderBy(b => b.ID).Select(b => new MeterTreeObj
+                            {
+                                id = b.ID,
+                                name = b.ID,
+                                type = "meter"
+                            }).ToList()
+                        }).ToList());
+                        //没有房间编码的表记，直接挂载到楼层
+                        floor.children.AddRange(treeList.Where(a => a.L4ID == floor.id && string.IsNullOrEmpty(a.RID)).OrderBy(a => a.ID).Select(a => new MeterTreeObj
+                        {
+                            id = a.ID,
+                            name = a.ID,
+                            type = "meter"
+                        }).ToList());
+                    }
+                }
+                collection.Add(new JsonStringValue("data", JsonConvert.SerializeObject(treeObjList)));
+            }
+            catch (Exception ex)
+            {
+                flag = 99;
+                msg = ex.Message;
+            }
+            collection.Add(new JsonStringValue("type", "gettree"));
+            collection.Add(new JsonNumericValue("flag", flag));
+            collection.Add(new JsonStringValue("msg", msg));
+            return collection.ToString();
+        }
         private string getMeterInfoaction(JsonArrayParse jp)
         {
             JsonObjectCollection collection = new JsonObjectCollection();
@@ -764,5 +996,51 @@ namespace project.Presentation.Op
             collection.Add(new JsonStringValue("flag", flag));
             return collection.ToString();
         }
+
+        private string getLoc4action(JsonArrayParse jp)
+        {
+            JsonObjectCollection collection = new JsonObjectCollection();
+            string loc4List = "<option value='' selected>全部</option>";
+            string msg = string.Empty;
+            try
+            {
+                DataTable loc4Dt = sqlExecute.PopulateDataSet(string.Format("select * from Mstr_Location where ParentLOCNo='{0}'", jp.getValue("Loc3No"))).Tables[0];
+                if (loc4Dt != null)
+                {
+                    Business.Base.BusinessLocation location = new Business.Base.BusinessLocation();
+                    foreach (Entity.Base.EntityLocation item in location.Query(loc4Dt))
+                    {
+                        loc4List += string.Format("<option value='{0}'>{1}</option>", item.LOCNo, item.LOCName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                msg = ex.Message;
+            }
+            collection.Add(new JsonStringValue("type", "getLoc4"));
+            collection.Add(new JsonStringValue("data", loc4List));
+            collection.Add(new JsonStringValue("msg", msg));
+            return collection.ToString();
+        }
     }
+    public class MeterTree
+    {
+        public string ID { get; set; }
+        public string RID { get; set; }
+        public string RName { get; set; }
+        public string L3ID { get; set; }
+        public string L3Name { get; set; }
+        public string L4ID { get; set; }
+        public string L4Name { get; set; }
+    }
+    public class MeterTreeObj
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public string type { get; set; }
+        public List<MeterTreeObj> children { get; set; }
+    }
+
+
 }

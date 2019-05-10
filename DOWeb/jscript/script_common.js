@@ -320,6 +320,10 @@ function reflist() {
             $("[onclick='approve()']").html("<i class=\"Hui-iconfont\">&#xe615;</i>&nbsp;审核");
         trid = this;
         $(this).addClass('active');
+        //树形菜单展开，主要服务抄表记录
+        if (typeof expandNode == "function") {
+            expandNode($(this).find(".td-meterno").text());
+        }
     });
 }
 

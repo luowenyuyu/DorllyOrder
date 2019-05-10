@@ -48,18 +48,14 @@ namespace project.Presentation.Op
                         "left join Mstr_ServiceProvider c on c.SPNo=a.ODContractSPNo " +
                         "left join Op_OrderHeader d on d.RowPointer=a.RefRP " +
                         "left join Mstr_Customer e on e.CustNo=d.CustNo " +
-
-
                         "left join Op_ContractRMRentList f on a.RefNo=f.RowPointer " +
                         "left join Op_ContractRMRentList_Readout g on g.RefRentRP=f.RowPointer " +
                         "left join Op_Readout h on h.RowPointer=g.RefReadoutRP "
                         ,
-
                         "a.*,b.SRVName,c.SPName,c.SPBank,c.SPBankAccount,c.SPBankTitle,d.OrderTime,e.CustName,d.OrderType," +
-
                         "h.LastReadout as RLastReadout,h.Readout as RReadout,isnull(h.Readings,0)*isnull(h.MeteRate,0) as RODQTY," +
-                        "isnull(h.Readings,0)*isnull(h.MeteRate,0)*a.ODUnitPrice as RODARAmount,h.MeteRate as RMeteRate",
-
+                        "isnull(h.Readings,0)*isnull(h.MeteRate,0)*a.ODUnitPrice as RODARAmount,h.MeteRate as RMeteRate"
+                        ,
                         " and a.RefRP=" + "'" + OrderRP + "'", i, 8, "a.ResourceNo,a.ODCreateDate");
 
                     if (i > 1) doc.NewPage();
@@ -419,6 +415,8 @@ namespace project.Presentation.Op
             PT1.WidthPercentage = 100;
             PT1.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
 
+            #region 表头
+
             PdfPCell cell1 = new PdfPCell(new Paragraph("序号", font9_Bold));
             cell1.Border = Rectangle.TOP_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER;
             cell1.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -457,8 +455,11 @@ namespace project.Presentation.Op
             PT1.AddCell(cell7);
             PT1.AddCell(cell8);
             PT1.AddCell(cell9);
-
             doc.Add(PT1);
+
+            #endregion
+
+
             int cnt = 0;
             int row = (page - 1) * 10;
             foreach (DataRow dr in dt.Rows)
@@ -488,21 +489,34 @@ namespace project.Presentation.Op
 
                 string ODQTY = decimal.Parse(dr["ODQTY"].ToString()).ToString("0.##");
                 string ODARAmount = decimal.Parse(dr["ODARAmount"].ToString()).ToString("0.##");
-                //水费、电费、公摊电费、超额电费 dr["ODSRVNo"].ToString() == "GDDF-56" ||
-                if (dr["ODSRVNo"].ToString() == "DF-56" || dr["ODSRVNo"].ToString() == "SF-55" || dr["ODSRVNo"].ToString() == "CEDF-62")
-                {
-                    if (dr["RLastReadout"].ToString() != "")
-                        LastReadout = decimal.Parse(dr["RLastReadout"].ToString()).ToString("0.##");
-                    if (dr["RReadout"].ToString() != "")
-                        Readout = decimal.Parse(dr["RReadout"].ToString()).ToString("0.##");
-                    if (dr["RMeteRate"].ToString() != "")
-                        MeteRate = decimal.Parse(dr["RMeteRate"].ToString()).ToString("0.##");
+                //水费、电费、公摊电费、超额电费 
 
-                    if (dr["RODQTY"].ToString() != "")
-                        ODQTY = decimal.Parse(dr["RODQTY"].ToString()).ToString("0.##");
-                    if (dr["RODARAmount"].ToString() != "")
-                        ODARAmount = decimal.Parse(dr["RODARAmount"].ToString()).ToString("0.##");
-                }
+                if (dr["RLastReadout"].ToString() != "" && decimal.Parse(dr["RLastReadout"].ToString()) > 0)
+                    LastReadout = decimal.Parse(dr["RLastReadout"].ToString()).ToString("0.##");
+                if (dr["RReadout"].ToString() != "" && decimal.Parse(dr["RReadout"].ToString()) > 0)
+                    Readout = decimal.Parse(dr["RReadout"].ToString()).ToString("0.##");
+                if (dr["RMeteRate"].ToString() != "" && decimal.Parse(dr["RMeteRate"].ToString()) > 0)
+                    MeteRate = decimal.Parse(dr["RMeteRate"].ToString()).ToString("0.##");
+
+                if (dr["RODQTY"].ToString() != "" && decimal.Parse(dr["RODQTY"].ToString()) > 0)
+                    ODQTY = decimal.Parse(dr["RODQTY"].ToString()).ToString("0.##");
+                if (dr["RODARAmount"].ToString() != "" && decimal.Parse(dr["RODARAmount"].ToString()) > 0)
+                    ODARAmount = decimal.Parse(dr["RODARAmount"].ToString()).ToString("0.##");
+
+                //if (dr["ODSRVNo"].ToString() == "DF-56" || dr["ODSRVNo"].ToString() == "SF-55" || dr["ODSRVNo"].ToString() == "CEDF-62")
+                //{
+                //    if (dr["RLastReadout"].ToString() != "")
+                //        LastReadout = decimal.Parse(dr["RLastReadout"].ToString()).ToString("0.##");
+                //    if (dr["RReadout"].ToString() != "")
+                //        Readout = decimal.Parse(dr["RReadout"].ToString()).ToString("0.##");
+                //    if (dr["RMeteRate"].ToString() != "")
+                //        MeteRate = decimal.Parse(dr["RMeteRate"].ToString()).ToString("0.##");
+
+                //    if (dr["RODQTY"].ToString() != "")
+                //        ODQTY = decimal.Parse(dr["RODQTY"].ToString()).ToString("0.##");
+                //    if (dr["RODARAmount"].ToString() != "")
+                //        ODARAmount = decimal.Parse(dr["RODARAmount"].ToString()).ToString("0.##");
+                //}
 
                 PdfPCell cell24 = new PdfPCell(new Paragraph(LastReadout, font9));
                 cell24.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
@@ -666,7 +680,7 @@ namespace project.Presentation.Op
             cell42.HorizontalAlignment = Element.ALIGN_LEFT;
             cell42.VerticalAlignment = Element.ALIGN_MIDDLE;
             cell42.FixedHeight = 15;
-            
+
             PT4.AddCell(cell42);
 
             PdfPTable PT5 = new PdfPTable(2);

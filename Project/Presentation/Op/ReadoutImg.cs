@@ -10,107 +10,111 @@ namespace project.Presentation.Op
 {
     public class ReadoutImg : IHttpHandler
     {
-
+        /// <summary>
+        /// 保存图片根目录
+        /// </summary>
+        private string _rootPath
+        {
+            get
+            {
+                return HttpContext.Current.Server.MapPath("~/upload/meter/");
+            }
+        }
+        /// <summary>
+        /// 表记编号
+        /// </summary>
+        private string _meterNo
+        {
+            get
+            {
+                return HttpContext.Current.Request.Form["meterNo"].ToString();
+            }
+        }
+        /// <summary>
+        /// 抄表记录主键
+        /// </summary>
+        private string _readoutID
+        {
+            get
+            {
+                return HttpContext.Current.Request.Form["id"].ToString();
+            }
+        }
         public void ProcessRequest(HttpContext context)
         {
-            context.Response.ContentType = "text/plain";
-            string path = context.Server.MapPath("~/upload/meter/");
-            string imgPath = string.Empty;
-            string newImgName = string.Empty;
             int flag = 0;
             string info = string.Empty;
-            string exinfo = string.Empty;
+            context.Response.ContentType = "text/plain";
             JsonObjectCollection collection = new JsonObjectCollection();
             try
             {
-                string imgName = context.Request.Form["Img"];
-                string meterNo = context.Request["meterNo"];
-                string id = context.Request["id"];
-                string opration = context.Request["flag"];
-
-                if (opration == "1")
+                if (!string.IsNullOrEmpty(_meterNo))
                 {
-                    if (context.Request.Files.Count > 0)
+                    if (!string.IsNullOrEmpty(_readoutID))
                     {
-                        HttpPostedFile postFile = context.Request.Files[0];
-                        string mime = postFile.ContentType.ToLower();
-                        if (mime.Contains("image"))
-                        {
-                            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-                            if (!string.IsNullOrEmpty(meterNo))
-                            {
-                                //保存图片
-                                newImgName = meterNo + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
-                                postFile.SaveAs(path + newImgName);
-
-                                //更改记录
-                                if (!string.IsNullOrEmpty(id))
-                                {
-                                    Business.Op.BusinessReadout bc = new project.Business.Op.BusinessReadout();
-                                    bc.load(id);
-                                    bc.Entity.Img = newImgName;
-                                    bc.Save("update");
-                                }
-
-                                //删除原始图片
-                                if (!string.IsNullOrEmpty(imgName))
-                                {
-                                    imgPath = path + imgName;
-                                    if (File.Exists(imgPath)) File.Delete(imgPath);
-                                }
-                                flag = 1;
-                                info = "图片保存成功！";
-                            }
-                            else
-                            {
-                                flag = 2;
-                                info = "表计编号为空！";
-                            }
-                        }
-                        else
-                        {
-                            flag = 2;
-                            info = "图片格式错误！";
-                        }
+                        /*
+                         * 新增图片
+                         */
+                        //保存图片
+                        info = SaveReadoutImg(context);
+                        if (info.Contains(_meterNo)) flag = 1;
                     }
                     else
                     {
-                        flag = 2;
-                        info = "未检测到图片文件！";
+                        /*
+                         * 变更图片
+                         */
+                        //保存图片
+                        info = SaveReadoutImg(context);
+                        if (info.Contains(_meterNo)) flag = 1;
+                        //{
+                        //    flag = 1;
+                        //    //删除图片
+                        //    bc = new project.Business.Op.BusinessReadout();
+                        //    bc.load(_readoutID);
+                        //    if (!string.IsNullOrEmpty(bc.Entity.Img))
+                        //    {
+                        //        string imgPath = _rootPath + bc.Entity.Img;
+                        //        if (File.Exists(imgPath)) File.Delete(imgPath);
+                        //    }
+                        //}
                     }
                 }
-                else
-                {
-                    //更改记录
-                    if (!string.IsNullOrEmpty(id))
-                    {
-                        Business.Op.BusinessReadout bc = new project.Business.Op.BusinessReadout();
-                        bc.load(id);
-                        bc.Entity.Img = "";
-                        bc.Save("update");
-                    }
-
-                    //删除原始图片
-                    if (!string.IsNullOrEmpty(imgName))
-                    {
-                        imgPath = path + imgName;
-                        if (File.Exists(imgPath)) File.Delete(imgPath);
-                    }
-                    flag = 1;
-                    info = "删除图片成功！";
-                }
+                else info = "表记编号为空！";
             }
             catch (Exception ex)
             {
-                flag = 3;
-                info = "操作异常！";
-                exinfo = ex.ToString();
+                info = ex.Message;
             }
             collection.Add(new JsonNumericValue("flag", flag));
             collection.Add(new JsonStringValue("info", info));
-            collection.Add(new JsonStringValue("exinfo", exinfo));
-            collection.Add(new JsonStringValue("img", newImgName));
             context.Response.Write(collection.ToString());
+        }
+
+
+        public string SaveReadoutImg(HttpContext context)
+        {
+            string result = string.Empty;
+            try
+            {
+                if (context.Request.Files.Count > 0)
+                {
+                    HttpPostedFile postFile = context.Request.Files[0];
+                    if (postFile.ContentType.ToLower().Contains("image"))
+                    {
+                        if (!Directory.Exists(_rootPath)) Directory.CreateDirectory(_rootPath);
+                        result = _meterNo + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + postFile.FileName.Substring(postFile.FileName.LastIndexOf("."));
+                        postFile.SaveAs(_rootPath + result);
+                    }
+                    else result = "文件不是图片类型！";
+                }
+                else result = "图片文件为零！";
+            }
+            catch (Exception ex)
+            {
+                result = "保存文件异常！" + ex.Message;
+            }
+            return result;
         }
 
         public bool IsReusable

@@ -287,7 +287,7 @@ namespace project.Presentation.Op
             {
                 Business.Op.BusinessContract bc = new Business.Op.BusinessContract();
                 bc.load(jp.getValue("id"));
-                if (bc.Entity.OffLeaseStatus != "2")
+                if (bc.Entity.OffLeaseStatus != "2" || bc.Entity.ContractStatus != "2")
                 {
                     flag = "3";
                 }
@@ -460,7 +460,7 @@ namespace project.Presentation.Op
                             ButlerSrv.AppService appService = new ButlerSrv.AppService { Timeout = 5000 };
                             appService.UpdateCustomer(bc.Entity.ContractCustNo, status, date);
                         }
-                        catch (Exception ex) 
+                        catch (Exception ex)
                         {
                             collection.Add(new JsonStringValue("syncButlerException", ex.ToString()));
                         }

@@ -42,4 +42,10 @@
 
 .table_ch th,.table_ch td{padding:2px;line-height:20px}
 
+.loading-select {
+    position: absolute;
+    top: 7px;
+    right: 25px;
+}
+
 

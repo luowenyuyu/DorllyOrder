@@ -171,7 +171,7 @@ namespace project.Presentation.Op
             Business.Op.BusinessContract bc = new project.Business.Op.BusinessContract();
             foreach (Entity.Op.EntityContract it in bc.GetListQuery(ContractNo, ContractNoManual, ContractType, ContractSPNo, ContractCustNo,
                             ParseSearchDateForString(MinContractSignedDate), ParseSearchDateForString(MaxContractSignedDate),
-                            ParseSearchDateForString(MinContractEndDate), ParseSearchDateForString(MaxContractEndDate), string.Empty, OffLeaseStatus,
+                            ParseSearchDateForString(MinContractEndDate), ParseSearchDateForString(MaxContractEndDate), ContractStatusS, OffLeaseStatus,
                             ParseSearchDateForString(MinOffLeaseActulDate), ParseSearchDateForString(MaxOffLeaseActulDate), page, pageSize))
             {
                 sb.Append("<tr class=\"text-c\" id=\"" + it.RowPointer + "\">");

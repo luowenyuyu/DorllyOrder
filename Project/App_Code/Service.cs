@@ -467,7 +467,7 @@ public class Service : System.Web.Services.WebService
                             left join Mstr_ServiceProvider e on a.ODContractSPNo=e.SPNo
                             where b.OrderStatus>='1'
                             --and e.SPName not like '%福中达%'
-                            and e.SPNo='FWC-001'
+                            and e.SPNo in ('FWC-001','FWC-004')
                             and b.CustNo='{0}'
                             and CONVERT(char(7),b.OrderTime,121)='{1}'", custno, month);
             var dt = obj.PopulateDataSet(sql).Tables[0];
@@ -548,7 +548,7 @@ public class Service : System.Web.Services.WebService
                 try { doc.Close(); } catch { }
                 project.Presentation.Op.OrderPrint.PDFWatermark(input, output, pic, 369, 111);
                 if (File.Exists(input)) File.Delete(input);
-                result = JsonConvert.SerializeObject(new { flag = 1, url = rootUrl + "/pdf/" + file, info = "文件生成成功！" });
+                result = JsonConvert.SerializeObject(new { flag = 1, url = rootUrl + "/order/pdf/" + file, info = "文件生成成功！" });
 
             }
             else
