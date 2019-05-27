@@ -102,3 +102,16 @@ D:\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.CopyComplete
 D:\Projects\DorllyOrder\Project\obj\Debug\project.dll
 D:\Projects\DorllyOrder\Project\obj\Debug\project.pdb
 D:\Projects\DorllyOrder\Project\obj\Debug\Project.csprojAssemblyReference.cache
+D:\Projects\NewDorllyOrder\Project\bin\Debug\project.dll.config
+D:\Projects\NewDorllyOrder\Project\bin\Debug\project.dll
+D:\Projects\NewDorllyOrder\Project\bin\Debug\project.pdb
+D:\Projects\NewDorllyOrder\Project\bin\Debug\Newtonsoft.Json.dll
+D:\Projects\NewDorllyOrder\Project\bin\Debug\Newtonsoft.Json.pdb
+D:\Projects\NewDorllyOrder\Project\bin\Debug\Newtonsoft.Json.xml
+D:\Projects\NewDorllyOrder\Project\obj\Debug\Service.resources
+D:\Projects\NewDorllyOrder\Project\obj\Debug\Project.csproj.GenerateResource.cache
+D:\Projects\NewDorllyOrder\Project\obj\Debug\Project.csproj.CoreCompileInputs.cache
+D:\Projects\NewDorllyOrder\Project\obj\Debug\Project.csproj.CopyComplete
+D:\Projects\NewDorllyOrder\Project\obj\Debug\project.dll
+D:\Projects\NewDorllyOrder\Project\obj\Debug\project.pdb
+D:\Projects\NewDorllyOrder\Project\obj\Debug\Project.csprojAssemblyReference.cache

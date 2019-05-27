@@ -29,3 +29,4 @@ D:\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintServ
 D:\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.csproj.CopyComplete
 D:\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.exe
 D:\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.pdb
+D:\Projects\DorllyOrder\AmmeterLabelPrintService\obj\Debug\AmmeterLabelPrintService.csprojAssemblyReference.cache

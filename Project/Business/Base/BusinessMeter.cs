@@ -40,7 +40,7 @@ namespace project.Business.Base
         /// </summary>
         public void load(string id)
         {
-            DataRow dr = objdata.PopulateDataSet("select a.*,c.LOCName as MeterLOCNo1Name,d.LOCName as MeterLOCNo2Name,e.LOCName as MeterLOCNo3Name,f.LOCName as MeterLOCNo4Name " + 
+            DataRow dr = objdata.PopulateDataSet("select a.*,c.LOCName as MeterLOCNo1Name,d.LOCName as MeterLOCNo2Name,e.LOCName as MeterLOCNo3Name,f.LOCName as MeterLOCNo4Name " +
                 "from Mstr_Meter a " +
                 "left join Mstr_Location c on c.LOCNo=a.MeterLOCNo1 " +
                 "left join Mstr_Location d on d.LOCNo=a.MeterLOCNo2 " +
@@ -72,7 +72,7 @@ namespace project.Business.Base
             _entity.MeterCreateDate = ParseDateTimeForString(dr["MeterCreateDate"].ToString());
             _entity.MeterCreator = dr["MeterCreator"].ToString();
         }
-        
+
         /// </summary>
         /// Save方法
         /// </summary>
@@ -85,13 +85,13 @@ namespace project.Business.Base
                 readout = "'" + Entity.MeterReadoutDate.ToString("yyyy-MM-dd HH:mm:ss") + "'";
 
             if (type == "insert")
-                sqlstr = "insert into Mstr_Meter(MeterNo,MeterName,MeterType,MeterLOCNo1,MeterLOCNo2,MeterLOCNo3,MeterLOCNo4,"+
+                sqlstr = "insert into Mstr_Meter(MeterNo,MeterName,MeterType,MeterLOCNo1,MeterLOCNo2,MeterLOCNo3,MeterLOCNo4," +
                         "MeterRate,MeterDigit,MeterUsageType,MeterNatureType,MeterReadout,MeterReadoutDate,MeterRMID,MeterSize," +
                         "MeterRelatedMeterNo,Addr,MeterStatus,MeterCreateDate,MeterCreator)" +
-                    "values('" + Entity.MeterNo + "'" + "," + "'" + Entity.MeterName + "'" + "," + "'" + Entity.MeterType + "'" + "," + 
+                    "values('" + Entity.MeterNo + "'" + "," + "'" + Entity.MeterName + "'" + "," + "'" + Entity.MeterType + "'" + "," +
                     "'" + Entity.MeterLOCNo1 + "'" + "," + "'" + Entity.MeterLOCNo2 + "'" + "," +
-                    "'" + Entity.MeterLOCNo3 + "'" + "," + "'" + Entity.MeterLOCNo4 + "'" + "," +  Entity.MeterRate + "," +
-                    Entity.MeterDigit + "," + "'" + Entity.MeterUsageType + "'" + "," + "'" + Entity.MeterNatureType + "'" + "," + 
+                    "'" + Entity.MeterLOCNo3 + "'" + "," + "'" + Entity.MeterLOCNo4 + "'" + "," + Entity.MeterRate + "," +
+                    Entity.MeterDigit + "," + "'" + Entity.MeterUsageType + "'" + "," + "'" + Entity.MeterNatureType + "'" + "," +
                     Entity.MeterReadout + "," + readout + "," + "'" + Entity.MeterRMID + "'" + "," +
                     "'" + Entity.MeterSize + "'" + "," + "'" + Entity.MeterRelatedMeterNo + "'" + "," + "'" + Entity.Addr + "'" + "," + "'open'," +
                     "'" + Entity.MeterCreateDate.ToString("yyyy-MM-dd HH:mm:ss") + "'" + ",'" + Entity.MeterCreator + "')";
@@ -99,9 +99,9 @@ namespace project.Business.Base
                 sqlstr = "update Mstr_Meter" +
                     " set MeterName=" + "'" + Entity.MeterName + "'" + "," + "MeterType=" + "'" + Entity.MeterType + "'" + "," +
                     "MeterLOCNo1=" + "'" + Entity.MeterLOCNo1 + "'" + "," + "MeterLOCNo2=" + "'" + Entity.MeterLOCNo2 + "'" + "," +
-                    "MeterLOCNo3=" + "'" + Entity.MeterLOCNo3 + "'" + "," + "MeterLOCNo4=" + "'" + Entity.MeterLOCNo4 + "'" + "," + 
+                    "MeterLOCNo3=" + "'" + Entity.MeterLOCNo3 + "'" + "," + "MeterLOCNo4=" + "'" + Entity.MeterLOCNo4 + "'" + "," +
                     "MeterRate=" + Entity.MeterRate + "," + "MeterDigit=" + Entity.MeterDigit + "," +
-                    "MeterUsageType=" + "'" + Entity.MeterUsageType + "'" + "," + "MeterNatureType=" + "'" + Entity.MeterNatureType + "'" + "," + 
+                    "MeterUsageType=" + "'" + Entity.MeterUsageType + "'" + "," + "MeterNatureType=" + "'" + Entity.MeterNatureType + "'" + "," +
                     "MeterReadout=" + Entity.MeterReadout + "," +
                     "MeterRMID=" + "'" + Entity.MeterRMID + "'" + "," + "MeterSize=" + Entity.MeterSize + "," +
                     "MeterRelatedMeterNo=" + "'" + Entity.MeterRelatedMeterNo + "'" + "," + "Addr=" + "'" + Entity.Addr + "'" +
@@ -126,7 +126,7 @@ namespace project.Business.Base
         {
             return objdata.ExecuteNonQuery("update Mstr_Meter set MeterStatus='" + Entity.MeterStatus + "' where MeterNo='" + Entity.MeterNo + "'");
         }
-        
+
         /// <summary>
         /// 按条件查询，支持分页
         /// </summary>
@@ -143,7 +143,7 @@ namespace project.Business.Base
         /// <param name="startRow">页码</param>
         /// <param name="pageSize">每页行数</param>
         /// <returns></returns>
-        public System.Collections.ICollection GetListQuery(string MeterLOCNo1, string MeterLOCNo2, string MeterLOCNo3, string MeterLOCNo4, string MeterNo, 
+        public System.Collections.ICollection GetListQuery(string MeterLOCNo1, string MeterLOCNo2, string MeterLOCNo3, string MeterLOCNo4, string MeterNo,
             string MeterType, string MeterUsageType, string MeterRMID, string AccurateMeterRMID, string MeterSize, string MeterStatus, int startRow, int pageSize)
         {
             if (startRow < 0 || pageSize <= 0)
@@ -168,7 +168,7 @@ namespace project.Business.Base
         /// <param name="MeterSize">大小类型</param>
         /// <param name="MeterStatus">状态</param>
         /// <returns></returns>
-        public System.Collections.ICollection GetListQuery(string MeterLOCNo1, string MeterLOCNo2, string MeterLOCNo3, string MeterLOCNo4, string MeterNo, 
+        public System.Collections.ICollection GetListQuery(string MeterLOCNo1, string MeterLOCNo2, string MeterLOCNo3, string MeterLOCNo4, string MeterNo,
             string MeterType, string MeterUsageType, string MeterRMID, string AccurateMeterRMID, string MeterSize, string MeterStatus)
         {
             return GetListHelper(MeterLOCNo1, MeterLOCNo2, MeterLOCNo3, MeterLOCNo4, MeterNo, MeterType, MeterUsageType, MeterRMID, AccurateMeterRMID, MeterSize, MeterStatus, START_ROW_INIT, START_ROW_INIT);
@@ -257,7 +257,7 @@ namespace project.Business.Base
         /// <param name="startRow">页码</param>
         /// <param name="pageSize">每页行数</param>
         /// <returns></returns>
-        private System.Collections.ICollection GetListHelper(string MeterLOCNo1, string MeterLOCNo2, string MeterLOCNo3, string MeterLOCNo4, string MeterNo, 
+        private System.Collections.ICollection GetListHelper(string MeterLOCNo1, string MeterLOCNo2, string MeterLOCNo3, string MeterLOCNo4, string MeterNo,
             string MeterType, string MeterUsageType, string MeterRMID, string AccurateMeterRMID, string MeterSize, string MeterStatus, int startRow, int pageSize)
         {
             string wherestr = "";
@@ -309,12 +309,12 @@ namespace project.Business.Base
             System.Collections.IList entitys = null;
             if (startRow > START_ROW_INIT && pageSize > START_ROW_INIT)
             {
-                entitys = Query(objdata.ExecSelect("Mstr_Meter a "+
+                entitys = Query(objdata.ExecSelect("Mstr_Meter a " +
                     "left join Mstr_Location c on c.LOCNo=a.MeterLOCNo1 " +
                     "left join Mstr_Location d on d.LOCNo=a.MeterLOCNo2 " +
                     "left join Mstr_Location e on e.LOCNo=a.MeterLOCNo3 " +
-                    "left join Mstr_Location f on f.LOCNo=a.MeterLOCNo4 ", 
-                    "a.*,c.LOCName as MeterLOCNo1Name,d.LOCName as MeterLOCNo2Name,e.LOCName as MeterLOCNo3Name,f.LOCName as MeterLOCNo4Name ", 
+                    "left join Mstr_Location f on f.LOCNo=a.MeterLOCNo4 ",
+                    "a.*,c.LOCName as MeterLOCNo1Name,d.LOCName as MeterLOCNo2Name,e.LOCName as MeterLOCNo3Name,f.LOCName as MeterLOCNo4Name ",
                     wherestr, startRow, pageSize, OrderField));
             }
             else
@@ -324,12 +324,12 @@ namespace project.Business.Base
                     "left join Mstr_Location d on d.LOCNo=a.MeterLOCNo2 " +
                     "left join Mstr_Location e on e.LOCNo=a.MeterLOCNo3 " +
                     "left join Mstr_Location f on f.LOCNo=a.MeterLOCNo4 ",
-                    "a.*,c.LOCName as MeterLOCNo1Name,d.LOCName as MeterLOCNo2Name,e.LOCName as MeterLOCNo3Name,f.LOCName as MeterLOCNo4Name ", 
+                    "a.*,c.LOCName as MeterLOCNo1Name,d.LOCName as MeterLOCNo2Name,e.LOCName as MeterLOCNo3Name,f.LOCName as MeterLOCNo4Name ",
                     wherestr, START_ROW_INIT, START_ROW_INIT, OrderField));
             }
             return entitys;
         }
-        
+
         /// </summary>
         ///Query 方法 dt查询结果
         /// </summary>

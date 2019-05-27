@@ -27,6 +27,7 @@ namespace project.Presentation.Op
         {
             try
             {
+                //
                 HttpCookie hc = getCookie("1");
                 if (hc != null)
                 {

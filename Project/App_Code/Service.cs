@@ -1,6 +1,7 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -565,9 +566,28 @@ public class Service : System.Web.Services.WebService
     }
 
 
-    //工单
+    /*
+     * 
+     * 提供给工单的接口
+     * 
+     */
+
+    /*
+     * 
+     * 旧接口
+     * 
+     */
+    /// <summary>
+    /// 获取表记
+    /// </summary>
+    /// <param name="MeterNo"></param>
+    /// <param name="KEY"></param>
+    /// <param name="meterRMID"></param>
+    /// <param name="readout"></param>
+    /// <param name="digit"></param>
+    /// <returns></returns>
     [WebMethod]
-    public string GetMeterInfo(string MeterNo, string KEY, out string meterRMID, out decimal readout, out int digit)
+    public string GetMeterInfo1(string MeterNo, string KEY, out string meterRMID, out decimal readout, out int digit)
     {
         meterRMID = "";
         readout = 0;
@@ -594,6 +614,28 @@ public class Service : System.Web.Services.WebService
         }
         catch { InfoMsg = "获取表记信息异常"; }
         return InfoMsg;
+    }
+    [WebMethod]
+    public string GetReadout(string meterNo, string key)
+    {
+        if (key == "6E5F0C851FD4" && !string.IsNullOrEmpty(meterNo))
+        {
+            try
+            {
+                DateTime begin = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM") + "-01");
+                DateTime end = begin.AddMonths(1);
+                DataTable dt = obj.PopulateDataSet(string.Format("select * from Op_Readout where MeterNo='{0}' and AuditStatus=1 and ROCreateDate between '{1}' and '{2}'", meterNo, begin, end)).Tables[0];
+                if (dt.Rows.Count > 0)
+                {
+
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        return "";
     }
 
     [WebMethod]
@@ -690,6 +732,203 @@ public class Service : System.Web.Services.WebService
         }
 
         return InfoMsg;
+    }
+
+    /*
+     * 
+     * 新接口
+     * 
+     */
+    [WebMethod]
+    public string GetMeterInfo(string key, string meterNo, out string info)
+    {
+        string reuslt = string.Empty;
+        info = string.Empty;
+        if (key != "6E5F0C851FD4" || string.IsNullOrEmpty(meterNo))
+        {
+            info = "参数有误！";
+            return reuslt;
+        }
+        try
+        {
+            var bc = new project.Business.Base.BusinessMeter();
+            bc.load(meterNo);
+            if (bc.Entity != null)
+            {
+                var obj = new { rmid = bc.Entity.MeterRMID, read = bc.Entity.MeterReadout.ToString("0.##"), digit = bc.Entity.MeterDigit };
+                reuslt = JsonConvert.SerializeObject(obj);
+            }
+            else info = "查无此表！";
+        }
+        catch
+        {
+            info = "异常！";
+        }
+        return reuslt;
+    }
+    [WebMethod]
+    public string GetMeterReadout(string key, string meterNo, out string info)
+    {
+        string result = string.Empty;
+        info = string.Empty;
+        if (key != "6E5F0C851FD4" || string.IsNullOrEmpty(meterNo))
+        {
+            info = "参数有误！";
+            return result;
+        }
+        try
+        {
+            string sql = string.Format(@"select
+                            RowPointer, MeterNo, RMID, ReadoutType, LastReadout, Readout, Readings, JoinReadings,
+                            MeteRate, AuditStatus, RODate, b.ReaderName,Img
+                            from Op_Readout a left join Mstr_MeterReader b on a.ROOperator = b.ReaderNo 
+                            where MeterNo='{0}' and AuditStatus=0 and ROCreateDate between '{1}' and '{2}' order by RODate desc",
+                            meterNo, GetDate().AddDays(-60), GetDate());
+            DataTable dt = obj.PopulateDataSet(sql).Tables[0];
+            if (dt.Rows.Count > 0) result = JsonConvert.SerializeObject(dt,new IsoDateTimeConverter { DateTimeFormat= "yyyy-MM-dd HH:mm:ss" });
+            else info = "暂无数据";
+        }
+        catch (Exception)
+        {
+            info = "异常！";
+        }
+        return result;
+    }
+    [WebMethod]
+    public bool AddMeterReadout(string key, string userName, string meterReadoutObj, byte[] readoutImg)
+    {
+        string imgName = string.Empty;
+        if (key != "6E5F0C851FD4") return false;
+        try
+        {
+            var entityReadout = JsonConvert.DeserializeObject<project.Entity.Op.EntityReadout>(meterReadoutObj);
+            entityReadout.RowPointer = Guid.NewGuid().ToString();
+            //表记资料
+            var businessMeter = new project.Business.Base.BusinessMeter();
+            businessMeter.load(entityReadout.MeterNo);
+            if (businessMeter.Entity == null) return false;
+            entityReadout.RMID = businessMeter.Entity.MeterRMID;
+            entityReadout.MeterType = businessMeter.Entity.MeterType;
+            entityReadout.MeteRate = businessMeter.Entity.MeterRate;
+            //抄表附带数据
+            DataTable dt = obj.PopulateDataSet(string.Format("SELECT READERNO FROM Mstr_MeterReader WHERE READERNAME='{0}'", userName)).Tables[0];
+            entityReadout.ROOperator = dt.Rows.Count > 0 ? dt.Rows[0]["ReaderNo"].ToString() : "";
+            entityReadout.ROCreateDate = GetDate();
+            entityReadout.ROCreator = userName;
+            entityReadout.RODate = GetDate();
+            //图片处理
+            if (readoutImg != null) imgName = SaveReadoutImg(entityReadout.MeterNo, readoutImg);
+            entityReadout.Img = imgName;
+            //数据保存
+            var businessReadout = new project.Business.Op.BusinessReadout(entityReadout);
+            if (businessReadout.Save("insert") > 0) return true;
+            else
+            {
+                if (!string.IsNullOrEmpty(imgName))
+                {
+                    string imgPath = ReadoutImgPath + imgName;
+                    if (File.Exists(imgPath)) File.Delete(imgPath);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            if (!string.IsNullOrEmpty(imgName))
+            {
+                string imgPath = ReadoutImgPath + imgName;
+                if (File.Exists(imgPath)) File.Delete(imgPath);
+            }
+        }
+        return false;
+    }
+    [WebMethod]
+    public bool UpdateMeterReadout(string key, string userName, string rowPointer, string meterReadoutObj, byte[] readoutImg)
+    {
+        string imgName = string.Empty;
+        string newImgName = string.Empty;
+        if (key != "6E5F0C851FD4") return false;
+        try
+        {
+            var entityReadout = JsonConvert.DeserializeObject<project.Entity.Op.EntityReadout>(meterReadoutObj);
+            var businessReadout = new project.Business.Op.BusinessReadout();
+            businessReadout.load(rowPointer);
+            if (string.IsNullOrEmpty(businessReadout.Entity.RowPointer)) return false;
+            //数据填充
+            imgName = businessReadout.Entity.Img;
+            businessReadout.Entity.ReadoutType = entityReadout.ReadoutType;
+            businessReadout.Entity.LastReadout = entityReadout.LastReadout;
+            businessReadout.Entity.Readout = entityReadout.Readout;
+            businessReadout.Entity.JoinReadings = entityReadout.JoinReadings;
+            businessReadout.Entity.Readings = entityReadout.Readings;
+            DataTable dt = obj.PopulateDataSet(string.Format("SELECT READERNO FROM Mstr_MeterReader WHERE READERNAME='{0}'", userName)).Tables[0];
+            businessReadout.Entity.ROOperator = dt.Rows.Count > 0 ? dt.Rows[0]["ReaderNo"].ToString() : "";
+            businessReadout.Entity.RODate = GetDate();
+            //图片处理
+            if (readoutImg != null) newImgName = SaveReadoutImg(businessReadout.Entity.MeterNo, readoutImg);
+            if(!string.IsNullOrEmpty(newImgName)) businessReadout.Entity.Img = newImgName;
+            //保存
+            if (businessReadout.Save("update") > 0)
+            {
+                //删除旧图片
+                if (!string.IsNullOrEmpty(newImgName))
+                {
+                    string imgPath = ReadoutImgPath + imgName;
+                    if (File.Exists(imgPath)) File.Delete(imgPath);
+                }
+                return true;
+            }
+            else
+            {
+                //删除新图片
+                if (!string.IsNullOrEmpty(newImgName))
+                {
+                    string imgPath = ReadoutImgPath + newImgName;
+                    if (File.Exists(imgPath)) File.Delete(imgPath);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            //删除新图片
+            if (!string.IsNullOrEmpty(newImgName))
+            {
+                string imgPath = ReadoutImgPath + newImgName;
+                if (File.Exists(imgPath)) File.Delete(imgPath);
+            }
+        }
+        return false;
+    }
+    public string SaveReadoutImg(string meterNo, byte[] readoutImg)
+    {
+        FileStream fs = null;
+        string imgName = meterNo + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+        string imgPath = ReadoutImgPath + imgName;
+        try
+        {
+            //保存图片
+            if (!Directory.Exists(ReadoutImgPath)) Directory.CreateDirectory(ReadoutImgPath);
+            fs = new FileStream(imgPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            fs.Write(readoutImg, 0, readoutImg.Length);
+        }
+        catch (Exception)
+        {
+            if (File.Exists(imgPath)) File.Delete(imgPath);
+            imgName = "";
+        }
+        finally
+        {
+            if (fs != null)
+            {
+                fs.Close();
+                fs.Dispose();
+            }
+        }
+        return imgName;
+    }
+    [WebMethod]
+    public string GetUrl()
+    {
+        return "http://" + HttpContext.Current.Request.Url.Authority + "/upload/meter/";
     }
 
     //资源

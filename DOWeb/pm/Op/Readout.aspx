@@ -1030,6 +1030,11 @@
         //树形菜单展开
         function expandNode(id) {
             var zTreeObj = $.fn.zTree.getZTreeObj("ztree");
+            var selectObj = zTreeObj.getSelectedNodes()[0];
+            //console.log(selectObj);
+            if (selectObj && selectObj.id == id) {
+                return;
+            }
             zTreeObj.expandAll(false);
             setTimeout(function () {
                 //解决展开速度大于收缩速度，导致展开失效
