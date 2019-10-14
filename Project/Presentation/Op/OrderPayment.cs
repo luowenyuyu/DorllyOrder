@@ -678,7 +678,7 @@ namespace project.Presentation.Op
                         U8Return ot = new U8Return();
                         object oj = JsonToObject(result, ot);
                         U8Msg msg = ((U8Return)oj).rtn[0];
-                        if (msg.flag == "True")
+                        if (msg.flag == "1")
                         {
                             collection.Add(new JsonStringValue("liststr", createList(jp.getValue("OrderNoS"), jp.getValue("OrderTypeS"), jp.getValue("CustNoS"),
                                 jp.getValue("OrderTimeS"), jp.getValue("MinOrderCreateDate"), jp.getValue("MaxOrderCreateDate"), jp.getValue("OrderStatusS"), jp.getValue("SPNo"), ParseIntForString(jp.getValue("page")))));

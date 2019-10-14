@@ -36,6 +36,7 @@
             this.meterLabelPrintServiceProcessInstaller.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
             this.meterLabelPrintServiceProcessInstaller.Password = null;
             this.meterLabelPrintServiceProcessInstaller.Username = null;
+            
             // 
             // meterLabelPrintServiceInstaller
             // 

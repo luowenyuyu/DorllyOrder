@@ -389,7 +389,7 @@
         <div class="row">
             <label class="form-label col-2"><span class="c-red">*</span>[旧表]换表止度：</label>
             <div class="formControls col-3">
-                <input type="text" class="input-text required endRead" data-valid="isNonEmpty||onlyNum" data-error="换表止度不能为空||必须为数字" onchange="calcReadout()"/>
+                <input type="text" class="input-text required endRead" data-valid="isNonEmpty||onlyNum" data-error="换表止度不能为空||必须为数字" onchange="calcReadout()" />
             </div>
             <div class="col-2"></div>
         </div>
@@ -446,7 +446,7 @@
             </div>
             <label class="form-label col-2"><span class="c-red">*</span>[新表]表计类别：</label>
             <div class="formControls col-3">
-                <select class="input-text required meterType" data-valid="isNonEmpty" data-error="表计类别不能为空">
+                <select class="input-text required meterType" disabled="disabled" style="background-color: #EEEEEE;" data-valid="isNonEmpty" data-error="表计类别不能为空">
                     <option value="">请选择</option>
                     <option value="wm">水表</option>
                     <option value="am">电表</option>
@@ -758,8 +758,10 @@
                     $("#change .meterNo").eq(0).val(meter.MeterNo);
                     $("#change .meterName").eq(0).val(meter.MeterName);
                     $("#change .lastRead").val(meter.MeterReadout);
-                    $("#change .rate").val(meter.MeterRate);
-                    $("#change .digit").val(meter.MeterDigit);
+                    $("#change .rate").eq(0).val(meter.MeterRate);
+                    $("#change .digit").eq(0).val(meter.MeterDigit);
+                    $("#change .rate").eq(1).val("").unbind("change").bind("change", writeMeterName);
+                    $("#change .digit").eq(1).val("").unbind("change").bind("change", writeMeterName);
                     $("#change .meterType").val(meter.MeterType);
                     $("#change .sizeType").val(meter.MeterSize);
                     $("#change .natureType").val(meter.MeterNatureType);
@@ -813,7 +815,6 @@
             transmitData(datatostr(submitData));
             return;
         }
-
         function changesubmit() {
             if ($('#change').validate('submitValidate')) {
                 var submitData = new Object();
@@ -835,6 +836,20 @@
                 transmitData(datatostr(submitData));
             }
             return;
+        }
+        function writeMeterName() {
+            var type = $("#change .meterType").eq(1).find("option:selected").text();;
+            var rate = $("#change .rate").eq(1).val();
+            var digit = $("#change .digit").eq(1).val();
+            var meterName = $("#change .meterName").eq(1);
+            if (rate!=null & rate!="" & !isNaN(rate)) {
+                meterName.val(type + "-" + rate + "倍");
+                if (digit!=null & digit!="" &!isNaN(digit)) {
+                    meterName.val(type + "-" + rate + "倍" + "-" + digit + "位");
+                }
+            } else {
+                meterName.val(type);
+            }
         }
         function insert() {
             $('#editlist').validate('reset');

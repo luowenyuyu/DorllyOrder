@@ -198,8 +198,8 @@
 
     <div class="pos-a ztreeDiv">
         <ul id="ztree" class="ztree"></ul>
-        <div class="ztree-loading" style="text-align:center;margin-top:300px;">
-            <img src="../../images/loading.gif" style="width:19px;"/>&nbsp;&nbsp;加载中&nbsp;.&nbsp;.&nbsp;.
+        <div class="ztree-loading" style="text-align: center; margin-top: 300px;">
+            <img src="../../images/loading.gif" style="width: 19px;" />&nbsp;&nbsp;加载中&nbsp;.&nbsp;.&nbsp;.
         </div>
     </div>
 
@@ -540,6 +540,9 @@
             $('#edit').validate('reset');
             type = "insert";
             resetEditDiv();
+            if ($("#selectKey").val() != "") {
+                $("#MeterNo").val($("#" + $("#selectKey").val()).find(".td-meterno").text()).trigger("change");
+            }
             zTreeShowOrHide(false);
             editDivShowOrHide(true);
             return;
@@ -769,7 +772,7 @@
             return;
         }
         //添加或修改中的表记编号文本框，失去焦点操作
-        $("#MeterNo").blur(function () {
+        $("#MeterNo").change(function () {
             if ($("#MeterNo").val() != "") {
                 var submitData = new Object();
                 submitData.Type = "getMeterInfo";
@@ -943,20 +946,20 @@
         }
 
         //--------------------------    树形菜单    ----------------------------
-
-        //function choose(id, labels, values) {
-        //    if (labels != "" && labels != undefined && labels != "undefined") {
-        //        if (id == "MeterNo") {
-        //            var submitData = new Object();
-        //            submitData.Type = "getMeterInfo";
-        //            submitData.MeterNo = labels;
-        //            transmitData(datatostr(submitData));
-        //        }
-        //        else {
-        //            $("#" + id).val(labels);
-        //        }
-        //    }
-        //}
+        //选择表计编号回调
+        function choose(id, labels, values) {
+            if (labels != "" && labels != undefined && labels != "undefined") {
+                if (id == "MeterNo") {
+                    var submitData = new Object();
+                    submitData.Type = "getMeterInfo";
+                    submitData.MeterNo = labels;
+                    transmitData(datatostr(submitData));
+                }
+                else {
+                    $("#" + id).val(labels);
+                }
+            }
+        }
 
         function getTree() {
             var submitData = new Object();

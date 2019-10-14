@@ -827,7 +827,7 @@ namespace project.Presentation.Op
                                 U8Return ot = new U8Return();
                                 object oj = JsonToObject(result, ot);
                                 U8Msg msg = ((U8Return)oj).rtn[0];
-                                if (msg.flag == "True")
+                                if (msg.flag == "1")
                                 {
                                     //collection.Add(new JsonStringValue("liststr", createList(jp.getValue("OrderNoS"), jp.getValue("OrderTypeS"), jp.getValue("CustNoS"),
                                     //    jp.getValue("OrderTimeS"), jp.getValue("MinOrderCreateDate"), jp.getValue("MaxOrderCreateDate"), jp.getValue("OrderStatusS"),
@@ -1040,16 +1040,6 @@ namespace project.Presentation.Op
                 {
                     flag = "4";
                 }
-                //foreach (string id in jp.getValue("ids").Split(';'))
-                //{
-                //    if (id == "") continue;
-                //    DataTable dt = obj.PopulateDataSet("select count(1) as Cnt from Op_OrderDetail where RefRP='" + id + "'").Tables[0];
-                //    if (int.Parse(dt.Rows[0]["Cnt"].ToString()) == 0)
-                //    {
-                //        flag = "4";
-                //        break;
-                //    }
-                //}
                 if (flag != "4")
                 {
                     Business.Op.BusinessOrderHeader bc = new Business.Op.BusinessOrderHeader();
@@ -1084,17 +1074,8 @@ namespace project.Presentation.Op
 
                     //加水印
                     string picName = "a.png";
-                    dt = obj.PopulateDataSet("select * from Op_OrderDetail where RefRP='" + bc.Entity.RowPointer + "'").Tables[0];
-                    if (dt.Rows.Count > 0)
-                    {
-                        //FWC-001
-                        if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-001")
-                            picName = "dl.png";
-                        else if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-002")
-                            picName = "mh.png";
-                        else if (dt.Rows[0]["ODContractSPNo"].ToString() == "FWC-003")
-                            picName = "fzd.png";
-                    }
+                    DataTable picDt = obj.PopulateDataSet("select ODContractSPNo from Op_OrderDetail where RefRP='" + bc.Entity.RowPointer + "'").Tables[0];
+                    if (picDt.Rows.Count > 0) picName = picDt.Rows[0]["ODContractSPNo"].ToString() + ".png";
                     OrderPrint.PDFWatermark(OrderPrint.UnpayPath + newName,
                         OrderPrint.UnpayPath + pathName,
                         OrderPrint.UnpayPath.Replace("未缴费通知单", "") + picName, 369, 111);

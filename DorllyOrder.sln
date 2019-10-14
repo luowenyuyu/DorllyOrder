@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2046
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project", "Project\Project.csproj", "{2E8C93D3-5205-427F-9518-738A79DFE981}"
 EndProject
@@ -28,6 +28,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "DOWeb", "http://localhost:2
 		Release.AspNetCompiler.Debug = "False"
 		SlnRelativePath = "DOWeb\"
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingOrder", "ParkingOrder\ParkingOrder.csproj", "{D0238139-0F86-4745-A181-283B00B6175F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +79,22 @@ Global
 		{BD6ECE6F-7035-4A8B-AF09-412243B0987E}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{BD6ECE6F-7035-4A8B-AF09-412243B0987E}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
 		{BD6ECE6F-7035-4A8B-AF09-412243B0987E}.Release|x86.ActiveCfg = Debug|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Debug|.NET.Build.0 = Debug|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Debug|x86.Build.0 = Debug|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Release|.NET.ActiveCfg = Release|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Release|.NET.Build.0 = Release|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Release|x86.ActiveCfg = Release|Any CPU
+		{D0238139-0F86-4745-A181-283B00B6175F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

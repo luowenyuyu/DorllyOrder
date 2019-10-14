@@ -491,18 +491,25 @@ namespace project.Presentation.Op
                 string ODARAmount = decimal.Parse(dr["ODARAmount"].ToString()).ToString("0.##");
                 //水费、电费、公摊电费、超额电费 
 
-                if (dr["RLastReadout"].ToString() != "" && decimal.Parse(dr["RLastReadout"].ToString()) > 0)
+                //if (dr["RLastReadout"].ToString() != "" && decimal.Parse(dr["RLastReadout"].ToString()) >= 0)
+                //    LastReadout = decimal.Parse(dr["RLastReadout"].ToString()).ToString("0.##");
+                //if (dr["RReadout"].ToString() != "" && decimal.Parse(dr["RReadout"].ToString()) >= 0)
+                //    Readout = decimal.Parse(dr["RReadout"].ToString()).ToString("0.##");
+                //if (dr["RMeteRate"].ToString() != "" && decimal.Parse(dr["RMeteRate"].ToString()) >= 0)
+                //    MeteRate = decimal.Parse(dr["RMeteRate"].ToString()).ToString("0.##");
+
+                //if (dr["RODQTY"].ToString() != "" && decimal.Parse(dr["RODQTY"].ToString()) >= 0)
+                //    ODQTY = decimal.Parse(dr["RODQTY"].ToString()).ToString("0.##");
+                //if (dr["RODARAmount"].ToString() != "" && decimal.Parse(dr["RODARAmount"].ToString()) >= 0)
+                //    ODARAmount = decimal.Parse(dr["RODARAmount"].ToString()).ToString("0.##");
+                if (!string.IsNullOrEmpty(dr["RLastReadout"].ToString()))
+                {
                     LastReadout = decimal.Parse(dr["RLastReadout"].ToString()).ToString("0.##");
-                if (dr["RReadout"].ToString() != "" && decimal.Parse(dr["RReadout"].ToString()) > 0)
                     Readout = decimal.Parse(dr["RReadout"].ToString()).ToString("0.##");
-                if (dr["RMeteRate"].ToString() != "" && decimal.Parse(dr["RMeteRate"].ToString()) > 0)
                     MeteRate = decimal.Parse(dr["RMeteRate"].ToString()).ToString("0.##");
-
-                if (dr["RODQTY"].ToString() != "" && decimal.Parse(dr["RODQTY"].ToString()) > 0)
                     ODQTY = decimal.Parse(dr["RODQTY"].ToString()).ToString("0.##");
-                if (dr["RODARAmount"].ToString() != "" && decimal.Parse(dr["RODARAmount"].ToString()) > 0)
                     ODARAmount = decimal.Parse(dr["RODARAmount"].ToString()).ToString("0.##");
-
+                }
                 //if (dr["ODSRVNo"].ToString() == "DF-56" || dr["ODSRVNo"].ToString() == "SF-55" || dr["ODSRVNo"].ToString() == "CEDF-62")
                 //{
                 //    if (dr["RLastReadout"].ToString() != "")
@@ -778,25 +785,30 @@ namespace project.Presentation.Op
 
                 for (int i = 1; i <= page; i++)
                 {
+                    #region back
                     DataTable dt = obj.ExecSelect("Op_OrderDetail a " +
                         "left join Mstr_Service b on a.ODSRVNo=b.SRVNo " +
                         "left join Mstr_ServiceProvider c on c.SPNo=a.ODContractSPNo " +
                         "left join Op_OrderHeader d on d.RowPointer=a.RefRP " +
                         "left join Mstr_Customer e on e.CustNo=d.CustNo " +
-
-
                         "left join Op_ContractRMRentList f on a.RefNo=f.RowPointer " +
                         "left join Op_ContractRMRentList_Readout g on g.RefRentRP=f.RowPointer " +
-                        "left join Op_Readout h on h.RowPointer=g.RefReadoutRP "
-                        ,
-
-                        "a.*,b.SRVName,c.SPName,c.SPBank,c.SPBankAccount,c.SPBankTitle,d.OrderTime,e.CustName,d.OrderType," +
-
-                        "h.LastReadout as RLastReadout,h.Readout as RReadout,isnull(h.Readings,0)*isnull(h.MeteRate,0) as RODQTY," +
-                        "isnull(h.Readings,0)*isnull(h.MeteRate,0)*a.ODUnitPrice as RODARAmount,h.MeteRate as RMeteRate,ISNULL(a.ODARAmount,0)-ISNULL(a.ODPaidAmount,0) as ODUnpayAmount",
-
-                        " and a.RefRP=" + "'" + OrderRP + "' and ISNULL(a.ODARAmount,0)!=ISNULL(a.ODPaidAmount,0)", i, 8, "a.ResourceNo,a.ODCreateDate");
-
+                        "left join Op_Readout h on h.RowPointer=g.RefReadoutRP ",
+                        "a.RefRP,a.ResourceNo,b.SRVName,d.OrderTime,e.CustName,d.OrderType," +
+                        "c.SPName,c.SPBank,c.SPBankAccount,c.SPBankTitle,"+
+                        "coalesce(a.ODARAmount, 0) as Amount, coalesce(a.ODPaidAmount, 0) as PayAmonut," +
+                        "coalesce(a.ODARAmount, 0) - coalesce(a.ODPaidAmount, 0) as UnpayAmount",
+                        " and a.RefRP=" + "'" + OrderRP + "' and coalesce(a.ODARAmount,0)!=coalesce(a.ODPaidAmount,0)", i,
+                         8, "a.ResourceNo,a.ODCreateDate");
+                    #endregion
+                    //DataTable dt = obj.PopulateDataSet(string.Format(@"select a.ResourceNo,b.SRVName,d.OrderTime,e.CustName,d.OrderType,
+                    //                coalesce(a.ODARAmount,0) as Amount,coalesce(a.ODPaidAmount,0) as PayAmonut,
+                    //                coalesce(a.ODARAmount,0)-coalesce(a.ODPaidAmount,0) as ODUnpayAmount 
+                    //                from Op_OrderDetail a  left join Mstr_Service b on a.ODSRVNo=b.SRVNo
+                    //                left join Op_OrderHeader d on d.RowPointer=a.RefRP  
+                    //                left join Mstr_Customer e on e.CustNo=d.CustNo
+                    //                where a.RefRP='{0}' and coalesce(a.ODARAmount,0)!=coalesce(a.ODPaidAmount,0)
+                    //                order by a.ResourceNo,a.ODCreateDate", OrderRP)).Tables[0];
                     if (i > 1) doc.NewPage();
 
                     if (dt.Rows[0]["OrderType"].ToString() == "04" || dt.Rows[0]["OrderType"].ToString() == "09")
@@ -938,11 +950,11 @@ namespace project.Presentation.Op
                 cell23.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
                 cell23.HorizontalAlignment = Element.ALIGN_CENTER;
 
-                PdfPCell cell24 = new PdfPCell(new Paragraph(decimal.Parse(dr["ODARAmount"].ToString()).ToString("0.##"), font9));
+                PdfPCell cell24 = new PdfPCell(new Paragraph(decimal.Parse(dr["Amount"].ToString()).ToString("0.##"), font9));
                 cell24.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
                 cell24.HorizontalAlignment = Element.ALIGN_CENTER;
 
-                PdfPCell cell25 = new PdfPCell(new Paragraph(decimal.Parse(dr["ODUnpayAmount"].ToString()).ToString("0.##"), font9));
+                PdfPCell cell25 = new PdfPCell(new Paragraph(decimal.Parse(dr["UnpayAmount"].ToString()).ToString("0.##"), font9));
                 cell25.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
                 cell25.HorizontalAlignment = Element.ALIGN_CENTER;
 
@@ -1061,24 +1073,24 @@ namespace project.Presentation.Op
                 cell23.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
                 cell23.HorizontalAlignment = Element.ALIGN_CENTER;
 
-                string ODARAmount = decimal.Parse(dr["ODARAmount"].ToString()).ToString("0.##");
-                string UnpayAmount = (decimal.Parse(dr["ODARAmount"].ToString()) - decimal.Parse(string.IsNullOrEmpty(dr["ODPaidAmount"].ToString()) ? "0" : dr["ODPaidAmount"].ToString())).ToString("0.##");
-                //水费、电费、公摊电费、超额电费 dr["ODSRVNo"].ToString() == "GDDF-56" ||
-                if (dr["ODSRVNo"].ToString() == "DF-56" || dr["ODSRVNo"].ToString() == "SF-55" || dr["ODSRVNo"].ToString() == "CEDF-62")
-                {
-                    if (dr["RODARAmount"].ToString() != "")
-                    {
-                        ODARAmount = decimal.Parse(dr["RODARAmount"].ToString()).ToString("0.##");
-                        UnpayAmount = (decimal.Parse(dr["RODARAmount"].ToString()) - decimal.Parse(dr["ODPaidAmount"].ToString())).ToString("0.##");
-                    }
+                //string ODARAmount = decimal.Parse(dr["ODARAmount"].ToString()).ToString("0.##");
+                //string UnpayAmount = (decimal.Parse(dr["ODARAmount"].ToString()) - decimal.Parse(string.IsNullOrEmpty(dr["ODPaidAmount"].ToString()) ? "0" : dr["ODPaidAmount"].ToString())).ToString("0.##");
+                ////水费、电费、公摊电费、超额电费 dr["ODSRVNo"].ToString() == "GDDF-56" ||
+                //if (dr["ODSRVNo"].ToString() == "DF-56" || dr["ODSRVNo"].ToString() == "SF-55" || dr["ODSRVNo"].ToString() == "CEDF-62")
+                //{
+                //    if (dr["RODARAmount"].ToString() != "")
+                //    {
+                //        ODARAmount = decimal.Parse(dr["RODARAmount"].ToString()).ToString("0.##");
+                //        UnpayAmount = (decimal.Parse(dr["RODARAmount"].ToString()) - decimal.Parse(dr["ODPaidAmount"].ToString())).ToString("0.##");
+                //    }
 
-                }
+                //}
 
-                PdfPCell cell24 = new PdfPCell(new Paragraph(ODARAmount, font9));
+                PdfPCell cell24 = new PdfPCell(new Paragraph(decimal.Parse(dr["Amount"].ToString()).ToString("0.##"), font9));
                 cell24.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
                 cell24.HorizontalAlignment = Element.ALIGN_CENTER;
 
-                PdfPCell cell25 = new PdfPCell(new Paragraph(UnpayAmount, font9));
+                PdfPCell cell25 = new PdfPCell(new Paragraph(decimal.Parse(dr["UnpayAmount"].ToString()).ToString("0.##"), font9));
                 cell25.Border = Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER;
                 cell25.HorizontalAlignment = Element.ALIGN_CENTER;
 

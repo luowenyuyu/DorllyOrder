@@ -101,7 +101,6 @@ D:\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.CoreCompileInputs.cache
 D:\Projects\DorllyOrder\Project\obj\Debug\Project.csproj.CopyComplete
 D:\Projects\DorllyOrder\Project\obj\Debug\project.dll
 D:\Projects\DorllyOrder\Project\obj\Debug\project.pdb
-D:\Projects\DorllyOrder\Project\obj\Debug\Project.csprojAssemblyReference.cache
 D:\Projects\NewDorllyOrder\Project\bin\Debug\project.dll.config
 D:\Projects\NewDorllyOrder\Project\bin\Debug\project.dll
 D:\Projects\NewDorllyOrder\Project\bin\Debug\project.pdb
@@ -115,3 +114,7 @@ D:\Projects\NewDorllyOrder\Project\obj\Debug\Project.csproj.CopyComplete
 D:\Projects\NewDorllyOrder\Project\obj\Debug\project.dll
 D:\Projects\NewDorllyOrder\Project\obj\Debug\project.pdb
 D:\Projects\NewDorllyOrder\Project\obj\Debug\Project.csprojAssemblyReference.cache
+D:\Projects\DorllyOrder\DOWeb\Bin\project.dll.config
+D:\Projects\DorllyOrder\DOWeb\Bin\project.dll
+D:\Projects\DorllyOrder\DOWeb\Bin\project.pdb
+D:\Projects\DorllyOrder\Project\obj\Debug\Project.csprojAssemblyReference.cache
